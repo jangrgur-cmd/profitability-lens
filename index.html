@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Messaging profitability model</title>
+  <meta name="description" content="Interactive model of a business-messaging company's gross margin by country, channel and customer, with what-if scenarios. Synthetic data.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="masthead">
+    <div class="wrap">
+      <p class="byline">
+        Synthetic data · Built by Jan Grgur Glivar ·
+        <a href="https://linkedin.com/in/jangrgurglivar" rel="noopener">LinkedIn</a> ·
+        <a href="https://github.com/jangrgur-cmd/messaging-profitability" rel="noopener">GitHub repo</a>
+      </p>
+      <h1>Messaging profitability model</h1>
+      <p class="lede">
+        Where a business-messaging company makes and loses money across 15 countries,
+        four channels and 30 customers, and what happens when prices, costs or exchange rates move.
+      </p>
+    </div>
+
+    <nav class="wrap tabs" aria-label="Views">
+      <div role="tablist" id="tablist">
+        <button role="tab" id="tab-overview" aria-controls="panel-overview" data-tab="overview">Overview</button>
+        <button role="tab" id="tab-routes" aria-controls="panel-routes" data-tab="routes">Routes</button>
+        <button role="tab" id="tab-customers" aria-controls="panel-customers" data-tab="customers">Customers</button>
+        <button role="tab" id="tab-scenarios" aria-controls="panel-scenarios" data-tab="scenarios">Scenarios</button>
+        <button role="tab" id="tab-assumptions" aria-controls="panel-assumptions" data-tab="assumptions">Assumptions &amp; method</button>
+        <button role="tab" id="tab-checks" aria-controls="panel-checks" data-tab="checks">Data checks</button>
+      </div>
+    </nav>
+  </header>
+
+  <section class="filterbar" aria-label="Filters">
+    <form class="wrap filters" id="filters">
+      <fieldset class="filter filter--months">
+        <legend>Months</legend>
+        <label class="sr-only" for="f-from">From month</label>
+        <select id="f-from" name="monthFrom"></select>
+        <span aria-hidden="true">to</span>
+        <label class="sr-only" for="f-to">To month</label>
+        <select id="f-to" name="monthTo"></select>
+      </fieldset>
+      <div class="filter">
+        <label for="f-country">Country</label>
+        <select id="f-country" name="country"></select>
+      </div>
+      <div class="filter">
+        <label for="f-channel">Channel</label>
+        <select id="f-channel" name="channel"></select>
+      </div>
+      <div class="filter">
+        <label for="f-category">Category</label>
+        <select id="f-category" name="category"></select>
+      </div>
+      <div class="filter">
+        <label for="f-industry">Customer industry</label>
+        <select id="f-industry" name="industry"></select>
+      </div>
+      <div class="filter filter--actions">
+        <button type="button" id="f-reset" class="button-quiet">Reset filters</button>
+        <p class="filter-count" id="filter-count" aria-live="polite"></p>
+      </div>
+    </form>
+  </section>
+
+  <main id="main" class="wrap">
+    <p class="load-error" id="load-error" hidden></p>
+
+    <section role="tabpanel" id="panel-overview" aria-labelledby="tab-overview" tabindex="0">
+      <h2 class="sr-only">Overview</h2>
+      <p class="statement" id="statement" aria-live="polite"></p>
+
+      <dl class="ledger" id="kpis"></dl>
+
+      <div class="charts">
+        <figure class="chart chart--wide">
+          <figcaption>
+            <h3>Revenue and gross profit by month</h3>
+            <p>Bars in EUR on the left axis; gross margin on the right axis.</p>
+          </figcaption>
+          <div class="chart-box">
+            <canvas id="trend-chart" role="img"></canvas>
+          </div>
+        </figure>
+        <figure class="chart">
+          <figcaption>
+            <h3>Channel mix</h3>
+            <p>Each channel's share of messages, revenue and gross profit.</p>
+          </figcaption>
+          <div class="chart-box chart-box--short">
+            <canvas id="mix-chart" role="img"></canvas>
+          </div>
+          <p class="chart-note" id="mix-note" hidden></p>
+        </figure>
+      </div>
+    </section>
+
+    <section role="tabpanel" id="panel-routes" aria-labelledby="tab-routes" tabindex="0" hidden>
+      <h2>Routes</h2>
+      <p class="placeholder">This view is being built.</p>
+    </section>
+    <section role="tabpanel" id="panel-customers" aria-labelledby="tab-customers" tabindex="0" hidden>
+      <h2>Customers</h2>
+      <p class="placeholder">This view is being built.</p>
+    </section>
+    <section role="tabpanel" id="panel-scenarios" aria-labelledby="tab-scenarios" tabindex="0" hidden>
+      <h2>Scenarios</h2>
+      <p class="placeholder">This view is being built.</p>
+    </section>
+    <section role="tabpanel" id="panel-assumptions" aria-labelledby="tab-assumptions" tabindex="0" hidden>
+      <h2>Assumptions &amp; method</h2>
+      <p class="placeholder">This view is being built.</p>
+    </section>
+    <section role="tabpanel" id="panel-checks" aria-labelledby="tab-checks" tabindex="0" hidden>
+      <h2>Data checks</h2>
+      <p class="placeholder">This view is being built.</p>
+    </section>
+  </main>
+
+  <footer class="wrap footer">
+    <p>Synthetic data for demonstration. Not affiliated with any company. Not based on any company's real figures.</p>
+  </footer>
+
+  <script src="lib/chart.umd.min.js"></script>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
