@@ -369,7 +369,8 @@
           "DE": 1
         },
         "channels": [
-          "SMS"
+          "SMS",
+          "WhatsApp"
         ]
       }
     },
@@ -408,7 +409,8 @@
           "DE": 1
         },
         "channels": [
-          "SMS"
+          "SMS",
+          "WhatsApp"
         ]
       }
     },
@@ -427,6 +429,7 @@
         },
         "channels": [
           "SMS",
+          "WhatsApp",
           "Voice"
         ]
       }
@@ -560,7 +563,8 @@
           "GB": 1
         },
         "channels": [
-          "SMS"
+          "SMS",
+          "WhatsApp"
         ]
       }
     },
@@ -618,7 +622,8 @@
         },
         "channels": [
           "SMS",
-          "Viber"
+          "Viber",
+          "WhatsApp"
         ]
       }
     },
@@ -719,6 +724,120 @@
         "channels": [
           "SMS",
           "Viber"
+        ]
+      }
+    },
+    {
+      "id": "C31",
+      "name": "Croatian parcel delivery company",
+      "industry": "Logistics",
+      "home_country": "HR",
+      "size_tier": "SMB",
+      "discount_tier": "discount_tier_0",
+      "base_monthly_volume": 700000,
+      "volume_note": "Estimated: ≈1M parcels a month × 70% with a delivery notice.",
+      "footprint": {
+        "countries": {
+          "HR": 1
+        },
+        "channels": [
+          "SMS",
+          "Viber"
+        ]
+      }
+    },
+    {
+      "id": "C32",
+      "name": "German drugstore chain",
+      "industry": "Retail",
+      "home_country": "DE",
+      "size_tier": "Mid-market",
+      "discount_tier": "discount_tier_1",
+      "base_monthly_volume": 4000000,
+      "volume_note": "Estimated: ≈10M app and loyalty members × 0.4 messages a month.",
+      "footprint": {
+        "countries": {
+          "DE": 0.9,
+          "HR": 0.1
+        },
+        "channels": [
+          "SMS",
+          "WhatsApp"
+        ]
+      }
+    },
+    {
+      "id": "C33",
+      "name": "French hospital and clinic group",
+      "industry": "Healthcare",
+      "home_country": "FR",
+      "size_tier": "SMB",
+      "discount_tier": "discount_tier_1",
+      "base_monthly_volume": 1500000,
+      "volume_note": "Estimated: ≈1.5M appointments a month × 1 reminder.",
+      "footprint": {
+        "countries": {
+          "FR": 1
+        },
+        "channels": [
+          "SMS",
+          "WhatsApp"
+        ]
+      }
+    },
+    {
+      "id": "C34",
+      "name": "French mobile network operator",
+      "industry": "Telco",
+      "home_country": "FR",
+      "size_tier": "Mid-market",
+      "discount_tier": "discount_tier_1",
+      "base_monthly_volume": 4000000,
+      "volume_note": "Estimated: ≈20M subscribers × 0.2 messages a month sent through a CPaaS (most go over its own network).",
+      "footprint": {
+        "countries": {
+          "FR": 1
+        },
+        "channels": [
+          "SMS",
+          "WhatsApp"
+        ]
+      }
+    },
+    {
+      "id": "C35",
+      "name": "UK mobile network operator",
+      "industry": "Telco",
+      "home_country": "GB",
+      "size_tier": "Mid-market",
+      "discount_tier": "discount_tier_1",
+      "base_monthly_volume": 3000000,
+      "volume_note": "Estimated: ≈15M subscribers × 0.2 messages a month sent through a CPaaS.",
+      "footprint": {
+        "countries": {
+          "GB": 1
+        },
+        "channels": [
+          "SMS",
+          "WhatsApp"
+        ]
+      }
+    },
+    {
+      "id": "C36",
+      "name": "US mobile virtual network operator",
+      "industry": "Telco",
+      "home_country": "US",
+      "size_tier": "Mid-market",
+      "discount_tier": "discount_tier_1",
+      "base_monthly_volume": 2000000,
+      "volume_note": "Estimated: ≈4M subscribers × 0.5 messages a month (activation codes, billing).",
+      "footprint": {
+        "countries": {
+          "US": 1
+        },
+        "channels": [
+          "SMS"
         ]
       }
     }

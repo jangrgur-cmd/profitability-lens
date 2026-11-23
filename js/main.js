@@ -53,17 +53,40 @@ function initTabs() {
 // Filter bar
 // ---------------------------------------------------------------------------
 
-/** Fills a <select> with options: [{ value, label }]. */
+/** Creates one <option>. */
+function makeOption(value, label, disabled = false) {
+  const option = document.createElement("option");
+  option.value = String(value);
+  option.textContent = label;
+  option.disabled = disabled;
+  return option;
+}
+
+/** Fills a <select> with options: [{ value, label }], and remembers the full list. */
 function fillSelect(select, options) {
-  select.replaceChildren(
-    ...options.map(({ value, label }) => {
-      const option = document.createElement("option");
-      option.value = String(value);
-      option.textContent = label;
-      option.dataset.label = label;
-      return option;
-    }),
-  );
+  select.allOptions = options;
+  select.replaceChildren(...options.map(({ value, label }) => makeOption(value, label)));
+}
+
+/**
+ * Rebuilds a dropdown so that options with traffic (given the other filters)
+ * come first, and the rest sit in a separate, disabled group at the bottom.
+ * The current selection always stays selectable.
+ */
+function arrangeOptions(select, available, current) {
+  const [all, ...values] = select.allOptions;
+  const hasTraffic = (o) => available.has(String(o.value)) || String(o.value) === current;
+  const withTraffic = values.filter(hasTraffic);
+  const withoutTraffic = values.filter((o) => !hasTraffic(o));
+
+  const children = [makeOption(all.value, all.label), ...withTraffic.map((o) => makeOption(o.value, o.label))];
+  if (withoutTraffic.length > 0) {
+    const group = document.createElement("optgroup");
+    group.label = "Not in this selection";
+    group.append(...withoutTraffic.map((o) => makeOption(o.value, o.label, true)));
+    children.push(group);
+  }
+  select.replaceChildren(...children);
 }
 
 function initFilters() {
@@ -95,8 +118,8 @@ function initFilters() {
 }
 
 /**
- * Writes the current filter state back into the form controls, and greys out
- * options that would return no traffic given the other filters.
+ * Writes the current filter state back into the form controls. Options that
+ * would return no traffic given the other filters move to a disabled group.
  */
 function syncFilterControls(filters) {
   const defaults = defaultState().filters;
@@ -105,13 +128,7 @@ function syncFilterControls(filters) {
 
   for (const [name, value] of Object.entries(filters)) {
     const select = $("filters").elements[name];
-    if (available[name]) {
-      for (const option of select.options) {
-        const empty = option.value !== "all" && option.value !== String(value) && !available[name].has(option.value);
-        option.disabled = empty;
-        option.textContent = empty ? `${option.dataset.label} (no traffic)` : option.dataset.label;
-      }
-    }
+    if (available[name]) arrangeOptions(select, available[name], String(value));
     select.value = String(value);
     select.classList.toggle("is-active", value !== defaults[name]);
   }
