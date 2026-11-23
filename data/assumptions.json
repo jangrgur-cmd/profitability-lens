@@ -251,7 +251,11 @@
       "home_region": "Western Europe",
       "size_tier": "Mid-market",
       "discount_tier": "discount_tier_1",
-      "base_monthly_volume": 1992000
+      "base_monthly_volume": 1992000,
+      "footprint": {
+        "countries": { "GB": 1, "DE": 1, "HR": 0.5, "TR": 0.3 },
+        "channels": ["SMS", "WhatsApp", "Viber"]
+      }
     },
     {
       "id": "C08",
@@ -350,7 +354,11 @@
       "home_region": "Balkans",
       "size_tier": "SMB",
       "discount_tier": "discount_tier_1",
-      "base_monthly_volume": 584000
+      "base_monthly_volume": 584000,
+      "footprint": {
+        "countries": { "HR": 0.7, "SI": 0.3 },
+        "channels": ["SMS", "Viber"]
+      }
     },
     {
       "id": "C19",
@@ -439,7 +447,11 @@
       "home_region": "Western Europe",
       "size_tier": "SMB",
       "discount_tier": "discount_tier_0",
-      "base_monthly_volume": 344000
+      "base_monthly_volume": 344000,
+      "footprint": {
+        "countries": { "DE": 0.6, "HR": 0.4 },
+        "channels": ["SMS"]
+      }
     },
     {
       "id": "C28",
@@ -457,7 +469,11 @@
       "home_region": "Balkans",
       "size_tier": "SMB",
       "discount_tier": "discount_tier_0",
-      "base_monthly_volume": 314000
+      "base_monthly_volume": 314000,
+      "footprint": {
+        "countries": { "HR": 1 },
+        "channels": ["SMS"]
+      }
     },
     {
       "id": "C30",
