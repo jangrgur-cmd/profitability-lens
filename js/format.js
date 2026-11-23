@@ -2,7 +2,9 @@
 // EUR amounts are abbreviated (€1.2M, €45.3k), percentages use one decimal,
 // per-message figures use four decimals (0.0123 €/msg).
 
-const MINUS = "−"; // typographic minus sign, same width as a digit
+// Typographic minus sign (same width as a digit), followed by a word joiner so
+// a line never breaks between the sign and the number.
+const MINUS = "−⁠";
 
 /** Adds a typographic minus for negative numbers. */
 function signed(text, value) {

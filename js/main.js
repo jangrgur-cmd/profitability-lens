@@ -5,6 +5,8 @@ import { filterRows, availableFilterValues, summarize, monthlyTotals, channelTot
 import { createTrendChart, updateTrendChart, createMixChart, updateMixChart } from "./charts.js";
 import { formatEur, formatPct, formatPerMessage, formatCount, formatInteger } from "./format.js";
 import { TABS, parseHash, serializeHash, filtersAreDefault, defaultState } from "./state.js";
+import { createRoutesView } from "./routes-view.js";
+import { createCustomersView } from "./customers-view.js";
 
 const $ = (id) => document.getElementById(id);
 
@@ -15,7 +17,15 @@ const app = {
   model: null,
   state: defaultState(),
   charts: {},
+  views: {},
 };
+
+/** Short file-name tag for CSV exports, e.g. "HR_SMS_m3-8" or "all". */
+function filterTag({ monthFrom, monthTo, country, channel, category, industry }) {
+  const parts = [country, channel, category, industry].filter((v) => v !== "all");
+  if (monthFrom !== 1 || monthTo !== 12) parts.push(`m${monthFrom}-${monthTo}`);
+  return parts.length ? parts.join("_").replace(/[^\w-]/g, "") : "all";
+}
 
 // ---------------------------------------------------------------------------
 // Tabs
@@ -273,7 +283,10 @@ function render() {
   const rows = filterRows(model.rows, state.filters, model.customersById);
   $("filter-count").textContent = `${formatInteger(rows.length)} of ${formatInteger(model.rows.length)} traffic rows`;
 
+  const tag = filterTag(state.filters);
   if (state.tab === "overview") renderOverview(rows);
+  if (state.tab === "routes") app.views.routes.render(rows, tag);
+  if (state.tab === "customers") app.views.customers.render(rows, tag);
 }
 
 async function init() {
@@ -287,6 +300,8 @@ async function init() {
     return;
   }
   initFilters();
+  app.views.routes = createRoutesView(app.model);
+  app.views.customers = createCustomersView(app.model);
   app.state = parseHash(location.hash, app.model.dimensions);
   window.addEventListener("hashchange", () => {
     app.state = parseHash(location.hash, app.model.dimensions);

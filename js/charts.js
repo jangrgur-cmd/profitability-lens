@@ -226,6 +226,109 @@ export function updateMixChart(chart, channelTotals) {
   return null;
 }
 
+// ---------------------------------------------------------------------------
+// Whale curve: cumulative share of customers (x) vs cumulative share of gross profit (y)
+// ---------------------------------------------------------------------------
+
+/** Creates the whale-curve chart (empty until updateWhaleChart is called). */
+export function createWhaleChart(canvas) {
+  ensureDefaults();
+  const p = palette();
+  return new Chart(canvas, {
+    type: "line",
+    data: {
+      datasets: [
+        {
+          label: "Cumulative gross profit",
+          data: [],
+          names: [],
+          borderColor: p.profit,
+          backgroundColor: p.profit,
+          borderWidth: 2,
+          pointRadius: 2,
+          tension: 0,
+        },
+        {
+          label: "Peak",
+          data: [],
+          showLine: false,
+          pointRadius: 6,
+          pointStyle: "rectRot",
+          borderColor: p.ink,
+          backgroundColor: p.ink,
+        },
+        {
+          label: "100 % of gross profit",
+          data: [{ x: 0, y: 1 }, { x: 1, y: 1 }],
+          borderColor: p.muted,
+          borderWidth: 1,
+          borderDash: [4, 4],
+          pointRadius: 0,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      parsing: false,
+      scales: {
+        x: {
+          type: "linear", min: 0, max: 1,
+          title: { display: true, text: "Share of customers (most profitable first)" },
+          ticks: { callback: (v) => formatPct(v), maxTicksLimit: 6 },
+          grid: { display: false },
+        },
+        y: {
+          beginAtZero: true,
+          title: { display: true, text: "Share of gross profit" },
+          ticks: { callback: (v) => formatPct(v), maxTicksLimit: 6 },
+          grid: { color: p.rule },
+        },
+      },
+      plugins: {
+        legend: { position: "bottom", align: "start" },
+        tooltip: {
+          filter: (item) => item.datasetIndex < 2,
+          callbacks: {
+            title: (items) => items[0]?.raw.name ?? "",
+            label: (item) => ` ${formatPct(item.raw.x)} of customers earn ${formatPct(item.raw.y)} of gross profit`,
+          },
+        },
+      },
+    },
+  });
+}
+
+/**
+ * Updates the whale-curve chart.
+ * @param {object} chart from createWhaleChart
+ * @param {{points: object[], peak: object|null, totalGrossProfit: number}} curve output of calc.whaleCurve
+ * @param {(id: string) => string} nameOf customer id → display name
+ * @returns {string} plain-English summary (also used as the chart's screen-reader label)
+ */
+export function updateWhaleChart(chart, curve, nameOf) {
+  const [line, peak] = chart.data.datasets;
+  const valid = curve.points.length > 0 && curve.points.every((pt) => pt.profitSharePct !== null);
+  line.data = valid
+    ? [{ x: 0, y: 0, name: "Start" }, ...curve.points.map((pt) => ({ x: pt.customerSharePct, y: pt.profitSharePct, name: nameOf(pt.customer_id) }))]
+    : [];
+  peak.data = valid && curve.peak
+    ? [{ x: curve.peak.customerSharePct, y: curve.peak.profitSharePct, name: `Peak: ${nameOf(curve.peak.customer_id)}` }]
+    : [];
+  chart.update();
+
+  let summary;
+  if (curve.points.length === 0) summary = "No customers match these filters.";
+  else if (!valid) summary = "Total gross profit in this selection is zero or negative, so profit shares cannot be shown.";
+  else if (curve.peak.profitSharePct > 1 + 1e-9) {
+    summary = `The curve peaks at ${formatPct(curve.peak.profitSharePct)} of gross profit after the ${curve.peak.rank} most profitable customers; the remaining customers lose money and give back the difference.`;
+  } else {
+    summary = "Every customer in this selection is profitable, so the curve rises steadily to 100 % without overshooting.";
+  }
+  chart.canvas.setAttribute("aria-label", `Whale curve chart. ${summary}`);
+  return summary;
+}
+
 /** Plain-English summary of the channel mix chart for screen readers. */
 function describeMix(channelTotals, totals, profitShareValid) {
   if (channelTotals.length === 0) return "Channel mix chart: no traffic in the selected filters.";

@@ -6,9 +6,59 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { formatEur, formatPct, formatPerMessage, formatCount, formatInteger } from "../js/format.js";
 import { parseHash, serializeHash, defaultState, filtersAreDefault } from "../js/state.js";
+import { toCsv } from "../js/export.js";
+import { sortRows } from "../js/tables.js";
+import { heatColor } from "../js/routes-view.js";
+
+// --- CSV export -------------------------------------------------------------------
+
+test("toCsv writes a header and raw values, quoting where needed", () => {
+  const columns = [
+    { label: "customer", key: "name" },
+    { label: "revenue_eur", key: "revenue" },
+    { label: "loss_making", csv: (r) => (r.gp < 0 ? "yes" : "no") },
+  ];
+  const rows = [
+    { name: "Harbor & Pine, Travel", revenue: 1234.5, gp: 10 },
+    { name: 'Say "hi"', revenue: 0.1 + 0.2, gp: -1 },
+    { name: "Empty", revenue: null, gp: 0 },
+  ];
+  assert.equal(
+    toCsv(columns, rows),
+    'customer,revenue_eur,loss_making\r\n"Harbor & Pine, Travel",1234.5,no\r\n"Say ""hi""",0.3,yes\r\nEmpty,,no\r\n',
+  );
+});
+
+// --- Table sorting -------------------------------------------------------------------
+
+test("sortRows sorts numbers and text, puts nulls last and is stable", () => {
+  const rows = [
+    { id: "a", v: 3, t: "Germany" },
+    { id: "b", v: null, t: "Croatia" },
+    { id: "c", v: 1, t: "France" },
+    { id: "d", v: 3, t: "United States" },
+  ];
+  const num = { key: "v", type: "number" };
+  assert.deepEqual(sortRows(rows, num, "asc").map((r) => r.id), ["c", "a", "d", "b"]);
+  assert.deepEqual(sortRows(rows, num, "desc").map((r) => r.id), ["a", "d", "c", "b"]);
+  assert.deepEqual(sortRows(rows, { key: "t", type: "text" }, "asc").map((r) => r.id), ["b", "c", "a", "d"]);
+  assert.deepEqual(rows.map((r) => r.id), ["a", "b", "c", "d"], "input must not be changed");
+});
+
+// --- Heatmap colours -------------------------------------------------------------------
+
+test("heatColor uses the loss colour below zero and the profit colour above", () => {
+  assert.match(heatColor(-0.05), /var\(--loss\)/);
+  assert.match(heatColor(0.2), /var\(--profit\)/);
+  assert.equal(heatColor(null), "transparent");
+  // Stronger margins get a deeper tint, capped at the top of the scale.
+  const strength = (css) => Number(css.match(/(\d+)%/)[1]);
+  assert.ok(strength(heatColor(0.3)) > strength(heatColor(0.1)));
+  assert.equal(strength(heatColor(0.5)), strength(heatColor(0.9)));
+});
 
 const { dimensions } = JSON.parse(readFileSync(new URL("../data/assumptions.json", import.meta.url), "utf8"));
-const MINUS = "−";
+const MINUS = "−⁠"; // minus sign + word joiner (no line break after the sign)
 
 // --- Formatting ---------------------------------------------------------------
 

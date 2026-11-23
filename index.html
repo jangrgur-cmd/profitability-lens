@@ -103,12 +103,50 @@
     </section>
 
     <section role="tabpanel" id="panel-routes" aria-labelledby="tab-routes" tabindex="0" hidden>
-      <h2>Routes</h2>
-      <p class="placeholder">This view is being built.</p>
+      <h2 class="section-title">Routes</h2>
+      <p class="section-lede" id="routes-summary" aria-live="polite"></p>
+
+      <div class="block">
+        <h3 class="block-title">Gross margin by country and channel</h3>
+        <p class="block-note">Each cell is one route. Deeper green means a higher margin; red cells lose money. A dash means no traffic.</p>
+        <div id="heatmap" class="heatmap"></div>
+      </div>
+
+      <div class="block">
+        <div class="block-head">
+          <h3 class="block-title">All routes</h3>
+          <button type="button" class="button-quiet" id="routes-csv">Download CSV</button>
+        </div>
+        <div id="routes-table"></div>
+      </div>
     </section>
+
     <section role="tabpanel" id="panel-customers" aria-labelledby="tab-customers" tabindex="0" hidden>
-      <h2>Customers</h2>
-      <p class="placeholder">This view is being built.</p>
+      <h2 class="section-title">Customers</h2>
+      <p class="section-lede" id="customers-summary" aria-live="polite"></p>
+
+      <figure class="chart block">
+        <figcaption>
+          <h3>Whale curve</h3>
+          <p>Customers sorted from most to least profitable, against their cumulative share of gross profit.
+            The curve rises above 100&nbsp;% when some customers lose money.</p>
+        </figcaption>
+        <div class="chart-box chart-box--short">
+          <canvas id="whale-chart" role="img"></canvas>
+        </div>
+        <p class="chart-note" id="whale-note"></p>
+      </figure>
+
+      <div class="customers-grid">
+        <div class="block">
+          <div class="block-head">
+            <h3 class="block-title">All customers</h3>
+            <button type="button" class="button-quiet" id="customers-csv">Download CSV</button>
+          </div>
+          <div id="customers-table"></div>
+        </div>
+        <aside class="detail" id="customer-detail" aria-live="polite" aria-label="Customer detail"></aside>
+      </div>
     </section>
     <section role="tabpanel" id="panel-scenarios" aria-labelledby="tab-scenarios" tabindex="0" hidden>
       <h2>Scenarios</h2>
