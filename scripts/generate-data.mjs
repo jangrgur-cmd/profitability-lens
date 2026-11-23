@@ -80,6 +80,16 @@ function pickCountries(customer, dims, gen, rand) {
   return ordered.map((code, i) => ({ code, weight: weights[i] / total }));
 }
 
+/**
+ * Uses a customer's fixed traffic footprint from assumptions.json instead of a
+ * random pick. Weights are normalised so they sum to 1.
+ * @param {Record<string, number>} countryWeights e.g. { NG: 0.85, TR: 0.15 }
+ */
+function fixedCountries(countryWeights) {
+  const total = Object.values(countryWeights).reduce((s, w) => s + w, 0);
+  return Object.entries(countryWeights).map(([code, w]) => ({ code, weight: w / total }));
+}
+
 /** Picks the channels a customer uses: the tier's "always" list plus optional ones by probability. */
 function pickChannels(customer, gen, rand) {
   const rule = gen.channels_per_tier[customer.size_tier];
@@ -92,6 +102,9 @@ function pickChannels(customer, gen, rand) {
 
 /**
  * Generates all traffic rows from the assumptions file.
+ *
+ * Each customer's countries and channels are picked at random from its size
+ * tier's rules, unless the customer has a fixed `footprint` in assumptions.json.
  *
  * Volume of one row =
  *   customer base monthly volume
@@ -114,8 +127,14 @@ export function generateTraffic(assumptionsFile) {
   const rows = [];
 
   for (const customer of customers) {
-    const countries = pickCountries(customer, dims, gen, rand);
-    const usedChannels = pickChannels(customer, gen, rand);
+    // Most customers get a random footprint; a few have a fixed one in assumptions.json.
+    const footprint = customer.footprint ?? {};
+    const countries = footprint.countries
+      ? fixedCountries(footprint.countries)
+      : pickCountries(customer, dims, gen, rand);
+    const usedChannels = footprint.channels
+      ? new Set(footprint.channels)
+      : pickChannels(customer, gen, rand);
     const industryKey = customer.industry.replace(/\W/g, "");
 
     for (const { code: country, weight: countryWeight } of countries) {

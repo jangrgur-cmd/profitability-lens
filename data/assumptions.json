@@ -359,7 +359,11 @@
       "home_region": "Middle East & Africa",
       "size_tier": "SMB",
       "discount_tier": "discount_tier_1",
-      "base_monthly_volume": 544000
+      "base_monthly_volume": 544000,
+      "footprint": {
+        "countries": { "NG": 0.85, "TR": 0.15 },
+        "channels": ["SMS"]
+      }
     },
     {
       "id": "C20",
@@ -377,7 +381,11 @@
       "home_region": "Asia",
       "size_tier": "SMB",
       "discount_tier": "discount_tier_0",
-      "base_monthly_volume": 478000
+      "base_monthly_volume": 478000,
+      "footprint": {
+        "countries": { "IN": 1 },
+        "channels": ["WhatsApp"]
+      }
     },
     {
       "id": "C22",
