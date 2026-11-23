@@ -35,7 +35,9 @@ function applyDefaults() {
   Chart.defaults.font.size = 12;
   Chart.defaults.color = p.muted;
   Chart.defaults.borderColor = p.rule;
-  Chart.defaults.animation = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? false : { duration: 250 };
+  // No animation: figures should change instantly when filters change, and
+  // Chart.js animations crash when a value changes type between updates.
+  Chart.defaults.animation = false;
   Chart.defaults.plugins.legend.labels.boxWidth = 10;
   Chart.defaults.plugins.legend.labels.boxHeight = 10;
   Chart.defaults.plugins.tooltip.backgroundColor = p.ink;
@@ -158,8 +160,7 @@ export function createMixChart(canvas, channels) {
         raw: [],
         backgroundColor: p.channels[channel],
         borderColor: "#ffffff",
-        borderWidth: { right: 1 },
-        borderSkipped: false,
+        borderWidth: 1,
       })),
     },
     options: {
@@ -211,7 +212,7 @@ export function updateMixChart(chart, channelTotals) {
     dataset.data = [
       share(volume, totals.volume),
       share(revenue, totals.revenue),
-      profitShareValid ? share(profit, totals.grossProfit) : null,
+      profitShareValid ? share(profit, totals.grossProfit) : 0,
     ];
   }
   chart.update();

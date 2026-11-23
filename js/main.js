@@ -1,7 +1,7 @@
 // main.js: app bootstrap, tab routing, filter bar and the Overview tab.
 
 import { loadModel } from "./data.js";
-import { filterRows, summarize, monthlyTotals, channelTotals } from "./calc.js";
+import { filterRows, availableFilterValues, summarize, monthlyTotals, channelTotals } from "./calc.js";
 import { createTrendChart, updateTrendChart, createMixChart, updateMixChart } from "./charts.js";
 import { formatEur, formatPct, formatPerMessage, formatCount, formatInteger } from "./format.js";
 import { TABS, parseHash, serializeHash, filtersAreDefault, defaultState } from "./state.js";
@@ -60,6 +60,7 @@ function fillSelect(select, options) {
       const option = document.createElement("option");
       option.value = String(value);
       option.textContent = label;
+      option.dataset.label = label;
       return option;
     }),
   );
@@ -93,11 +94,24 @@ function initFilters() {
   $("f-reset").addEventListener("click", () => setState({ filters: defaultState().filters }));
 }
 
-/** Writes the current filter state back into the form controls. */
+/**
+ * Writes the current filter state back into the form controls, and greys out
+ * options that would return no traffic given the other filters.
+ */
 function syncFilterControls(filters) {
   const defaults = defaultState().filters;
+  const { rows, customersById } = app.model;
+  const available = availableFilterValues(rows, filters, customersById);
+
   for (const [name, value] of Object.entries(filters)) {
     const select = $("filters").elements[name];
+    if (available[name]) {
+      for (const option of select.options) {
+        const empty = option.value !== "all" && option.value !== String(value) && !available[name].has(option.value);
+        option.disabled = empty;
+        option.textContent = empty ? `${option.dataset.label} (no traffic)` : option.dataset.label;
+      }
+    }
     select.value = String(value);
     select.classList.toggle("is-active", value !== defaults[name]);
   }

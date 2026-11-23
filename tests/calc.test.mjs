@@ -18,7 +18,7 @@ import { readFileSync } from "node:fs";
 import {
   buildCalcContext, fxToEur, rowRevenue, rowDeliveryCost, rowPlatformCost, rowMetrics,
   grossMarginPct, summarize, groupAndSummarize, monthlyTotals, channelTotals,
-  routeProfitability, customerProfitability, whaleCurve, filterRows,
+  routeProfitability, customerProfitability, whaleCurve, filterRows, availableFilterValues,
 } from "../js/calc.js";
 
 const ctx = { eurUsd: 1.25, discountByCustomer: { A: 0.1, B: 0 } };
@@ -173,6 +173,35 @@ test("filterRows by month range, channel and industry", () => {
   assert.deepEqual(filterRows(rows, { channel: "WhatsApp" }), [r4]);
   assert.deepEqual(filterRows(rows, { industry: "Retail" }, customersById), [r2, r3]);
   assert.deepEqual(filterRows(rows, { country: "all", category: "" }), rows);
+});
+
+test("availableFilterValues lists values that have traffic given the other filters", () => {
+  const customersById = { A: { industry: "Banking" }, B: { industry: "Retail" } };
+  // With Croatia selected, only customer A (Banking) sends traffic, so Retail is unavailable.
+  const hr = availableFilterValues(rows, { country: "HR" }, customersById);
+  assert.deepEqual([...hr.industry], ["Banking"]);
+  assert.deepEqual([...hr.channel].sort(), ["SMS", "WhatsApp"]);
+  // The country list ignores the country filter itself, so other countries stay selectable.
+  assert.deepEqual([...hr.country].sort(), ["HR", "NG", "US"]);
+  // With Retail selected, only B's countries remain.
+  const retail = availableFilterValues(rows, { industry: "Retail" }, customersById);
+  assert.deepEqual([...retail.country].sort(), ["NG", "US"]);
+});
+
+test("every combination of available filter values returns traffic (real data)", () => {
+  // Picking any non-greyed option must never lead to an empty result.
+  const customersById = Object.fromEntries(assumptionsFile.customers.map((c) => [c.id, c]));
+  for (const country of ["all", ...assumptionsFile.dimensions.countries.map((c) => c.code)]) {
+    const base = { country };
+    const avail = availableFilterValues(traffic, base, customersById);
+    for (const industry of avail.industry) {
+      const filters = { country, industry };
+      assert.ok(filterRows(traffic, filters, customersById).length > 0, `${country} × ${industry} is empty`);
+      for (const channel of availableFilterValues(traffic, filters, customersById).channel) {
+        assert.ok(filterRows(traffic, { ...filters, channel }, customersById).length > 0, `${country} × ${industry} × ${channel} is empty`);
+      }
+    }
+  }
 });
 
 test("calculations never change their input rows", () => {

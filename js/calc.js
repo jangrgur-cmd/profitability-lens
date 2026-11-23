@@ -296,3 +296,24 @@ export function filterRows(rows, filters = {}, customersById = {}) {
       (!active(filters.industry) || customersById[r.customer_id]?.industry === filters.industry),
   );
 }
+
+/**
+ * For each dropdown filter, lists the values that still have traffic given
+ * all the OTHER filters. Used to grey out options that would return no data
+ * (e.g. Retail when Croatia is selected and no retail customer sends traffic there).
+ * @returns {{country:Set<string>, channel:Set<string>, category:Set<string>, industry:Set<string>}}
+ */
+export function availableFilterValues(rows, filters = {}, customersById = {}) {
+  const valueOf = {
+    country: (r) => r.country,
+    channel: (r) => r.channel,
+    category: (r) => r.category,
+    industry: (r) => customersById[r.customer_id]?.industry,
+  };
+  const result = {};
+  for (const [field, getValue] of Object.entries(valueOf)) {
+    const others = { ...filters, [field]: "all" };
+    result[field] = new Set(filterRows(rows, others, customersById).map(getValue));
+  }
+  return result;
+}
