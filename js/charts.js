@@ -35,9 +35,17 @@ function applyDefaults() {
   Chart.defaults.font.size = 12;
   Chart.defaults.color = p.muted;
   Chart.defaults.borderColor = p.rule;
-  // No animation: figures should change instantly when filters change, and
-  // Chart.js animations crash when a value changes type between updates.
-  Chart.defaults.animation = false;
+  // A short, smooth transition when filters change; none for people who ask
+  // their system for reduced motion. Only change individual settings: replacing
+  // the whole Chart.defaults.animation object drops Chart.js's colour
+  // interpolation and crashes every colour transition.
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (reduceMotion) {
+    Chart.defaults.animation = false;
+  } else {
+    Chart.defaults.animation.duration = 450;
+    Chart.defaults.animation.easing = "easeOutCubic";
+  }
   Chart.defaults.plugins.legend.labels.boxWidth = 10;
   Chart.defaults.plugins.legend.labels.boxHeight = 10;
   Chart.defaults.plugins.tooltip.backgroundColor = p.ink;

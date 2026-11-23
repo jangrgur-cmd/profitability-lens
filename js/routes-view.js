@@ -93,8 +93,11 @@ export function createRoutesView(model) {
     el.textContent = `${losers.length} of ${routes.length} routes ${verb} money in this selection: ${list}. ${bestText}`;
   }
 
-  function renderHeatmap(routes) {
-    const byKey = new Map(routes.map((r) => [`${r.country}|${r.channel}`, r]));
+  // The heatmap grid is built once; each render only updates the cells, so
+  // their colour can fade smoothly from one selection to the next (CSS transition).
+  const cells = new Map();
+
+  function buildHeatmap() {
     const tableEl = document.createElement("table");
     const caption = document.createElement("caption");
     caption.className = "sr-only";
@@ -119,7 +122,14 @@ export function createRoutesView(model) {
       th.textContent = countryNames[code];
       tr.append(th);
       for (const channel of dimensions.channels) {
-        tr.append(heatCell(byKey.get(`${code}|${channel}`)));
+        const td = document.createElement("td");
+        const margin = document.createElement("span");
+        margin.className = "cell-margin";
+        const revenue = document.createElement("span");
+        revenue.className = "cell-revenue";
+        td.append(margin, revenue);
+        cells.set(`${code}|${channel}`, { td, margin, revenue });
+        tr.append(td);
       }
       tbody.append(tr);
     }
@@ -127,26 +137,29 @@ export function createRoutesView(model) {
     $("heatmap").replaceChildren(tableEl);
   }
 
-  function heatCell(route) {
-    const td = document.createElement("td");
-    if (!route) {
-      td.className = "is-empty";
-      td.textContent = "—";
-      td.setAttribute("aria-label", "No traffic");
-      return td;
-    }
-    td.style.background = heatColor(route.grossMarginPct);
-    if (route.lossMaking) td.classList.add("is-loss");
-    const margin = document.createElement("span");
-    margin.className = "cell-margin";
-    margin.textContent = `${route.lossMaking ? "▼ " : ""}${formatPct(route.grossMarginPct)}`;
-    const revenue = document.createElement("span");
-    revenue.className = "cell-revenue";
-    revenue.textContent = formatEur(route.revenue);
-    td.append(margin, revenue);
-    td.title = `${countryNames[route.country]} ${route.channel}: margin ${formatPct(route.grossMarginPct)}, revenue ${formatEur(route.revenue)}, gross profit ${formatEur(route.grossProfit)}${route.lossMaking ? " (loss-making)" : ""}`;
-    return td;
+  function renderHeatmap(routes) {
+    const byKey = new Map(routes.map((r) => [`${r.country}|${r.channel}`, r]));
+    for (const [key, cell] of cells) updateCell(cell, byKey.get(key));
   }
+
+  /** Updates one heatmap cell in place: colour, figures, loss flag and tooltip. */
+  function updateCell({ td, margin, revenue }, route) {
+    td.classList.toggle("is-empty", !route);
+    td.classList.toggle("is-loss", Boolean(route?.lossMaking));
+    if (!route) {
+      td.style.backgroundColor = "";
+      margin.textContent = "—";
+      revenue.textContent = "";
+      td.title = "No traffic";
+      return;
+    }
+    td.style.backgroundColor = heatColor(route.grossMarginPct);
+    margin.textContent = `${route.lossMaking ? "▼ " : ""}${formatPct(route.grossMarginPct)}`;
+    revenue.textContent = formatEur(route.revenue);
+    td.title = `${countryNames[route.country]} ${route.channel}: margin ${formatPct(route.grossMarginPct)}, revenue ${formatEur(route.revenue)}, gross profit ${formatEur(route.grossProfit)}${route.lossMaking ? " (loss-making)" : ""}`;
+  }
+
+  buildHeatmap();
 
   /**
    * @param {object[]} rows filtered traffic rows
