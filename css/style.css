@@ -547,6 +547,121 @@ main { padding-block: var(--space-6) var(--space-7); }
 .detail .num { text-align: right; }
 .detail caption { text-align: left; font-weight: 600; font-size: var(--step--1); padding-bottom: var(--space-2); }
 
+/* ---------- Scenarios ---------- */
+
+.presets {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: var(--space-3);
+}
+
+.preset {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--rule-strong);
+  border-radius: 4px;
+  background: var(--surface);
+  font: inherit;
+  text-align: left;
+  color: var(--ink);
+  cursor: pointer;
+}
+.preset:hover { border-color: var(--accent); }
+.preset[aria-pressed="true"] { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); background: var(--accent-soft); }
+.preset strong { font-weight: 600; }
+.preset span { font-size: var(--step--1); color: var(--ink-muted); }
+.preset--reset { align-items: flex-start; justify-content: center; border-style: dashed; }
+
+.scenario-layout {
+  display: grid;
+  grid-template-columns: minmax(16rem, 21rem) minmax(0, 1fr);
+  gap: var(--space-6);
+  align-items: start;
+}
+
+.scenario-controls { position: sticky; top: 6.5rem; }
+.scenario-controls .block-note { margin-top: 0; }
+
+.step {
+  margin: 0 0 var(--space-4);
+  padding: var(--space-3) 0 var(--space-4);
+  border: 0;
+  border-top: 1px solid var(--rule);
+  min-width: 0;
+}
+
+.step legend {
+  padding: 0;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.step-no {
+  display: inline-grid;
+  place-items: center;
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 50%;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-size: var(--step--1);
+  font-weight: 700;
+}
+
+.slider { display: block; margin-top: var(--space-3); font-size: var(--step--1); color: var(--ink-muted); }
+.slider > span { display: flex; justify-content: space-between; gap: var(--space-2); }
+.slider output { color: var(--ink); font-weight: 600; }
+.slider output.is-changed { color: var(--accent); }
+.slider input[type="range"] { width: 100%; margin: var(--space-1) 0 0; accent-color: var(--accent); }
+
+.inline-select {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+  font-size: var(--step--1);
+  color: var(--ink-muted);
+}
+.inline-select input[type="number"] {
+  width: 5rem;
+  font: inherit;
+  font-size: 0.9375rem;
+  padding: 0.25rem 0.4rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: 4px;
+  text-align: right;
+}
+
+.country-checks { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-3); margin-top: var(--space-3); font-size: var(--step--1); }
+.country-checks label { display: inline-flex; align-items: center; gap: 0.3em; }
+.country-checks input { accent-color: var(--accent); }
+
+.compare { width: 100%; max-width: 40rem; border-collapse: collapse; font-size: 0.9375rem; }
+.compare th, .compare td { padding: 0.5rem var(--space-3); border-bottom: 1px solid var(--rule); text-align: right; }
+.compare th:first-child { text-align: left; font-weight: 500; }
+.compare thead th { font-size: var(--step--1); color: var(--ink-muted); font-weight: 600; }
+.compare .up { color: var(--profit); }
+.compare .down { color: var(--loss); }
+
+.affected { display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); gap: 0 var(--space-6); }
+.affected table { width: 100%; border-collapse: collapse; font-size: var(--step--1); }
+.affected th, .affected td { padding: 0.4rem 0; border-bottom: 1px solid var(--rule); text-align: right; }
+.affected th:first-child, .affected td:first-child { text-align: left; }
+.affected thead th { color: var(--ink-muted); font-weight: 600; }
+.affected .up { color: var(--profit); }
+.affected .down { color: var(--loss); }
+.affected .none { color: var(--ink-muted); font-size: var(--step--1); }
+
+@media (max-width: 64rem) {
+  .scenario-layout { grid-template-columns: minmax(0, 1fr); }
+  .scenario-controls { position: static; }
+}
+
 /* ---------- Footer ---------- */
 
 .footer {

@@ -7,6 +7,7 @@ import { formatEur, formatPct, formatPerMessage, formatCount, formatInteger } fr
 import { TABS, parseHash, serializeHash, filtersAreDefault, defaultState } from "./state.js";
 import { createRoutesView } from "./routes-view.js";
 import { createCustomersView } from "./customers-view.js";
+import { createScenariosView } from "./scenarios-view.js";
 
 const $ = (id) => document.getElementById(id);
 
@@ -287,6 +288,7 @@ function render() {
   if (state.tab === "overview") renderOverview(rows);
   if (state.tab === "routes") app.views.routes.render(rows, tag);
   if (state.tab === "customers") app.views.customers.render(rows, tag);
+  if (state.tab === "scenarios") app.views.scenarios.render(state);
 }
 
 async function init() {
@@ -302,6 +304,7 @@ async function init() {
   initFilters();
   app.views.routes = createRoutesView(app.model);
   app.views.customers = createCustomersView(app.model);
+  app.views.scenarios = createScenariosView(app.model, (scenario) => setState({ scenario }));
   app.state = parseHash(location.hash, app.model.dimensions);
   window.addEventListener("hashchange", () => {
     app.state = parseHash(location.hash, app.model.dimensions);

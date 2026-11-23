@@ -100,10 +100,34 @@ test("state survives a round trip through the hash", () => {
   const state = {
     tab: "routes",
     filters: { monthFrom: 3, monthTo: 8, country: "HR", channel: "SMS", category: "marketing", industry: "Banking" },
+    scenario: defaultState().scenario,
   };
   const hash = serializeHash(state);
   assert.equal(hash, "#tab=routes&from=3&to=8&country=HR&channel=SMS&category=marketing&industry=Banking");
   assert.deepEqual(parseHash(hash, dimensions), state);
+});
+
+test("scenario settings survive a round trip through the hash", () => {
+  const state = defaultState();
+  state.tab = "scenarios";
+  state.scenario = {
+    ...state.scenario,
+    volumeChange: -0.05, volumeCategory: "marketing", migration: { authentication: 0, utility: 0.25, marketing: 0.25 },
+    conversionRatio: 1.5, priceChange: 0.03, priceChannel: "WhatsApp", costChange: 0.15, costChannel: "SMS",
+    costCountries: ["HR", "DE"], fxChange: -0.1,
+  };
+  const hash = serializeHash(state);
+  assert.equal(hash, "#tab=scenarios&sv=-5&sp=3&sc=15&fx=-10&mu=25&mm=25&cr=1.5&svc=marketing&spc=WhatsApp&scc=SMS&sco=HR%2CDE");
+  assert.deepEqual(parseHash(hash, dimensions), state);
+});
+
+test("out-of-range scenario values are ignored", () => {
+  const state = parseHash("#sc=90&fx=-50&mm=80&cr=9&sco=XX,HR", dimensions);
+  assert.equal(state.scenario.costChange, 0);
+  assert.equal(state.scenario.fxChange, 0);
+  assert.equal(state.scenario.migration.marketing, 0);
+  assert.equal(state.scenario.conversionRatio, 1);
+  assert.deepEqual(state.scenario.costCountries, ["HR"]);
 });
 
 test("invalid hash values fall back to defaults", () => {

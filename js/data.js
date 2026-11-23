@@ -28,6 +28,8 @@ export function buildModel(assumptionsFile, traffic) {
     customers,
     rows: Object.freeze(traffic.map((row) => Object.freeze(row))),
     ctx: buildCalcContext(assumptionsFile),
+    // assumption id → value; the scenario engine prices new WhatsApp rows from it
+    rates: new Map(assumptions.map((a) => [a.id, a.value])),
     customersById: Object.fromEntries(customers.map((c) => [c.id, c])),
     countryNames: Object.fromEntries(dimensions.countries.map((c) => [c.code, c.name])),
     categoryLabels: Object.fromEntries(dimensions.categories.map((c) => [c.id, c.label])),

@@ -149,8 +149,108 @@
       </div>
     </section>
     <section role="tabpanel" id="panel-scenarios" aria-labelledby="tab-scenarios" tabindex="0" hidden>
-      <h2>Scenarios</h2>
-      <p class="placeholder">This view is being built.</p>
+      <h2 class="section-title">Scenarios</h2>
+      <p class="section-lede" id="scenario-summary" aria-live="polite"></p>
+
+      <div class="presets block" id="presets" role="group" aria-label="Preset scenarios"></div>
+
+      <div class="scenario-layout">
+        <form class="scenario-controls" id="scenario-form" aria-label="Scenario settings">
+          <p class="block-note">
+            Steps are applied in this order. Each bar in the bridge is the change in gross profit caused by
+            that step, given the steps before it. Filters above apply to both baseline and scenario.
+          </p>
+
+          <fieldset class="step">
+            <legend><span class="step-no">1</span> Volume</legend>
+            <label class="slider">
+              <span>Change in messages <output id="o-volume"></output></span>
+              <input type="range" name="volumeChange" min="-30" max="30" step="1" value="0">
+            </label>
+            <label class="inline-select">Applies to
+              <select name="volumeCategory"></select>
+            </label>
+          </fieldset>
+
+          <fieldset class="step">
+            <legend><span class="step-no">2</span> SMS → WhatsApp migration</legend>
+            <label class="slider">
+              <span>Authentication SMS moved <output id="o-ma"></output></span>
+              <input type="range" name="migration.authentication" min="0" max="50" step="1" value="0">
+            </label>
+            <label class="slider">
+              <span>Utility SMS moved <output id="o-mu"></output></span>
+              <input type="range" name="migration.utility" min="0" max="50" step="1" value="0">
+            </label>
+            <label class="slider">
+              <span>Marketing SMS moved <output id="o-mm"></output></span>
+              <input type="range" name="migration.marketing" min="0" max="50" step="1" value="0">
+            </label>
+            <label class="inline-select">WhatsApp messages per SMS replaced
+              <input type="number" name="conversionRatio" min="0.5" max="2" step="0.05" value="1">
+            </label>
+          </fieldset>
+
+          <fieldset class="step">
+            <legend><span class="step-no">3</span> Customer price</legend>
+            <label class="slider">
+              <span>Change in our own fee <output id="o-price"></output></span>
+              <input type="range" name="priceChange" min="-20" max="20" step="1" value="0">
+            </label>
+            <label class="inline-select">Applies to
+              <select name="priceChannel"></select>
+            </label>
+          </fieldset>
+
+          <fieldset class="step">
+            <legend><span class="step-no">4</span> Operator cost</legend>
+            <label class="slider">
+              <span>Change in delivery cost <output id="o-cost"></output></span>
+              <input type="range" name="costChange" min="-30" max="50" step="1" value="0">
+            </label>
+            <label class="inline-select">Applies to
+              <select name="costChannel"></select>
+            </label>
+            <div class="country-checks" id="cost-countries" role="group" aria-label="Countries the cost change applies to (none ticked = all)"></div>
+          </fieldset>
+
+          <fieldset class="step">
+            <legend><span class="step-no">5</span> Exchange rate</legend>
+            <label class="slider">
+              <span>Change in EUR/USD <output id="o-fx"></output></span>
+              <input type="range" name="fxChange" min="-20" max="20" step="1" value="0">
+            </label>
+          </fieldset>
+        </form>
+
+        <div class="scenario-results">
+          <div class="block">
+            <h3 class="block-title">Baseline and scenario</h3>
+            <div id="scenario-compare"></div>
+          </div>
+
+          <figure class="chart block">
+            <figcaption>
+              <h3>Margin bridge</h3>
+              <p>Gross profit from baseline to scenario, step by step. The axis does not start at zero, so small effects stay visible.</p>
+            </figcaption>
+            <div class="chart-box">
+              <canvas id="bridge-chart" role="img"></canvas>
+            </div>
+          </figure>
+
+          <div class="affected">
+            <div class="block">
+              <h3 class="block-title">Routes most affected</h3>
+              <div id="affected-routes"></div>
+            </div>
+            <div class="block">
+              <h3 class="block-title">Customers most affected</h3>
+              <div id="affected-customers"></div>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
     <section role="tabpanel" id="panel-assumptions" aria-labelledby="tab-assumptions" tabindex="0" hidden>
       <h2>Assumptions &amp; method</h2>

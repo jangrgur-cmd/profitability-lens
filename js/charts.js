@@ -337,6 +337,97 @@ export function updateWhaleChart(chart, curve, nameOf) {
   return summary;
 }
 
+// ---------------------------------------------------------------------------
+// Margin bridge: waterfall from baseline to scenario gross profit
+// ---------------------------------------------------------------------------
+
+/** Creates the margin-bridge (waterfall) chart. */
+export function createBridgeChart(canvas) {
+  ensureDefaults();
+  return new Chart(canvas, {
+    type: "bar",
+    data: { labels: [], datasets: [{ label: "Gross profit", data: [], deltas: [], margins: [], backgroundColor: [], borderRadius: 2, barPercentage: 0.7 }] },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      scales: {
+        x: { grid: { display: false } },
+        y: { ticks: { callback: (v) => formatEur(v), maxTicksLimit: 6 } },
+      },
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          callbacks: {
+            label: (item) => {
+              const ds = item.dataset;
+              const delta = ds.deltas[item.dataIndex];
+              const margin = ds.margins[item.dataIndex];
+              const amount = delta === null ? formatEur(item.raw[1]) : `${delta >= 0 ? "+" : ""}${formatEur(delta)}`;
+              return ` ${amount} (gross margin ${formatPct(margin)} after this step)`;
+            },
+          },
+        },
+      },
+    },
+  });
+}
+
+/**
+ * Updates the bridge chart.
+ * Totals (baseline, scenario) are drawn from the axis floor; each step is a
+ * floating bar from the running total before it to the running total after it.
+ * The axis is zoomed to the range of the running totals so that effects of a
+ * few percent are visible; the caption says the axis does not start at zero.
+ * @param {object} chart from createBridgeChart
+ * @param {{baseline: object, scenario: object, steps: object[]}} bridge output of scenarios.marginBridge
+ */
+export function updateBridgeChart(chart, bridge) {
+  const p = palette();
+  const ds = chart.data.datasets[0];
+  const labels = ["Baseline"];
+  const bars = [];
+  const colours = [p.muted];
+  const deltas = [null];
+  const margins = [bridge.baseline.grossMarginPct];
+
+  let running = bridge.baseline.grossProfit;
+  const levels = [running];
+  for (const step of bridge.steps) {
+    labels.push(step.label);
+    bars.push([running, running + step.delta]);
+    running += step.delta;
+    levels.push(running);
+    colours.push(step.delta < 0 ? p.loss : p.profit);
+    deltas.push(step.delta);
+    margins.push(step.marginAfter);
+  }
+  labels.push("Scenario");
+  colours.push(p.ink);
+  deltas.push(null);
+  margins.push(bridge.scenario.grossMarginPct);
+
+  const lo = Math.min(...levels);
+  const hi = Math.max(...levels);
+  const pad = Math.max((hi - lo) * 0.6, Math.abs(hi) * 0.02, 1);
+  const floor = lo - pad;
+  chart.options.scales.y.min = floor;
+  chart.options.scales.y.max = hi + pad * 0.5;
+
+  ds.data = [[floor, bridge.baseline.grossProfit], ...bars, [floor, bridge.scenario.grossProfit]];
+  ds.backgroundColor = colours;
+  ds.deltas = deltas;
+  ds.margins = margins;
+  chart.data.labels = labels;
+  chart.update();
+
+  const parts = bridge.steps.filter((s) => Math.abs(s.delta) > 0.5).map((s) => `${s.label} ${s.delta >= 0 ? "+" : ""}${formatEur(s.delta)}`);
+  chart.canvas.setAttribute(
+    "aria-label",
+    `Margin bridge from baseline gross profit ${formatEur(bridge.baseline.grossProfit)} to scenario ${formatEur(bridge.scenario.grossProfit)}. ` +
+      (parts.length ? `Effects: ${parts.join("; ")}.` : "No parameter changes gross profit."),
+  );
+}
+
 /** Plain-English summary of the channel mix chart for screen readers. */
 function describeMix(channelTotals, totals, profitShareValid) {
   if (channelTotals.length === 0) return "Channel mix chart: no traffic in the selected filters.";
