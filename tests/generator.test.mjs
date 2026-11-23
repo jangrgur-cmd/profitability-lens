@@ -56,12 +56,13 @@ test("every row has positive integer volume, non-negative price and cost, and kn
   const categories = new Set(dimensions.categories.map((c) => c.id));
   const customers = new Set(assumptionsFile.customers.map((c) => c.id));
   const fields = ["month", "customer_id", "country", "channel", "category", "volume",
-    "price_eur", "cost_local", "cost_currency", "platform_cost_eur"];
+    "price_eur", "passthrough_eur", "cost_local", "cost_currency", "platform_cost_eur"];
 
   for (const row of rows) {
     assert.deepEqual(Object.keys(row), fields);
     assert.ok(Number.isInteger(row.volume) && row.volume > 0);
     assert.ok(row.price_eur >= 0 && row.cost_local >= 0 && row.platform_cost_eur >= 0);
+    assert.ok(row.passthrough_eur >= 0 && row.passthrough_eur <= row.price_eur, "pass-through must be part of the price");
     assert.ok(row.month >= 1 && row.month <= 12);
     assert.ok(countries.has(row.country));
     assert.ok(channels.has(row.channel));
@@ -77,6 +78,7 @@ test("every row's price and cost match an assumption", () => {
   for (const row of rows) {
     const route = `${row.country}_${row.channel}`;
     assert.equal(row.price_eur, values.get(`price_${route}_${row.category}`));
+    assert.equal(row.passthrough_eur, values.get(`passthrough_${route}_${row.category}`));
     assert.equal(row.cost_local, values.get(`cost_${route}_${row.category}`));
     assert.equal(row.cost_currency, values.get(`cost_currency_${route}`));
     assert.equal(row.platform_cost_eur, values.get(`platform_cost_${row.channel}`));
@@ -90,7 +92,8 @@ test("assumptions: unique ids, valid status, and no source on placeholders", () 
     ids.add(a.id);
     assert.ok(["placeholder", "sourced", "estimated"].includes(a.status), `bad status on ${a.id}`);
     if (a.status === "placeholder") assert.equal(a.source, "", `placeholder ${a.id} must not have a source`);
-    if (a.status === "sourced") assert.notEqual(a.source, "", `sourced ${a.id} needs a source`);
+    if (a.status === "sourced") assert.match(a.source, /^https:\/\//, `sourced ${a.id} needs a source URL`);
+    if (a.status === "estimated") assert.notEqual(a.note, "", `estimated ${a.id} needs its reasoning in note`);
   }
 });
 

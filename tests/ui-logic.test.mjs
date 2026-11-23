@@ -49,10 +49,10 @@ test("default state serializes to an empty hash", () => {
 test("state survives a round trip through the hash", () => {
   const state = {
     tab: "routes",
-    filters: { monthFrom: 3, monthTo: 8, country: "NG", channel: "SMS", category: "marketing", industry: "Banking" },
+    filters: { monthFrom: 3, monthTo: 8, country: "HR", channel: "SMS", category: "marketing", industry: "Banking" },
   };
   const hash = serializeHash(state);
-  assert.equal(hash, "#tab=routes&from=3&to=8&country=NG&channel=SMS&category=marketing&industry=Banking");
+  assert.equal(hash, "#tab=routes&from=3&to=8&country=HR&channel=SMS&category=marketing&industry=Banking");
   assert.deepEqual(parseHash(hash, dimensions), state);
 });
 

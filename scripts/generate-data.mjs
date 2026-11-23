@@ -69,8 +69,9 @@ function randomInt(min, max, rand) {
 function pickCountries(customer, dims, gen, rand) {
   const [min, max] = gen.countries_per_tier[customer.size_tier];
   const count = randomInt(min, max, rand);
-  const home = dims.countries.filter((c) => c.region === customer.home_region).map((c) => c.code);
-  const foreign = dims.countries.filter((c) => c.region !== customer.home_region).map((c) => c.code);
+  const homeRegion = dims.countries.find((c) => c.code === customer.home_country)?.region;
+  const home = dims.countries.filter((c) => c.region === homeRegion).map((c) => c.code);
+  const foreign = dims.countries.filter((c) => c.region !== homeRegion).map((c) => c.code);
   const ordered = [...shuffle(home, rand), ...shuffle(foreign, rand)].slice(0, count);
 
   const weights = ordered.map((code) =>
@@ -114,8 +115,8 @@ function pickChannels(customer, gen, rand) {
  *   × seasonality index for that month and category
  *   × random noise (±noise_pct)
  *
- * Price, cost, cost currency and platform cost are copied from the
- * assumptions for that country × channel × category.
+ * Price, pass-through fee, cost, cost currency and platform cost are copied
+ * from the assumptions for that country × channel × category.
  *
  * @param {object} assumptionsFile parsed assumptions.json
  * @returns {object[]} traffic rows
@@ -162,6 +163,7 @@ export function generateTraffic(assumptionsFile) {
         for (const category of categories) {
           if (category.share === 0) continue;
           const price = lookup(values, `price_${route}_${category.id}`);
+          const passthrough = lookup(values, `passthrough_${route}_${category.id}`);
           const cost = lookup(values, `cost_${route}_${category.id}`);
           const seasonGroup = category.id === "marketing" ? "marketing" : "other";
 
@@ -180,6 +182,7 @@ export function generateTraffic(assumptionsFile) {
               category: category.id,
               volume,
               price_eur: price,
+              passthrough_eur: passthrough,
               cost_local: cost,
               cost_currency: costCurrency,
               platform_cost_eur: platformCost,

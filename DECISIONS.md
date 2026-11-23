@@ -3,6 +3,8 @@
 Every non-trivial choice made while building this project, and who made it.
 "Claude" means the choice was made by the AI coding assistant (Claude Code) and is open for review by Jan Grgur Glivar.
 
+The log is in chronological order. The "Sourced rebuild" section at the end replaces several earlier choices (15 countries, fictional names, placeholder prices, planted problems); those rows are kept as history, and the rebuild rows say which earlier choice each one supersedes.
+
 | Date | Decision | Decided by | Why |
 |---|---|---|---|
 | 2026-11-23 | Used a seeded PRNG (mulberry32, seed in `assumptions.json`) for all randomness in the generator | Claude | Same inputs always produce the same `traffic.json`, so numbers in the dashboard, README and memo are reproducible |
@@ -37,3 +39,21 @@ Every non-trivial choice made while building this project, and who made it.
 | 2026-11-23 | Added `js/format.js` (number formatting) and `js/state.js` (URL state), plus `tests/ui-logic.test.mjs` | Claude | Pure helpers kept out of `main.js` so they can be unit-tested without a browser |
 | 2026-11-23 | Chart.js v4.4.7 (MIT) saved as `lib/chart.umd.min.js` | Claude, download approved by Frost | Spec requires a local copy; 4.4.7 is a stable release |
 | 2026-11-23 | `.gitattributes` forces LF line endings | Claude | The test that compares committed `traffic.json` with a fresh generation is byte-exact and would fail on Windows checkouts with CRLF |
+
+## Sourced rebuild (2026-11-23)
+
+| Date | Decision | Decided by | Why |
+|---|---|---|---|
+| 2026-11-23 | Model five markets: Croatia, Germany, France, United Kingdom, United States (supersedes the 15-country set) | Frost | Focus on the markets most relevant to the application. Only the US is publicly confirmed as the largest market for a large European CPaaS (about half of revenue); the European four are a chosen focus, not a sourced ranking |
+| 2026-11-23 | Customers are anonymised archetypes ("Large German retail bank"), not real company names (supersedes fictional brand names) | Frost, on Claude's advice | No public report discloses what a named company spends on messaging or with which provider; real names with invented volumes and margins would be false claims about real companies |
+| 2026-11-23 | Each archetype has a fixed country and channel footprint and an estimated monthly volume with its derivation in `volume_note` (users × messages per user × share routed to us); size tier and discount tier follow from that volume (supersedes the random power-law volumes) | Claude | Volumes an interviewer can sanity-check instead of a formula |
+| 2026-11-23 | Customer list prices follow a large public CPaaS's list prices (SMS per segment, voice per minute to mobile), converted at the 2025 average EUR/USD; status `sourced` with the page URL | Claude | The closest public evidence of market prices; the conversion is stated in each note |
+| 2026-11-23 | WhatsApp cost = Meta's fee from its USD rate card effective 1 Oct 2026 (sourced); WhatsApp price = Meta fee + $0.005 provider fee, the fee a public CPaaS lists on top of Meta's rates | Claude | Real rate card; reflects how CPaaS providers actually price WhatsApp |
+| 2026-11-23 | New `passthrough_eur` field: Meta fees and US carrier fees are passed on at cost and customer discounts do not apply to them. Revenue formula in spec section 5 updated | Frost (asked for maximum realism), Claude (design) | Discounting the pass-through part would create large, unrealistic losses; this is also why WhatsApp shows a low gross margin % (about 7 %) while SMS shows about 23 % |
+| 2026-11-23 | Pass-through fees are fixed in EUR at the base rate on the customer's price list, while Meta invoices in USD | Claude | Creates the real FX exposure: a stronger dollar raises WhatsApp cost but not the EUR price |
+| 2026-11-23 | US SMS price and cost include the average of the listed long-code carrier fees (AT&T, T-Mobile, Verizon; simple average $0.0043) | Claude | Carrier market shares are not in the source, so an equal weighting is used |
+| 2026-11-23 | Operator SMS termination estimated at 62 % and voice termination at 60 % of the public list price; volume discounts 0 / 10 / 20 / 30 % on our own fee (thresholds 1M / 5M / 20M messages a month) | Claude | Wholesale rates and discounts are not public; calibrated so the blended gross margin (20.7 %) sits in the 20–26 % range taken from listed peers |
+| 2026-11-23 | Viber priced and costed only in Croatia, as estimates | Claude | Viber is a major business channel in Croatia but has no public business rate card |
+| 2026-11-23 | UK costs kept in EUR rather than GBP | Claude | The model supports EUR and USD only; a stated simplification |
+| 2026-11-23 | No planted problems: the only loss-making route in the baseline is US Voice (about −6 %), which follows from the low public US voice price, enterprise discounts and platform cost; no customer is loss-making, so the whale curve peaks at 100 % (supersedes the planted loss routes and loss-making customers) | Claude | The spec now requires issues to come from the sourced economics and to be reported honestly |
+| 2026-11-23 | Peer margins cited from LINK Mobility and Sinch reports; Infobip figures used only for the README motivation | Claude | Spec keeps Infobip's name out of the app |

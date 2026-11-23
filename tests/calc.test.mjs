@@ -50,6 +50,15 @@ test("rowRevenue treats an unknown customer as no discount", () => {
   near(rowRevenue({ ...r1, customer_id: "Z" }, ctx), 50);
 });
 
+test("rowRevenue does not discount pass-through fees", () => {
+  // List price 0.10 of which 0.08 is Meta's fee passed on at cost; customer A has 10 % off.
+  // Revenue per message = 0.08 + (0.10 − 0.08) × 0.9 = 0.098; × 1,000 messages = 98.
+  const row = { ...r1, price_eur: 0.1, passthrough_eur: 0.08 };
+  near(rowRevenue(row, ctx), 98);
+  // Customer B has no discount, so revenue is simply the full list price.
+  near(rowRevenue({ ...row, customer_id: "B" }, ctx), 100);
+});
+
 test("rowDeliveryCost converts USD costs to EUR", () => {
   near(rowDeliveryCost(r1, ctx), 30); // 1000 × 0.03 × 1
   near(rowDeliveryCost(r2, ctx), 16); // 2000 × 0.01 × 0.8

@@ -7,7 +7,7 @@
 //
 // A traffic row looks like:
 //   { month, customer_id, country, channel, category, volume,
-//     price_eur, cost_local, cost_currency, platform_cost_eur }
+//     price_eur, passthrough_eur, cost_local, cost_currency, platform_cost_eur }
 //
 // A context looks like:
 //   { eurUsd: 1.08, discountByCustomer: { C01: 0.2, C02: 0.2, ... } }
@@ -56,11 +56,21 @@ export function fxToEur(currency, eurUsd) {
 
 /**
  * Revenue of one row, in EUR.
- * revenue = volume × list price × (1 − customer discount)
+ *
+ * The list price has two parts:
+ * - a pass-through fee: a third-party fee we charge on at cost (Meta's
+ *   WhatsApp fee, US carrier fees). Discounts never apply to it.
+ * - our own fee: the rest of the list price. The customer discount applies here.
+ *
+ * revenue = volume × (pass-through + (list price − pass-through) × (1 − customer discount))
+ *
+ * With no pass-through this is simply volume × list price × (1 − discount).
  */
 export function rowRevenue(row, ctx) {
   const discount = ctx.discountByCustomer[row.customer_id] ?? 0;
-  return row.volume * row.price_eur * (1 - discount);
+  const passthrough = row.passthrough_eur ?? 0;
+  const ownFee = row.price_eur - passthrough;
+  return row.volume * (passthrough + ownFee * (1 - discount));
 }
 
 /**
