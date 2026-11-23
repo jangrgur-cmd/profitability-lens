@@ -8,6 +8,9 @@ import { TABS, parseHash, serializeHash, filtersAreDefault, defaultState } from 
 
 const $ = (id) => document.getElementById(id);
 
+/** Longer channel names for the filter, where the short name is not self-explanatory. */
+const CHANNEL_LABELS = { Voice: "Voice (passcode calls)" };
+
 const app = {
   model: null,
   state: defaultState(),
@@ -82,7 +85,7 @@ function arrangeOptions(select, available, current) {
   const children = [makeOption(all.value, all.label), ...withTraffic.map((o) => makeOption(o.value, o.label))];
   if (withoutTraffic.length > 0) {
     const group = document.createElement("optgroup");
-    group.label = "Not in this selection";
+    group.label = "No traffic with these filters";
     group.append(...withoutTraffic.map((o) => makeOption(o.value, o.label, true)));
     children.push(group);
   }
@@ -98,7 +101,10 @@ function initFilters() {
     { value: "all", label: "All countries" },
     ...[...dimensions.countries].sort((a, b) => a.name.localeCompare(b.name)).map((c) => ({ value: c.code, label: c.name })),
   ]);
-  fillSelect($("f-channel"), [{ value: "all", label: "All channels" }, ...dimensions.channels.map((c) => ({ value: c, label: c }))]);
+  fillSelect($("f-channel"), [
+    { value: "all", label: "All channels" },
+    ...dimensions.channels.map((c) => ({ value: c, label: CHANNEL_LABELS[c] ?? c })),
+  ]);
   fillSelect($("f-category"), [
     { value: "all", label: "All categories" },
     ...dimensions.categories.map((c) => ({ value: c.id, label: c.label })),
@@ -152,7 +158,8 @@ function scopeText({ country, channel, category, industry }) {
   const { countryNames, categoryLabels } = app.model;
   const parts = [];
   const where = country === "all" ? null : `in ${countryNames[country]}`;
-  if (channel !== "all") parts.push(where ? `${channel} ${where}` : channel);
+  const channelName = channel === "Voice" ? "voice passcode calls" : channel;
+  if (channel !== "all") parts.push(where ? `${channelName} ${where}` : channelName);
   else if (where) parts.push(`all channels ${where}`);
   if (category !== "all") parts.push(`${categoryLabels[category].toLowerCase()} traffic`);
   if (industry !== "all") parts.push(`${industry} customers`);
