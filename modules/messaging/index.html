@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Messaging profitability model</title>
+  <meta name="description" content="Interactive model of a business-messaging provider's gross margin by country, channel and customer, priced from public rate cards, with what-if scenarios. Customers are illustrative.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <meta name="theme-color" content="#2f54eb">
+  <link rel="canonical" href="https://jangrgur-cmd.github.io/messaging-profitability/">
+
+  <!-- Link previews (LinkedIn, Slack, email): title, description and image card. -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://jangrgur-cmd.github.io/messaging-profitability/">
+  <meta property="og:title" content="Messaging profitability model">
+  <meta property="og:description" content="Interactive dashboard: where a European business-messaging provider makes and loses money, and what happens when operator prices, FX or channel mix change. Built by Jan Grgur Glivar.">
+  <meta property="og:image" content="https://jangrgur-cmd.github.io/messaging-profitability/docs/screenshots/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Messaging profitability model: headline result, KPIs and monthly revenue and gross profit chart">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="author" content="Jan Grgur Glivar">
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="masthead">
+    <div class="wrap">
+      <p class="byline">
+        Illustrative model, sourced market prices · Built by Jan Grgur Glivar ·
+        <a href="https://linkedin.com/in/jangrgurglivar" rel="noopener">LinkedIn</a> ·
+        <a href="https://github.com/jangrgur-cmd/messaging-profitability" rel="noopener">GitHub repo</a>
+      </p>
+      <h1>Messaging profitability model</h1>
+      <p class="lede">
+        Where a European business-messaging provider makes and loses money across five markets,
+        four channels and 36 customer types, and what happens when prices, costs or exchange rates
+        move. Market prices come from public rate cards.
+      </p>
+    </div>
+
+    <nav class="wrap tabs" aria-label="Views">
+      <div role="tablist" id="tablist">
+        <button role="tab" id="tab-overview" aria-controls="panel-overview" data-tab="overview">Overview</button>
+        <button role="tab" id="tab-routes" aria-controls="panel-routes" data-tab="routes">Routes</button>
+        <button role="tab" id="tab-customers" aria-controls="panel-customers" data-tab="customers">Customers</button>
+        <button role="tab" id="tab-scenarios" aria-controls="panel-scenarios" data-tab="scenarios">Scenarios</button>
+        <button role="tab" id="tab-assumptions" aria-controls="panel-assumptions" data-tab="assumptions">Assumptions &amp; method</button>
+        <button role="tab" id="tab-checks" aria-controls="panel-checks" data-tab="checks">Data checks</button>
+      </div>
+    </nav>
+  </header>
+
+  <section class="filterbar" aria-label="Filters">
+    <form class="wrap filters" id="filters">
+      <fieldset class="filter filter--months">
+        <legend>Months</legend>
+        <label class="sr-only" for="f-from">From month</label>
+        <select id="f-from" name="monthFrom"></select>
+        <span aria-hidden="true">to</span>
+        <label class="sr-only" for="f-to">To month</label>
+        <select id="f-to" name="monthTo"></select>
+      </fieldset>
+      <div class="filter">
+        <label for="f-country">Country</label>
+        <select id="f-country" name="country"></select>
+      </div>
+      <div class="filter">
+        <label for="f-channel">Channel</label>
+        <select id="f-channel" name="channel"></select>
+      </div>
+      <div class="filter">
+        <label for="f-category">Category</label>
+        <select id="f-category" name="category"></select>
+      </div>
+      <div class="filter">
+        <label for="f-industry">Customer industry</label>
+        <select id="f-industry" name="industry"></select>
+      </div>
+      <div class="filter filter--actions">
+        <button type="button" id="f-reset" class="button-quiet">Reset filters</button>
+        <p class="filter-count" id="filter-count" aria-live="polite"></p>
+      </div>
+    </form>
+  </section>
+
+  <main id="main" class="wrap">
+    <p class="load-error" id="load-error" hidden></p>
+
+    <section role="tabpanel" id="panel-overview" aria-labelledby="tab-overview" tabindex="0">
+      <h2 class="sr-only">Overview</h2>
+      <p class="statement" id="statement" aria-live="polite"></p>
+
+      <dl class="ledger" id="kpis"></dl>
+
+      <div class="charts">
+        <figure class="chart chart--wide">
+          <figcaption>
+            <h3>Revenue and gross profit by month</h3>
+            <p>Bars in EUR on the left axis; gross margin on the right axis.</p>
+          </figcaption>
+          <div class="chart-box">
+            <canvas id="trend-chart" role="img"></canvas>
+          </div>
+        </figure>
+        <figure class="chart">
+          <figcaption>
+            <h3>Channel mix</h3>
+            <p>Each channel's share of messages, revenue and gross profit.</p>
+          </figcaption>
+          <div class="chart-box chart-box--short">
+            <canvas id="mix-chart" role="img"></canvas>
+          </div>
+          <p class="chart-note" id="mix-note" hidden></p>
+        </figure>
+      </div>
+    </section>
+
+    <section role="tabpanel" id="panel-routes" aria-labelledby="tab-routes" tabindex="0" hidden>
+      <h2 class="section-title">Routes</h2>
+      <p class="section-lede" id="routes-summary" aria-live="polite"></p>
+
+      <div class="block heatmap-card">
+        <h3 class="block-title">Gross margin by country and channel</h3>
+        <p class="block-note">Each cell is one route. Deeper green means a higher margin; red cells lose money. A dash means no traffic.</p>
+        <div id="heatmap" class="heatmap"></div>
+      </div>
+
+      <div class="block">
+        <div class="block-head">
+          <h3 class="block-title">All routes</h3>
+          <button type="button" class="button-quiet" id="routes-csv">Download CSV</button>
+        </div>
+        <p class="block-note">Cost headroom: how much the route's delivery cost (operator, Meta or Viber fees) could rise,
+          with customer prices unchanged, before it stops making money. A negative value means the route already loses money.</p>
+        <div id="routes-table"></div>
+      </div>
+    </section>
+
+    <section role="tabpanel" id="panel-customers" aria-labelledby="tab-customers" tabindex="0" hidden>
+      <h2 class="section-title">Customers</h2>
+      <p class="section-lede" id="customers-summary" aria-live="polite"></p>
+
+      <figure class="chart block">
+        <figcaption>
+          <h3>Whale curve</h3>
+          <p>Customers sorted from most to least profitable, against their cumulative share of gross profit.
+            The curve rises above 100% when some customers lose money.</p>
+        </figcaption>
+        <div class="chart-box chart-box--short">
+          <canvas id="whale-chart" role="img"></canvas>
+        </div>
+        <p class="chart-note" id="whale-note"></p>
+      </figure>
+
+      <div class="customers-grid">
+        <div class="block">
+          <div class="block-head">
+            <h3 class="block-title">All customers</h3>
+            <button type="button" class="button-quiet" id="customers-csv">Download CSV</button>
+          </div>
+          <div id="customers-table"></div>
+        </div>
+        <aside class="customer-panel" id="customer-detail" aria-live="polite" aria-label="Customer detail"></aside>
+      </div>
+    </section>
+    <section role="tabpanel" id="panel-scenarios" aria-labelledby="tab-scenarios" tabindex="0" hidden>
+      <h2 class="section-title">Scenarios</h2>
+      <p class="section-lede" id="scenario-summary" aria-live="polite"></p>
+
+      <div class="presets block" id="presets" role="group" aria-label="Preset scenarios"></div>
+
+      <div class="scenario-layout">
+        <form class="scenario-controls" id="scenario-form" aria-label="Scenario settings">
+          <p class="block-note">
+            Steps are applied in this order. Each bar in the bridge is the change in gross profit caused by
+            that step, given the steps before it. Filters above apply to both baseline and scenario.
+          </p>
+
+          <fieldset class="step">
+            <legend><span class="step-no">1</span> Volume</legend>
+            <label class="slider">
+              <span>Change in messages <output id="o-volume"></output></span>
+              <input type="range" name="volumeChange" min="-30" max="30" step="1" value="0">
+            </label>
+            <label class="inline-select">Applies to
+              <select name="volumeCategory"></select>
+            </label>
+          </fieldset>
+
+          <fieldset class="step">
+            <legend><span class="step-no">2</span> SMS → WhatsApp migration</legend>
+            <label class="slider">
+              <span>Authentication SMS moved <output id="o-ma"></output></span>
+              <input type="range" name="migration.authentication" min="0" max="50" step="1" value="0">
+            </label>
+            <label class="slider">
+              <span>Utility SMS moved <output id="o-mu"></output></span>
+              <input type="range" name="migration.utility" min="0" max="50" step="1" value="0">
+            </label>
+            <label class="slider">
+              <span>Marketing SMS moved <output id="o-mm"></output></span>
+              <input type="range" name="migration.marketing" min="0" max="50" step="1" value="0">
+            </label>
+            <label class="inline-select">WhatsApp messages per SMS replaced
+              <input type="number" name="conversionRatio" min="0.5" max="2" step="0.05" value="1">
+            </label>
+          </fieldset>
+
+          <fieldset class="step">
+            <legend><span class="step-no">3</span> Customer price</legend>
+            <label class="slider">
+              <span>Change in our own fee <output id="o-price"></output></span>
+              <input type="range" name="priceChange" min="-20" max="20" step="1" value="0">
+            </label>
+            <label class="inline-select">Applies to
+              <select name="priceChannel"></select>
+            </label>
+          </fieldset>
+
+          <fieldset class="step">
+            <legend><span class="step-no">4</span> Operator cost</legend>
+            <label class="slider">
+              <span>Change in delivery cost <output id="o-cost"></output></span>
+              <input type="range" name="costChange" min="-30" max="50" step="1" value="0">
+            </label>
+            <label class="inline-select">Applies to
+              <select name="costChannel"></select>
+            </label>
+            <div class="country-checks" id="cost-countries" role="group" aria-label="Countries the cost change applies to"></div>
+            <p class="hint">With no country ticked, the change applies to all countries.</p>
+          </fieldset>
+
+          <fieldset class="step">
+            <legend><span class="step-no">5</span> Exchange rate</legend>
+            <label class="slider">
+              <span>Change in EUR/USD <output id="o-fx"></output></span>
+              <input type="range" name="fxChange" min="-20" max="20" step="1" value="0">
+            </label>
+          </fieldset>
+        </form>
+
+        <div class="scenario-results">
+          <div class="block">
+            <h3 class="block-title">Baseline and scenario</h3>
+            <div id="scenario-compare"></div>
+          </div>
+
+          <figure class="chart block">
+            <figcaption>
+              <h3>Margin bridge</h3>
+              <p>Gross profit from baseline to scenario, step by step. The axis does not start at zero, so small effects stay visible.</p>
+            </figcaption>
+            <div class="chart-box">
+              <canvas id="bridge-chart" role="img"></canvas>
+            </div>
+          </figure>
+
+          <div class="affected">
+            <div class="block">
+              <h3 class="block-title">Routes most affected</h3>
+              <div id="affected-routes"></div>
+            </div>
+            <div class="block">
+              <h3 class="block-title">Customers most affected</h3>
+              <div id="affected-customers"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section role="tabpanel" id="panel-assumptions" aria-labelledby="tab-assumptions" tabindex="0" hidden>
+      <h2 class="section-title">Assumptions &amp; method</h2>
+      <p class="section-lede" id="assumptions-summary" aria-live="polite"></p>
+      <p class="disclaimer">
+        For demonstration. Market prices and fees are from public rate cards; customers are illustrative
+        archetypes with estimated volumes. Not affiliated with any company. Not based on any company's real figures.
+      </p>
+
+      <div class="block">
+        <div class="block-head">
+          <h3 class="block-title">Every assumption</h3>
+          <button type="button" class="button-quiet" id="assumptions-csv">Download CSV</button>
+        </div>
+        <div class="table-filters">
+          <label class="inline-select">Group <select id="a-group"></select></label>
+          <label class="inline-select">Status <select id="a-status"></select></label>
+        </div>
+        <div id="assumptions-table"></div>
+      </div>
+
+      <div class="block">
+        <div class="block-head">
+          <h3 class="block-title">Customer archetypes and their estimated volumes</h3>
+          <button type="button" class="button-quiet" id="archetypes-csv">Download CSV</button>
+        </div>
+        <div id="archetypes-table"></div>
+      </div>
+
+      <div class="method">
+        <div class="block">
+          <h3 class="block-title">How the numbers are calculated</h3>
+          <dl class="formulas">
+            <div>
+              <dt>Revenue</dt>
+              <dd><code>volume × (pass-through + (list price − pass-through) × (1 − customer discount))</code>
+                The discount applies only to our own fee. Third-party fees passed on at cost (Meta's WhatsApp fee,
+                US carrier fees) are charged in full.</dd>
+            </div>
+            <div>
+              <dt>Delivery cost</dt>
+              <dd><code>volume × cost per message × exchange rate to EUR</code>
+                What we pay operators (SMS, voice), Meta (WhatsApp) or Viber. USD costs are converted at the EUR/USD rate.</dd>
+            </div>
+            <div>
+              <dt>Platform cost</dt>
+              <dd><code>volume × platform cost per message</code>
+                Our own infrastructure and support cost, so gross margin is not overstated.</dd>
+            </div>
+            <div>
+              <dt>Gross profit</dt>
+              <dd><code>revenue − delivery cost − platform cost</code></dd>
+            </div>
+            <div>
+              <dt>Gross margin</dt>
+              <dd><code>gross profit ÷ revenue</code> Shown as "n/a" when revenue is zero.</dd>
+            </div>
+            <div>
+              <dt>Cost headroom</dt>
+              <dd><code>gross profit ÷ delivery cost</code>
+                How far delivery cost can rise, with prices unchanged, before a route breaks even: the margin of safety
+                to bring into an operator negotiation. Raising that route's operator cost by this amount on the Scenarios
+                tab brings its gross profit to zero.</dd>
+            </div>
+            <div>
+              <dt>Route</dt>
+              <dd>One country × channel combination, e.g. "Germany SMS". A route is loss-making when its gross profit
+                over the selected period is below zero.</dd>
+            </div>
+            <div>
+              <dt>Whale curve</dt>
+              <dd>Customers sorted by gross profit, highest first, against their cumulative share of total gross
+                profit. It rises above 100% when some customers lose money.</dd>
+            </div>
+            <div>
+              <dt>Revenue and cost per message</dt>
+              <dd><code>revenue ÷ messages</code> and <code>(delivery cost + platform cost) ÷ messages</code>.
+                Voice is counted per call.</dd>
+            </div>
+          </dl>
+        </div>
+
+        <div class="block">
+          <h3 class="block-title">Scenario order of operations</h3>
+          <ol class="steps-list" id="method-steps"></ol>
+          <p class="block-note">Each bar in the margin bridge is the change in gross profit caused by one step, given the
+            steps before it, so the bars add up exactly to the total change.</p>
+        </div>
+
+        <div class="block">
+          <h3 class="block-title">How the traffic data is made</h3>
+          <p class="prose">
+            A small Node script (<code>scripts/generate-data.mjs</code>) turns the assumptions into one row per month,
+            customer, country, channel and category. Monthly volume = the customer's estimated base volume × its share
+            of traffic in that country × the channel's share × the category's share × a seasonality index × a little
+            random noise. The noise comes from a seeded random number generator, so the same assumptions always
+            produce exactly the same data. Revenue, cost and profit are not stored; they are calculated in the
+            browser, so scenarios can recalculate them.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section role="tabpanel" id="panel-checks" aria-labelledby="tab-checks" tabindex="0" hidden>
+      <h2 class="section-title">Data checks</h2>
+      <p class="section-lede" id="checks-summary" aria-live="polite"></p>
+      <ul class="checks" id="checks-list"></ul>
+    </section>
+  </main>
+
+  <footer class="wrap footer">
+    <p>For demonstration. Market prices and fees are from public rate cards; customers are illustrative archetypes with estimated volumes. Not affiliated with any company. Not based on any company's real figures.</p>
+  </footer>
+
+  <script src="lib/chart.umd.min.js"></script>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

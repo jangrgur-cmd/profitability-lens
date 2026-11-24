@@ -1,0 +1,3435 @@
+{
+  "meta": {
+    "title": "Messaging profitability model: input assumptions",
+    "model_year_label": "Model year",
+    "base_currency": "EUR",
+    "disclaimer": "For demonstration. Market prices and fees are from public rate cards; customers are illustrative archetypes with estimated volumes. Not affiliated with any company. Not based on any company's real figures."
+  },
+  "dimensions": {
+    "months": [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    ],
+    "regions": [
+      "Europe",
+      "North America"
+    ],
+    "countries": [
+      {
+        "code": "HR",
+        "name": "Croatia",
+        "region": "Europe"
+      },
+      {
+        "code": "DE",
+        "name": "Germany",
+        "region": "Europe"
+      },
+      {
+        "code": "FR",
+        "name": "France",
+        "region": "Europe"
+      },
+      {
+        "code": "GB",
+        "name": "United Kingdom",
+        "region": "Europe"
+      },
+      {
+        "code": "US",
+        "name": "United States",
+        "region": "North America"
+      }
+    ],
+    "channels": [
+      "SMS",
+      "WhatsApp",
+      "Viber",
+      "Voice"
+    ],
+    "categories": [
+      {
+        "id": "authentication",
+        "label": "Authentication (OTP)"
+      },
+      {
+        "id": "utility",
+        "label": "Utility (transactional)"
+      },
+      {
+        "id": "marketing",
+        "label": "Marketing"
+      }
+    ],
+    "industries": [
+      "Banking",
+      "Retail",
+      "E-commerce",
+      "Logistics",
+      "Gaming",
+      "Travel",
+      "Healthcare",
+      "Telco"
+    ],
+    "size_tiers": [
+      "Enterprise",
+      "Mid-market",
+      "SMB"
+    ]
+  },
+  "generator": {
+    "seed": 20260101,
+    "noise_pct": 0.06,
+    "min_row_volume": 50,
+    "foreign_country_weight": 0.35,
+    "countries_per_tier": {
+      "Enterprise": [
+        3,
+        5
+      ],
+      "Mid-market": [
+        1,
+        3
+      ],
+      "SMB": [
+        1,
+        1
+      ]
+    },
+    "channels_per_tier": {
+      "Enterprise": {
+        "always": [
+          "SMS",
+          "WhatsApp",
+          "Voice"
+        ],
+        "optional": {}
+      },
+      "Mid-market": {
+        "always": [
+          "SMS",
+          "WhatsApp"
+        ],
+        "optional": {}
+      },
+      "SMB": {
+        "always": [
+          "SMS"
+        ],
+        "optional": {}
+      }
+    }
+  },
+  "customers": [
+    {
+      "id": "C01",
+      "name": "US ride-hailing app",
+      "industry": "Travel",
+      "home_country": "US",
+      "size_tier": "Enterprise",
+      "discount_tier": "discount_tier_3",
+      "base_monthly_volume": 60000000,
+      "volume_note": "Estimated: ≈30M monthly active riders × 4 messages each (sign-in codes, trip updates) × 50% routed to us.",
+      "footprint": {
+        "countries": {
+          "US": 0.8,
+          "GB": 0.1,
+          "FR": 0.05,
+          "DE": 0.05
+        },
+        "channels": [
+          "SMS",
+          "WhatsApp",
+          "Voice"
+        ]
+      }
+    },
+    {
+      "id": "C02",
+      "name": "US big-box retailer",
+      "industry": "Retail",
+      "home_country": "US",
+      "size_tier": "Enterprise",
+      "discount_tier": "discount_tier_3",
+      "base_monthly_volume": 30000000,
+      "volume_note": "Estimated: ≈40M loyalty members × 1.5 messages (offers, order updates) × 50% routed to us.",
+      "footprint": {
+        "countries": {
+          "US": 1
+        },
+        "channels": [
+          "SMS",
+          "WhatsApp"
+        ]
+      }
+    },
+    {
+      "id": "C03",
+      "name": "US national bank",
+      "industry": "Banking",
+      "home_country": "US",
+      "size_tier": "Enterprise",
+      "discount_tier": "discount_tier_3",
+      "base_monthly_volume": 20000000,
+      "volume_note": "Estimated: ≈50M digital-banking customers × 1 one-time passcode × 40% routed to us.",
+      "footprint": {
+        "countries": {
+          "US": 1
+        },
+        "channels": [
+          "SMS",
+          "Voice"
+        ]
+      }
+    },
+    {
+      "id": "C04",
+      "name": "US food-delivery platform",
+      "industry": "Logistics",
+      "home_country": "US",
+      "size_tier": "Enterprise",
+      "discount_tier": "discount_tier_3",
+      "base_monthly_volume": 22000000,
+      "volume_note": "Estimated: ≈25M monthly users × 3 order updates × 30% routed to us.",
+      "footprint": {
+        "countries": {
+          "US": 0.85,
+          "GB": 0.15
+        },
+        "channels": [
+          "SMS",
+          "WhatsApp"
+        ]
+      }
+    },
+    {
+      "id": "C05",
+      "name": "US e-commerce marketplace",
+      "industry": "E-commerce",
+      "home_country": "US",
+      "size_tier": "Enterprise",
+      "discount_tier": "discount_tier_2",
+      "base_monthly_volume": 15000000,
+      "volume_note": "Estimated: ≈20M monthly buyers × 1.5 messages × 50% routed to us.",
+      "footprint": {
+        "countries": {
+          "US": 0.6,
+          "GB": 0.15,
+          "DE": 0.15,
+          "FR": 0.1
+        },
+        "channels": [
+          "SMS",
+          "WhatsApp"
+        ]
+      }
+    },
+    {
+      "id": "C06",
+      "name": "US airline",
+      "industry": "Travel",
+      "home_country": "US",
+      "size_tier": "Mid-market",
+      "discount_tier": "discount_tier_2",
+      "base_monthly_volume": 8000000,
+      "volume_note": "Estimated: ≈15M passengers a month × 1 flight notification × 50% routed to us.",
+      "footprint": {
+        "countries": {
+          "US": 0.9,
+          "GB": 0.05,
+          "FR": 0.05
+        },
+        "channels": [
+          "SMS",
+          "WhatsApp",
+          "Voice"
+        ]
+      }
+    },
+    {
+      "id": "C07",
+      "name": "US mobile game studio",
+      "industry": "Gaming",
+      "home_country": "US",
+      "size_tier": "Mid-market",
+      "discount_tier": "discount_tier_1",
+      "base_monthly_volume": 4000000,
+      "volume_note": "Estimated: ≈8M monthly players × 0.5 messages (sign-in codes, promotions).",
+      "footprint": {
+        "countries": {
+          "US": 0.7,
+          "GB": 0.15,
+          "DE": 0.15
+        },
+        "channels": [
+          "SMS"
+        ]
+      }
+    },
+    {
+      "id": "C08",
+      "name": "US telehealth provider",
+      "industry": "Healthcare",
+      "home_country": "US",
+      "size_tier": "Mid-market",
+      "discount_tier": "discount_tier_1",
+      "base_monthly_volume": 3000000,
+      "volume_note": "Estimated: ≈2M patients × 1.5 reminders and codes a month.",
+      "footprint": {
+        "countries": {
+          "US": 1
+        },
+        "channels": [
+          "SMS",
+          "Voice"
+        ]
+      }
+    },
+    {
+      "id": "C09",
+      "name": "Large German retail bank",
+      "industry": "Banking",
+      "home_country": "DE",
+      "size_tier": "Mid-market",
+      "discount_tier": "discount_tier_2",
+      "base_monthly_volume": 9000000,
+      "volume_note": "Estimated: ≈10M online-banking customers × 1.5 passcodes × 60% routed to us.",
+      "footprint": {
+        "countries": {
+          "DE": 1
+        },
+        "channels": [
+          "SMS",
+          "Voice"
+        ]
+      }
+    },
+    {
+      "id": "C10",
+      "name": "German parcel carrier",
+      "industry": "Logistics",
+      "home_country": "DE",
+      "size_tier": "Enterprise",
+      "discount_tier": "discount_tier_2",
+      "base_monthly_volume": 15000000,
+      "volume_note": "Estimated: ≈25M parcels a month with a delivery notice × 60% routed to us.",
+      "footprint": {
+        "countries": {
+          "DE": 0.85,
+          "FR": 0.15
+        },
+        "channels": [
+          "SMS",
+          "WhatsApp"
+        ]
+      }
+    },
+    {
+      "id": "C11",
+      "name": "German fashion e-commerce",
+      "industry": "E-commerce",
+      "home_country": "DE",
+      "size_tier": "Mid-market",
+      "discount_tier": "discount_tier_2",
+      "base_monthly_volume": 6000000,
+      "volume_note": "Estimated: ≈8M active customers × 0.75 messages a month.",
+      "footprint": {
+        "countries": {
+          "DE": 0.6,
+          "FR": 0.2,
+          "GB": 0.2
+        },
+        "channels": [
+          "SMS",
+          "WhatsApp"
+        ]
+      }
+    },
+    {
+      "id": "C12",
+      "name": "German mobile network operator",
+      "industry": "Telco",
+      "home_country": "DE",
+      "size_tier": "Mid-market",
+      "discount_tier": "discount_tier_2",
+      "base_monthly_volume": 5000000,
+      "volume_note": "Estimated: ≈5M subscribers × 1 service or top-up message sent through a CPaaS.",
+      "footprint": {
+        "countries": {
+          "DE": 1
+        },
+        "channels": [
+          "SMS",
+          "WhatsApp"
+        ]
+      }
+    },
+    {
+      "id": "C13",
+      "name": "German online travel agency",
+      "industry": "Travel",
+      "home_country": "DE",
+      "size_tier": "Mid-market",
+      "discount_tier": "discount_tier_1",
+      "base_monthly_volume": 2500000,
+      "volume_note": "Estimated: ≈1.2M bookings a month × 2 messages.",
+      "footprint": {
+        "countries": {
+          "DE": 0.7,
+          "HR": 0.15,
+          "GB": 0.15
+        },
+        "channels": [
+          "SMS",
+          "WhatsApp"
+        ]
+      }
+    },
+    {
+      "id": "C14",
+      "name": "German health insurer",
+      "industry": "Healthcare",
+      "home_country": "DE",
+      "size_tier": "SMB",
+      "discount_tier": "discount_tier_1",
+      "base_monthly_volume": 1500000,
+      "volume_note": "Estimated: ≈10M members × 0.15 messages a month (codes, reminders).",
+      "footprint": {
+        "countries": {
+          "DE": 1
+        },
+        "channels": [
+          "SMS",
+          "WhatsApp"
+        ]
+      }
+    },
+    {
+      "id": "C15",
+      "name": "Large French bank",
+      "industry": "Banking",
+      "home_country": "FR",
+      "size_tier": "Enterprise",
+      "discount_tier": "discount_tier_2",
+      "base_monthly_volume": 12000000,
+      "volume_note": "Estimated: ≈12M online customers × 1.5 passcodes (card payments, log-in) × 70% routed to us.",
+      "footprint": {
+        "countries": {
+          "FR": 1
+        },
+        "channels": [
+          "SMS",
+          "WhatsApp",
+          "Voice"
+        ]
+      }
+    },
+    {
+      "id": "C16",
+      "name": "French supermarket chain",
+      "industry": "Retail",
+      "home_country": "FR",
+      "size_tier": "Mid-market",
+      "discount_tier": "discount_tier_2",
+      "base_monthly_volume": 8000000,
+      "volume_note": "Estimated: ≈10M loyalty members × 0.8 messages a month.",
+      "footprint": {
+        "countries": {
+          "FR": 1
+        },
+        "channels": [
+          "SMS",
+          "WhatsApp"
+        ]
+      }
+    },
+    {
+      "id": "C17",
+      "name": "French rail operator",
+      "industry": "Travel",
+      "home_country": "FR",
+      "size_tier": "Mid-market",
+      "discount_tier": "discount_tier_2",
+      "base_monthly_volume": 6000000,
+      "volume_note": "Estimated: ≈8M tickets a month × 0.75 messages.",
+      "footprint": {
+        "countries": {
+          "FR": 0.9,
+          "DE": 0.05,
+          "GB": 0.05
+        },
+        "channels": [
+          "SMS",
+          "WhatsApp"
+        ]
+      }
+    },
+    {
+      "id": "C18",
+      "name": "French parcel delivery company",
+      "industry": "Logistics",
+      "home_country": "FR",
+      "size_tier": "Mid-market",
+      "discount_tier": "discount_tier_2",
+      "base_monthly_volume": 5000000,
+      "volume_note": "Estimated: ≈8M parcels a month × 60% routed to us.",
+      "footprint": {
+        "countries": {
+          "FR": 1
+        },
+        "channels": [
+          "SMS",
+          "WhatsApp"
+        ]
+      }
+    },
+    {
+      "id": "C19",
+      "name": "French online gaming operator",
+      "industry": "Gaming",
+      "home_country": "FR",
+      "size_tier": "Mid-market",
+      "discount_tier": "discount_tier_1",
+      "base_monthly_volume": 2000000,
+      "volume_note": "Estimated: ≈1M active players × 2 messages a month.",
+      "footprint": {
+        "countries": {
+          "FR": 1
+        },
+        "channels": [
+          "SMS"
+        ]
+      }
+    },
+    {
+      "id": "C20",
+      "name": "UK high-street bank",
+      "industry": "Banking",
+      "home_country": "GB",
+      "size_tier": "Mid-market",
+      "discount_tier": "discount_tier_2",
+      "base_monthly_volume": 8000000,
+      "volume_note": "Estimated: ≈12M app users × 1 passcode × 70% routed to us.",
+      "footprint": {
+        "countries": {
+          "GB": 1
+        },
+        "channels": [
+          "SMS",
+          "Voice"
+        ]
+      }
+    },
+    {
+      "id": "C21",
+      "name": "UK online grocer",
+      "industry": "Retail",
+      "home_country": "GB",
+      "size_tier": "Mid-market",
+      "discount_tier": "discount_tier_2",
+      "base_monthly_volume": 5000000,
+      "volume_note": "Estimated: ≈2.5M orders a month × 2 messages.",
+      "footprint": {
+        "countries": {
+          "GB": 1
+        },
+        "channels": [
+          "SMS",
+          "WhatsApp"
+        ]
+      }
+    },
+    {
+      "id": "C22",
+      "name": "UK healthcare appointment platform",
+      "industry": "Healthcare",
+      "home_country": "GB",
+      "size_tier": "Mid-market",
+      "discount_tier": "discount_tier_1",
+      "base_monthly_volume": 4000000,
+      "volume_note": "Estimated: ≈4M appointments a month × 1 reminder.",
+      "footprint": {
+        "countries": {
+          "GB": 1
+        },
+        "channels": [
+          "SMS",
+          "WhatsApp"
+        ]
+      }
+    },
+    {
+      "id": "C23",
+      "name": "UK online betting operator",
+      "industry": "Gaming",
+      "home_country": "GB",
+      "size_tier": "Mid-market",
+      "discount_tier": "discount_tier_1",
+      "base_monthly_volume": 3000000,
+      "volume_note": "Estimated: ≈2M active players × 1.5 messages a month.",
+      "footprint": {
+        "countries": {
+          "GB": 0.8,
+          "HR": 0.1,
+          "DE": 0.1
+        },
+        "channels": [
+          "SMS"
+        ]
+      }
+    },
+    {
+      "id": "C24",
+      "name": "UK courier",
+      "industry": "Logistics",
+      "home_country": "GB",
+      "size_tier": "Mid-market",
+      "discount_tier": "discount_tier_1",
+      "base_monthly_volume": 3000000,
+      "volume_note": "Estimated: ≈5M parcels a month × 60% routed to us.",
+      "footprint": {
+        "countries": {
+          "GB": 1
+        },
+        "channels": [
+          "SMS",
+          "WhatsApp"
+        ]
+      }
+    },
+    {
+      "id": "C25",
+      "name": "Croatian mobile operator",
+      "industry": "Telco",
+      "home_country": "HR",
+      "size_tier": "SMB",
+      "discount_tier": "discount_tier_1",
+      "base_monthly_volume": 1500000,
+      "volume_note": "Estimated: ≈2M subscribers × 0.75 messages a month sent through a CPaaS.",
+      "footprint": {
+        "countries": {
+          "HR": 1
+        },
+        "channels": [
+          "SMS",
+          "Viber",
+          "WhatsApp"
+        ]
+      }
+    },
+    {
+      "id": "C26",
+      "name": "Large Croatian bank",
+      "industry": "Banking",
+      "home_country": "HR",
+      "size_tier": "SMB",
+      "discount_tier": "discount_tier_1",
+      "base_monthly_volume": 1800000,
+      "volume_note": "Estimated: ≈1.5M digital-banking users × 1.5 passcodes × 80% routed to us.",
+      "footprint": {
+        "countries": {
+          "HR": 1
+        },
+        "channels": [
+          "SMS",
+          "Viber",
+          "Voice"
+        ]
+      }
+    },
+    {
+      "id": "C27",
+      "name": "Croatian retail chain",
+      "industry": "Retail",
+      "home_country": "HR",
+      "size_tier": "SMB",
+      "discount_tier": "discount_tier_1",
+      "base_monthly_volume": 1000000,
+      "volume_note": "Estimated: ≈1.2M loyalty members × 0.8 messages a month.",
+      "footprint": {
+        "countries": {
+          "HR": 1
+        },
+        "channels": [
+          "SMS",
+          "Viber",
+          "WhatsApp"
+        ]
+      }
+    },
+    {
+      "id": "C28",
+      "name": "Croatian holiday-rental platform",
+      "industry": "Travel",
+      "home_country": "HR",
+      "size_tier": "SMB",
+      "discount_tier": "discount_tier_0",
+      "base_monthly_volume": 800000,
+      "volume_note": "Estimated: ≈0.4M bookings a month × 2 messages.",
+      "footprint": {
+        "countries": {
+          "HR": 0.5,
+          "DE": 0.3,
+          "GB": 0.2
+        },
+        "channels": [
+          "SMS",
+          "WhatsApp",
+          "Viber"
+        ]
+      }
+    },
+    {
+      "id": "C29",
+      "name": "Croatian e-commerce marketplace",
+      "industry": "E-commerce",
+      "home_country": "HR",
+      "size_tier": "SMB",
+      "discount_tier": "discount_tier_0",
+      "base_monthly_volume": 600000,
+      "volume_note": "Estimated: ≈0.5M orders a month × 1.2 messages.",
+      "footprint": {
+        "countries": {
+          "HR": 1
+        },
+        "channels": [
+          "SMS",
+          "Viber"
+        ]
+      }
+    },
+    {
+      "id": "C30",
+      "name": "Croatian private clinic network",
+      "industry": "Healthcare",
+      "home_country": "HR",
+      "size_tier": "SMB",
+      "discount_tier": "discount_tier_0",
+      "base_monthly_volume": 200000,
+      "volume_note": "Estimated: ≈0.2M appointments a month × 1 reminder.",
+      "footprint": {
+        "countries": {
+          "HR": 1
+        },
+        "channels": [
+          "SMS",
+          "Viber"
+        ]
+      }
+    },
+    {
+      "id": "C31",
+      "name": "Croatian parcel delivery company",
+      "industry": "Logistics",
+      "home_country": "HR",
+      "size_tier": "SMB",
+      "discount_tier": "discount_tier_0",
+      "base_monthly_volume": 700000,
+      "volume_note": "Estimated: ≈1M parcels a month × 70% with a delivery notice.",
+      "footprint": {
+        "countries": {
+          "HR": 1
+        },
+        "channels": [
+          "SMS",
+          "Viber"
+        ]
+      }
+    },
+    {
+      "id": "C32",
+      "name": "German drugstore chain",
+      "industry": "Retail",
+      "home_country": "DE",
+      "size_tier": "Mid-market",
+      "discount_tier": "discount_tier_1",
+      "base_monthly_volume": 4000000,
+      "volume_note": "Estimated: ≈10M app and loyalty members × 0.4 messages a month.",
+      "footprint": {
+        "countries": {
+          "DE": 0.9,
+          "HR": 0.1
+        },
+        "channels": [
+          "SMS",
+          "WhatsApp"
+        ]
+      }
+    },
+    {
+      "id": "C33",
+      "name": "French hospital and clinic group",
+      "industry": "Healthcare",
+      "home_country": "FR",
+      "size_tier": "SMB",
+      "discount_tier": "discount_tier_1",
+      "base_monthly_volume": 1500000,
+      "volume_note": "Estimated: ≈1.5M appointments a month × 1 reminder.",
+      "footprint": {
+        "countries": {
+          "FR": 1
+        },
+        "channels": [
+          "SMS",
+          "WhatsApp"
+        ]
+      }
+    },
+    {
+      "id": "C34",
+      "name": "French mobile network operator",
+      "industry": "Telco",
+      "home_country": "FR",
+      "size_tier": "Mid-market",
+      "discount_tier": "discount_tier_1",
+      "base_monthly_volume": 4000000,
+      "volume_note": "Estimated: ≈20M subscribers × 0.2 messages a month sent through a CPaaS (most go over its own network).",
+      "footprint": {
+        "countries": {
+          "FR": 1
+        },
+        "channels": [
+          "SMS",
+          "WhatsApp"
+        ]
+      }
+    },
+    {
+      "id": "C35",
+      "name": "UK mobile network operator",
+      "industry": "Telco",
+      "home_country": "GB",
+      "size_tier": "Mid-market",
+      "discount_tier": "discount_tier_1",
+      "base_monthly_volume": 3000000,
+      "volume_note": "Estimated: ≈15M subscribers × 0.2 messages a month sent through a CPaaS.",
+      "footprint": {
+        "countries": {
+          "GB": 1
+        },
+        "channels": [
+          "SMS",
+          "WhatsApp"
+        ]
+      }
+    },
+    {
+      "id": "C36",
+      "name": "US mobile virtual network operator",
+      "industry": "Telco",
+      "home_country": "US",
+      "size_tier": "Mid-market",
+      "discount_tier": "discount_tier_1",
+      "base_monthly_volume": 2000000,
+      "volume_note": "Estimated: ≈4M subscribers × 0.5 messages a month (activation codes, billing).",
+      "footprint": {
+        "countries": {
+          "US": 1
+        },
+        "channels": [
+          "SMS"
+        ]
+      }
+    }
+  ],
+  "assumptions": [
+    {
+      "id": "fx_eur_usd",
+      "group": "FX",
+      "label": "Base EUR/USD exchange rate (2025 average)",
+      "value": 1.13,
+      "unit": "USD per EUR",
+      "source": "https://www.suomenpankki.fi/en/statistics/interest-rates-and-exchange-rates/exchange-rates/average-annual-exchange-rates-for-the-year-2025/",
+      "status": "sourced",
+      "note": "Average of the ECB euro reference rates for 2025, as published by the Bank of Finland (USD 1.1300 per euro)."
+    },
+    {
+      "id": "target_margin_min",
+      "group": "Targets",
+      "label": "Target blended gross margin, lower bound",
+      "value": 0.2,
+      "unit": "share of revenue",
+      "source": "",
+      "status": "estimated",
+      "note": "Range chosen from listed peers' reported 2024 gross margins: LINK Mobility about 22% (gross profit NOK 1,528m on revenue of about NOK 6.99bn; Q4 2024 reported 23.6%, https://www.linkmobility.com/news/q4-interim-report-2024) and Sinch 34% (https://www.group.sinch.com/media/press-releases-and-news/2025/year-end-report-january-december-2024/), which includes higher-margin software. A messaging-heavy business sits in the low-to-mid 20s."
+    },
+    {
+      "id": "target_margin_max",
+      "group": "Targets",
+      "label": "Target blended gross margin, upper bound",
+      "value": 0.26,
+      "unit": "share of revenue",
+      "source": "",
+      "status": "estimated",
+      "note": "See target_margin_min."
+    },
+    {
+      "id": "discount_tier_0",
+      "group": "Volume discount",
+      "tier": 0,
+      "min_monthly_volume": 0,
+      "label": "Volume discount on our own fee, tier 0 (from 0 messages per month)",
+      "value": 0,
+      "unit": "share of list price (excluding pass-through fees)",
+      "source": "",
+      "status": "estimated",
+      "note": "No public figure: CPaaS list pages only mention committed-use discounts without amounts. Tiers chosen so that large enterprise contracts are priced well below list, as is common in tenders."
+    },
+    {
+      "id": "discount_tier_1",
+      "group": "Volume discount",
+      "tier": 1,
+      "min_monthly_volume": 1000000,
+      "label": "Volume discount on our own fee, tier 1 (from 1,000,000 messages per month)",
+      "value": 0.1,
+      "unit": "share of list price (excluding pass-through fees)",
+      "source": "",
+      "status": "estimated",
+      "note": "No public figure: CPaaS list pages only mention committed-use discounts without amounts. Tiers chosen so that large enterprise contracts are priced well below list, as is common in tenders."
+    },
+    {
+      "id": "discount_tier_2",
+      "group": "Volume discount",
+      "tier": 2,
+      "min_monthly_volume": 5000000,
+      "label": "Volume discount on our own fee, tier 2 (from 5,000,000 messages per month)",
+      "value": 0.2,
+      "unit": "share of list price (excluding pass-through fees)",
+      "source": "",
+      "status": "estimated",
+      "note": "No public figure: CPaaS list pages only mention committed-use discounts without amounts. Tiers chosen so that large enterprise contracts are priced well below list, as is common in tenders."
+    },
+    {
+      "id": "discount_tier_3",
+      "group": "Volume discount",
+      "tier": 3,
+      "min_monthly_volume": 20000000,
+      "label": "Volume discount on our own fee, tier 3 (from 20,000,000 messages per month)",
+      "value": 0.3,
+      "unit": "share of list price (excluding pass-through fees)",
+      "source": "",
+      "status": "estimated",
+      "note": "No public figure: CPaaS list pages only mention committed-use discounts without amounts. Tiers chosen so that large enterprise contracts are priced well below list, as is common in tenders."
+    },
+    {
+      "id": "platform_cost_SMS",
+      "group": "Platform cost",
+      "channel": "SMS",
+      "label": "Platform cost per message, SMS",
+      "value": 0.0005,
+      "unit": "EUR per message",
+      "source": "",
+      "status": "estimated",
+      "note": "Our own infrastructure, support and hosting cost per message. Not public; a small fixed amount so gross margin is not overstated."
+    },
+    {
+      "id": "platform_cost_WhatsApp",
+      "group": "Platform cost",
+      "channel": "WhatsApp",
+      "label": "Platform cost per message, WhatsApp",
+      "value": 0.0005,
+      "unit": "EUR per message",
+      "source": "",
+      "status": "estimated",
+      "note": "Our own infrastructure, support and hosting cost per message. Not public; a small fixed amount so gross margin is not overstated."
+    },
+    {
+      "id": "platform_cost_Viber",
+      "group": "Platform cost",
+      "channel": "Viber",
+      "label": "Platform cost per message, Viber",
+      "value": 0.0005,
+      "unit": "EUR per message",
+      "source": "",
+      "status": "estimated",
+      "note": "Our own infrastructure, support and hosting cost per message. Not public; a small fixed amount so gross margin is not overstated."
+    },
+    {
+      "id": "platform_cost_Voice",
+      "group": "Platform cost",
+      "channel": "Voice",
+      "label": "Platform cost per call, Voice",
+      "value": 0.002,
+      "unit": "EUR per call",
+      "source": "",
+      "status": "estimated",
+      "note": "Our own infrastructure, support and hosting cost per message. Not public; a small fixed amount so gross margin is not overstated."
+    },
+    {
+      "id": "seasonality_marketing_01",
+      "group": "Seasonality",
+      "month": 1,
+      "label": "Seasonality index, marketing traffic, month 1",
+      "value": 0.85,
+      "unit": "index (1.0 = average month)",
+      "source": "",
+      "status": "estimated",
+      "note": "Marketing traffic peaks around Black Friday and Christmas (November–December)."
+    },
+    {
+      "id": "seasonality_marketing_02",
+      "group": "Seasonality",
+      "month": 2,
+      "label": "Seasonality index, marketing traffic, month 2",
+      "value": 0.85,
+      "unit": "index (1.0 = average month)",
+      "source": "",
+      "status": "estimated",
+      "note": "Marketing traffic peaks around Black Friday and Christmas (November–December)."
+    },
+    {
+      "id": "seasonality_marketing_03",
+      "group": "Seasonality",
+      "month": 3,
+      "label": "Seasonality index, marketing traffic, month 3",
+      "value": 0.95,
+      "unit": "index (1.0 = average month)",
+      "source": "",
+      "status": "estimated",
+      "note": "Marketing traffic peaks around Black Friday and Christmas (November–December)."
+    },
+    {
+      "id": "seasonality_marketing_04",
+      "group": "Seasonality",
+      "month": 4,
+      "label": "Seasonality index, marketing traffic, month 4",
+      "value": 0.95,
+      "unit": "index (1.0 = average month)",
+      "source": "",
+      "status": "estimated",
+      "note": "Marketing traffic peaks around Black Friday and Christmas (November–December)."
+    },
+    {
+      "id": "seasonality_marketing_05",
+      "group": "Seasonality",
+      "month": 5,
+      "label": "Seasonality index, marketing traffic, month 5",
+      "value": 1,
+      "unit": "index (1.0 = average month)",
+      "source": "",
+      "status": "estimated",
+      "note": "Marketing traffic peaks around Black Friday and Christmas (November–December)."
+    },
+    {
+      "id": "seasonality_marketing_06",
+      "group": "Seasonality",
+      "month": 6,
+      "label": "Seasonality index, marketing traffic, month 6",
+      "value": 0.9,
+      "unit": "index (1.0 = average month)",
+      "source": "",
+      "status": "estimated",
+      "note": "Marketing traffic peaks around Black Friday and Christmas (November–December)."
+    },
+    {
+      "id": "seasonality_marketing_07",
+      "group": "Seasonality",
+      "month": 7,
+      "label": "Seasonality index, marketing traffic, month 7",
+      "value": 0.85,
+      "unit": "index (1.0 = average month)",
+      "source": "",
+      "status": "estimated",
+      "note": "Marketing traffic peaks around Black Friday and Christmas (November–December)."
+    },
+    {
+      "id": "seasonality_marketing_08",
+      "group": "Seasonality",
+      "month": 8,
+      "label": "Seasonality index, marketing traffic, month 8",
+      "value": 0.9,
+      "unit": "index (1.0 = average month)",
+      "source": "",
+      "status": "estimated",
+      "note": "Marketing traffic peaks around Black Friday and Christmas (November–December)."
+    },
+    {
+      "id": "seasonality_marketing_09",
+      "group": "Seasonality",
+      "month": 9,
+      "label": "Seasonality index, marketing traffic, month 9",
+      "value": 1,
+      "unit": "index (1.0 = average month)",
+      "source": "",
+      "status": "estimated",
+      "note": "Marketing traffic peaks around Black Friday and Christmas (November–December)."
+    },
+    {
+      "id": "seasonality_marketing_10",
+      "group": "Seasonality",
+      "month": 10,
+      "label": "Seasonality index, marketing traffic, month 10",
+      "value": 1.05,
+      "unit": "index (1.0 = average month)",
+      "source": "",
+      "status": "estimated",
+      "note": "Marketing traffic peaks around Black Friday and Christmas (November–December)."
+    },
+    {
+      "id": "seasonality_marketing_11",
+      "group": "Seasonality",
+      "month": 11,
+      "label": "Seasonality index, marketing traffic, month 11",
+      "value": 1.35,
+      "unit": "index (1.0 = average month)",
+      "source": "",
+      "status": "estimated",
+      "note": "Marketing traffic peaks around Black Friday and Christmas (November–December)."
+    },
+    {
+      "id": "seasonality_marketing_12",
+      "group": "Seasonality",
+      "month": 12,
+      "label": "Seasonality index, marketing traffic, month 12",
+      "value": 1.4,
+      "unit": "index (1.0 = average month)",
+      "source": "",
+      "status": "estimated",
+      "note": "Marketing traffic peaks around Black Friday and Christmas (November–December)."
+    },
+    {
+      "id": "seasonality_other_01",
+      "group": "Seasonality",
+      "month": 1,
+      "label": "Seasonality index, authentication and utility traffic, month 1",
+      "value": 0.97,
+      "unit": "index (1.0 = average month)",
+      "source": "",
+      "status": "estimated",
+      "note": "Authentication and utility traffic is steady with a mild year-end rise."
+    },
+    {
+      "id": "seasonality_other_02",
+      "group": "Seasonality",
+      "month": 2,
+      "label": "Seasonality index, authentication and utility traffic, month 2",
+      "value": 0.94,
+      "unit": "index (1.0 = average month)",
+      "source": "",
+      "status": "estimated",
+      "note": "Authentication and utility traffic is steady with a mild year-end rise."
+    },
+    {
+      "id": "seasonality_other_03",
+      "group": "Seasonality",
+      "month": 3,
+      "label": "Seasonality index, authentication and utility traffic, month 3",
+      "value": 1,
+      "unit": "index (1.0 = average month)",
+      "source": "",
+      "status": "estimated",
+      "note": "Authentication and utility traffic is steady with a mild year-end rise."
+    },
+    {
+      "id": "seasonality_other_04",
+      "group": "Seasonality",
+      "month": 4,
+      "label": "Seasonality index, authentication and utility traffic, month 4",
+      "value": 0.99,
+      "unit": "index (1.0 = average month)",
+      "source": "",
+      "status": "estimated",
+      "note": "Authentication and utility traffic is steady with a mild year-end rise."
+    },
+    {
+      "id": "seasonality_other_05",
+      "group": "Seasonality",
+      "month": 5,
+      "label": "Seasonality index, authentication and utility traffic, month 5",
+      "value": 1.01,
+      "unit": "index (1.0 = average month)",
+      "source": "",
+      "status": "estimated",
+      "note": "Authentication and utility traffic is steady with a mild year-end rise."
+    },
+    {
+      "id": "seasonality_other_06",
+      "group": "Seasonality",
+      "month": 6,
+      "label": "Seasonality index, authentication and utility traffic, month 6",
+      "value": 0.98,
+      "unit": "index (1.0 = average month)",
+      "source": "",
+      "status": "estimated",
+      "note": "Authentication and utility traffic is steady with a mild year-end rise."
+    },
+    {
+      "id": "seasonality_other_07",
+      "group": "Seasonality",
+      "month": 7,
+      "label": "Seasonality index, authentication and utility traffic, month 7",
+      "value": 0.97,
+      "unit": "index (1.0 = average month)",
+      "source": "",
+      "status": "estimated",
+      "note": "Authentication and utility traffic is steady with a mild year-end rise."
+    },
+    {
+      "id": "seasonality_other_08",
+      "group": "Seasonality",
+      "month": 8,
+      "label": "Seasonality index, authentication and utility traffic, month 8",
+      "value": 0.98,
+      "unit": "index (1.0 = average month)",
+      "source": "",
+      "status": "estimated",
+      "note": "Authentication and utility traffic is steady with a mild year-end rise."
+    },
+    {
+      "id": "seasonality_other_09",
+      "group": "Seasonality",
+      "month": 9,
+      "label": "Seasonality index, authentication and utility traffic, month 9",
+      "value": 1.01,
+      "unit": "index (1.0 = average month)",
+      "source": "",
+      "status": "estimated",
+      "note": "Authentication and utility traffic is steady with a mild year-end rise."
+    },
+    {
+      "id": "seasonality_other_10",
+      "group": "Seasonality",
+      "month": 10,
+      "label": "Seasonality index, authentication and utility traffic, month 10",
+      "value": 1.03,
+      "unit": "index (1.0 = average month)",
+      "source": "",
+      "status": "estimated",
+      "note": "Authentication and utility traffic is steady with a mild year-end rise."
+    },
+    {
+      "id": "seasonality_other_11",
+      "group": "Seasonality",
+      "month": 11,
+      "label": "Seasonality index, authentication and utility traffic, month 11",
+      "value": 1.05,
+      "unit": "index (1.0 = average month)",
+      "source": "",
+      "status": "estimated",
+      "note": "Authentication and utility traffic is steady with a mild year-end rise."
+    },
+    {
+      "id": "seasonality_other_12",
+      "group": "Seasonality",
+      "month": 12,
+      "label": "Seasonality index, authentication and utility traffic, month 12",
+      "value": 1.07,
+      "unit": "index (1.0 = average month)",
+      "source": "",
+      "status": "estimated",
+      "note": "Authentication and utility traffic is steady with a mild year-end rise."
+    },
+    {
+      "id": "channel_mix_HR_SMS",
+      "group": "Channel mix",
+      "country": "HR",
+      "channel": "SMS",
+      "label": "Channel mix, Croatia, SMS",
+      "value": 0.55,
+      "unit": "relative weight within the channels a customer uses",
+      "source": "",
+      "status": "estimated",
+      "note": "Business traffic split is not public. WhatsApp is widely used for business messages in Western Europe, little in the US; Viber is a major business channel in Croatia only."
+    },
+    {
+      "id": "channel_mix_HR_WhatsApp",
+      "group": "Channel mix",
+      "country": "HR",
+      "channel": "WhatsApp",
+      "label": "Channel mix, Croatia, WhatsApp",
+      "value": 0.15,
+      "unit": "relative weight within the channels a customer uses",
+      "source": "",
+      "status": "estimated",
+      "note": "Business traffic split is not public. WhatsApp is widely used for business messages in Western Europe, little in the US; Viber is a major business channel in Croatia only."
+    },
+    {
+      "id": "channel_mix_HR_Viber",
+      "group": "Channel mix",
+      "country": "HR",
+      "channel": "Viber",
+      "label": "Channel mix, Croatia, Viber",
+      "value": 0.25,
+      "unit": "relative weight within the channels a customer uses",
+      "source": "",
+      "status": "estimated",
+      "note": "Business traffic split is not public. WhatsApp is widely used for business messages in Western Europe, little in the US; Viber is a major business channel in Croatia only."
+    },
+    {
+      "id": "channel_mix_HR_Voice",
+      "group": "Channel mix",
+      "country": "HR",
+      "channel": "Voice",
+      "label": "Channel mix, Croatia, Voice",
+      "value": 0.05,
+      "unit": "relative weight within the channels a customer uses",
+      "source": "",
+      "status": "estimated",
+      "note": "Business traffic split is not public. WhatsApp is widely used for business messages in Western Europe, little in the US; Viber is a major business channel in Croatia only."
+    },
+    {
+      "id": "channel_mix_DE_SMS",
+      "group": "Channel mix",
+      "country": "DE",
+      "channel": "SMS",
+      "label": "Channel mix, Germany, SMS",
+      "value": 0.62,
+      "unit": "relative weight within the channels a customer uses",
+      "source": "",
+      "status": "estimated",
+      "note": "Business traffic split is not public. WhatsApp is widely used for business messages in Western Europe, little in the US; Viber is a major business channel in Croatia only."
+    },
+    {
+      "id": "channel_mix_DE_WhatsApp",
+      "group": "Channel mix",
+      "country": "DE",
+      "channel": "WhatsApp",
+      "label": "Channel mix, Germany, WhatsApp",
+      "value": 0.33,
+      "unit": "relative weight within the channels a customer uses",
+      "source": "",
+      "status": "estimated",
+      "note": "Business traffic split is not public. WhatsApp is widely used for business messages in Western Europe, little in the US; Viber is a major business channel in Croatia only."
+    },
+    {
+      "id": "channel_mix_DE_Viber",
+      "group": "Channel mix",
+      "country": "DE",
+      "channel": "Viber",
+      "label": "Channel mix, Germany, Viber",
+      "value": 0,
+      "unit": "relative weight within the channels a customer uses",
+      "source": "",
+      "status": "estimated",
+      "note": "Business traffic split is not public. WhatsApp is widely used for business messages in Western Europe, little in the US; Viber is a major business channel in Croatia only."
+    },
+    {
+      "id": "channel_mix_DE_Voice",
+      "group": "Channel mix",
+      "country": "DE",
+      "channel": "Voice",
+      "label": "Channel mix, Germany, Voice",
+      "value": 0.05,
+      "unit": "relative weight within the channels a customer uses",
+      "source": "",
+      "status": "estimated",
+      "note": "Business traffic split is not public. WhatsApp is widely used for business messages in Western Europe, little in the US; Viber is a major business channel in Croatia only."
+    },
+    {
+      "id": "channel_mix_FR_SMS",
+      "group": "Channel mix",
+      "country": "FR",
+      "channel": "SMS",
+      "label": "Channel mix, France, SMS",
+      "value": 0.72,
+      "unit": "relative weight within the channels a customer uses",
+      "source": "",
+      "status": "estimated",
+      "note": "Business traffic split is not public. WhatsApp is widely used for business messages in Western Europe, little in the US; Viber is a major business channel in Croatia only."
+    },
+    {
+      "id": "channel_mix_FR_WhatsApp",
+      "group": "Channel mix",
+      "country": "FR",
+      "channel": "WhatsApp",
+      "label": "Channel mix, France, WhatsApp",
+      "value": 0.23,
+      "unit": "relative weight within the channels a customer uses",
+      "source": "",
+      "status": "estimated",
+      "note": "Business traffic split is not public. WhatsApp is widely used for business messages in Western Europe, little in the US; Viber is a major business channel in Croatia only."
+    },
+    {
+      "id": "channel_mix_FR_Viber",
+      "group": "Channel mix",
+      "country": "FR",
+      "channel": "Viber",
+      "label": "Channel mix, France, Viber",
+      "value": 0,
+      "unit": "relative weight within the channels a customer uses",
+      "source": "",
+      "status": "estimated",
+      "note": "Business traffic split is not public. WhatsApp is widely used for business messages in Western Europe, little in the US; Viber is a major business channel in Croatia only."
+    },
+    {
+      "id": "channel_mix_FR_Voice",
+      "group": "Channel mix",
+      "country": "FR",
+      "channel": "Voice",
+      "label": "Channel mix, France, Voice",
+      "value": 0.05,
+      "unit": "relative weight within the channels a customer uses",
+      "source": "",
+      "status": "estimated",
+      "note": "Business traffic split is not public. WhatsApp is widely used for business messages in Western Europe, little in the US; Viber is a major business channel in Croatia only."
+    },
+    {
+      "id": "channel_mix_GB_SMS",
+      "group": "Channel mix",
+      "country": "GB",
+      "channel": "SMS",
+      "label": "Channel mix, United Kingdom, SMS",
+      "value": 0.7,
+      "unit": "relative weight within the channels a customer uses",
+      "source": "",
+      "status": "estimated",
+      "note": "Business traffic split is not public. WhatsApp is widely used for business messages in Western Europe, little in the US; Viber is a major business channel in Croatia only."
+    },
+    {
+      "id": "channel_mix_GB_WhatsApp",
+      "group": "Channel mix",
+      "country": "GB",
+      "channel": "WhatsApp",
+      "label": "Channel mix, United Kingdom, WhatsApp",
+      "value": 0.27,
+      "unit": "relative weight within the channels a customer uses",
+      "source": "",
+      "status": "estimated",
+      "note": "Business traffic split is not public. WhatsApp is widely used for business messages in Western Europe, little in the US; Viber is a major business channel in Croatia only."
+    },
+    {
+      "id": "channel_mix_GB_Viber",
+      "group": "Channel mix",
+      "country": "GB",
+      "channel": "Viber",
+      "label": "Channel mix, United Kingdom, Viber",
+      "value": 0,
+      "unit": "relative weight within the channels a customer uses",
+      "source": "",
+      "status": "estimated",
+      "note": "Business traffic split is not public. WhatsApp is widely used for business messages in Western Europe, little in the US; Viber is a major business channel in Croatia only."
+    },
+    {
+      "id": "channel_mix_GB_Voice",
+      "group": "Channel mix",
+      "country": "GB",
+      "channel": "Voice",
+      "label": "Channel mix, United Kingdom, Voice",
+      "value": 0.03,
+      "unit": "relative weight within the channels a customer uses",
+      "source": "",
+      "status": "estimated",
+      "note": "Business traffic split is not public. WhatsApp is widely used for business messages in Western Europe, little in the US; Viber is a major business channel in Croatia only."
+    },
+    {
+      "id": "channel_mix_US_SMS",
+      "group": "Channel mix",
+      "country": "US",
+      "channel": "SMS",
+      "label": "Channel mix, United States, SMS",
+      "value": 0.9,
+      "unit": "relative weight within the channels a customer uses",
+      "source": "",
+      "status": "estimated",
+      "note": "Business traffic split is not public. WhatsApp is widely used for business messages in Western Europe, little in the US; Viber is a major business channel in Croatia only."
+    },
+    {
+      "id": "channel_mix_US_WhatsApp",
+      "group": "Channel mix",
+      "country": "US",
+      "channel": "WhatsApp",
+      "label": "Channel mix, United States, WhatsApp",
+      "value": 0.06,
+      "unit": "relative weight within the channels a customer uses",
+      "source": "",
+      "status": "estimated",
+      "note": "Business traffic split is not public. WhatsApp is widely used for business messages in Western Europe, little in the US; Viber is a major business channel in Croatia only."
+    },
+    {
+      "id": "channel_mix_US_Viber",
+      "group": "Channel mix",
+      "country": "US",
+      "channel": "Viber",
+      "label": "Channel mix, United States, Viber",
+      "value": 0,
+      "unit": "relative weight within the channels a customer uses",
+      "source": "",
+      "status": "estimated",
+      "note": "Business traffic split is not public. WhatsApp is widely used for business messages in Western Europe, little in the US; Viber is a major business channel in Croatia only."
+    },
+    {
+      "id": "channel_mix_US_Voice",
+      "group": "Channel mix",
+      "country": "US",
+      "channel": "Voice",
+      "label": "Channel mix, United States, Voice",
+      "value": 0.04,
+      "unit": "relative weight within the channels a customer uses",
+      "source": "",
+      "status": "estimated",
+      "note": "Business traffic split is not public. WhatsApp is widely used for business messages in Western Europe, little in the US; Viber is a major business channel in Croatia only."
+    },
+    {
+      "id": "category_mix_Banking_authentication",
+      "group": "Category mix",
+      "industry": "Banking",
+      "category": "authentication",
+      "label": "Category mix, Banking, Authentication (OTP)",
+      "value": 0.55,
+      "unit": "share of customer volume",
+      "source": "",
+      "status": "estimated",
+      "note": "Typical use: banks send mostly passcodes, retailers mostly marketing, logistics mostly delivery updates."
+    },
+    {
+      "id": "category_mix_Banking_utility",
+      "group": "Category mix",
+      "industry": "Banking",
+      "category": "utility",
+      "label": "Category mix, Banking, Utility (transactional)",
+      "value": 0.35,
+      "unit": "share of customer volume",
+      "source": "",
+      "status": "estimated",
+      "note": "Typical use: banks send mostly passcodes, retailers mostly marketing, logistics mostly delivery updates."
+    },
+    {
+      "id": "category_mix_Banking_marketing",
+      "group": "Category mix",
+      "industry": "Banking",
+      "category": "marketing",
+      "label": "Category mix, Banking, Marketing",
+      "value": 0.1,
+      "unit": "share of customer volume",
+      "source": "",
+      "status": "estimated",
+      "note": "Typical use: banks send mostly passcodes, retailers mostly marketing, logistics mostly delivery updates."
+    },
+    {
+      "id": "category_mix_Retail_authentication",
+      "group": "Category mix",
+      "industry": "Retail",
+      "category": "authentication",
+      "label": "Category mix, Retail, Authentication (OTP)",
+      "value": 0.1,
+      "unit": "share of customer volume",
+      "source": "",
+      "status": "estimated",
+      "note": "Typical use: banks send mostly passcodes, retailers mostly marketing, logistics mostly delivery updates."
+    },
+    {
+      "id": "category_mix_Retail_utility",
+      "group": "Category mix",
+      "industry": "Retail",
+      "category": "utility",
+      "label": "Category mix, Retail, Utility (transactional)",
+      "value": 0.25,
+      "unit": "share of customer volume",
+      "source": "",
+      "status": "estimated",
+      "note": "Typical use: banks send mostly passcodes, retailers mostly marketing, logistics mostly delivery updates."
+    },
+    {
+      "id": "category_mix_Retail_marketing",
+      "group": "Category mix",
+      "industry": "Retail",
+      "category": "marketing",
+      "label": "Category mix, Retail, Marketing",
+      "value": 0.65,
+      "unit": "share of customer volume",
+      "source": "",
+      "status": "estimated",
+      "note": "Typical use: banks send mostly passcodes, retailers mostly marketing, logistics mostly delivery updates."
+    },
+    {
+      "id": "category_mix_Ecommerce_authentication",
+      "group": "Category mix",
+      "industry": "E-commerce",
+      "category": "authentication",
+      "label": "Category mix, E-commerce, Authentication (OTP)",
+      "value": 0.2,
+      "unit": "share of customer volume",
+      "source": "",
+      "status": "estimated",
+      "note": "Typical use: banks send mostly passcodes, retailers mostly marketing, logistics mostly delivery updates."
+    },
+    {
+      "id": "category_mix_Ecommerce_utility",
+      "group": "Category mix",
+      "industry": "E-commerce",
+      "category": "utility",
+      "label": "Category mix, E-commerce, Utility (transactional)",
+      "value": 0.35,
+      "unit": "share of customer volume",
+      "source": "",
+      "status": "estimated",
+      "note": "Typical use: banks send mostly passcodes, retailers mostly marketing, logistics mostly delivery updates."
+    },
+    {
+      "id": "category_mix_Ecommerce_marketing",
+      "group": "Category mix",
+      "industry": "E-commerce",
+      "category": "marketing",
+      "label": "Category mix, E-commerce, Marketing",
+      "value": 0.45,
+      "unit": "share of customer volume",
+      "source": "",
+      "status": "estimated",
+      "note": "Typical use: banks send mostly passcodes, retailers mostly marketing, logistics mostly delivery updates."
+    },
+    {
+      "id": "category_mix_Logistics_authentication",
+      "group": "Category mix",
+      "industry": "Logistics",
+      "category": "authentication",
+      "label": "Category mix, Logistics, Authentication (OTP)",
+      "value": 0.1,
+      "unit": "share of customer volume",
+      "source": "",
+      "status": "estimated",
+      "note": "Typical use: banks send mostly passcodes, retailers mostly marketing, logistics mostly delivery updates."
+    },
+    {
+      "id": "category_mix_Logistics_utility",
+      "group": "Category mix",
+      "industry": "Logistics",
+      "category": "utility",
+      "label": "Category mix, Logistics, Utility (transactional)",
+      "value": 0.8,
+      "unit": "share of customer volume",
+      "source": "",
+      "status": "estimated",
+      "note": "Typical use: banks send mostly passcodes, retailers mostly marketing, logistics mostly delivery updates."
+    },
+    {
+      "id": "category_mix_Logistics_marketing",
+      "group": "Category mix",
+      "industry": "Logistics",
+      "category": "marketing",
+      "label": "Category mix, Logistics, Marketing",
+      "value": 0.1,
+      "unit": "share of customer volume",
+      "source": "",
+      "status": "estimated",
+      "note": "Typical use: banks send mostly passcodes, retailers mostly marketing, logistics mostly delivery updates."
+    },
+    {
+      "id": "category_mix_Gaming_authentication",
+      "group": "Category mix",
+      "industry": "Gaming",
+      "category": "authentication",
+      "label": "Category mix, Gaming, Authentication (OTP)",
+      "value": 0.4,
+      "unit": "share of customer volume",
+      "source": "",
+      "status": "estimated",
+      "note": "Typical use: banks send mostly passcodes, retailers mostly marketing, logistics mostly delivery updates."
+    },
+    {
+      "id": "category_mix_Gaming_utility",
+      "group": "Category mix",
+      "industry": "Gaming",
+      "category": "utility",
+      "label": "Category mix, Gaming, Utility (transactional)",
+      "value": 0.2,
+      "unit": "share of customer volume",
+      "source": "",
+      "status": "estimated",
+      "note": "Typical use: banks send mostly passcodes, retailers mostly marketing, logistics mostly delivery updates."
+    },
+    {
+      "id": "category_mix_Gaming_marketing",
+      "group": "Category mix",
+      "industry": "Gaming",
+      "category": "marketing",
+      "label": "Category mix, Gaming, Marketing",
+      "value": 0.4,
+      "unit": "share of customer volume",
+      "source": "",
+      "status": "estimated",
+      "note": "Typical use: banks send mostly passcodes, retailers mostly marketing, logistics mostly delivery updates."
+    },
+    {
+      "id": "category_mix_Travel_authentication",
+      "group": "Category mix",
+      "industry": "Travel",
+      "category": "authentication",
+      "label": "Category mix, Travel, Authentication (OTP)",
+      "value": 0.2,
+      "unit": "share of customer volume",
+      "source": "",
+      "status": "estimated",
+      "note": "Typical use: banks send mostly passcodes, retailers mostly marketing, logistics mostly delivery updates."
+    },
+    {
+      "id": "category_mix_Travel_utility",
+      "group": "Category mix",
+      "industry": "Travel",
+      "category": "utility",
+      "label": "Category mix, Travel, Utility (transactional)",
+      "value": 0.6,
+      "unit": "share of customer volume",
+      "source": "",
+      "status": "estimated",
+      "note": "Typical use: banks send mostly passcodes, retailers mostly marketing, logistics mostly delivery updates."
+    },
+    {
+      "id": "category_mix_Travel_marketing",
+      "group": "Category mix",
+      "industry": "Travel",
+      "category": "marketing",
+      "label": "Category mix, Travel, Marketing",
+      "value": 0.2,
+      "unit": "share of customer volume",
+      "source": "",
+      "status": "estimated",
+      "note": "Typical use: banks send mostly passcodes, retailers mostly marketing, logistics mostly delivery updates."
+    },
+    {
+      "id": "category_mix_Healthcare_authentication",
+      "group": "Category mix",
+      "industry": "Healthcare",
+      "category": "authentication",
+      "label": "Category mix, Healthcare, Authentication (OTP)",
+      "value": 0.25,
+      "unit": "share of customer volume",
+      "source": "",
+      "status": "estimated",
+      "note": "Typical use: banks send mostly passcodes, retailers mostly marketing, logistics mostly delivery updates."
+    },
+    {
+      "id": "category_mix_Healthcare_utility",
+      "group": "Category mix",
+      "industry": "Healthcare",
+      "category": "utility",
+      "label": "Category mix, Healthcare, Utility (transactional)",
+      "value": 0.65,
+      "unit": "share of customer volume",
+      "source": "",
+      "status": "estimated",
+      "note": "Typical use: banks send mostly passcodes, retailers mostly marketing, logistics mostly delivery updates."
+    },
+    {
+      "id": "category_mix_Healthcare_marketing",
+      "group": "Category mix",
+      "industry": "Healthcare",
+      "category": "marketing",
+      "label": "Category mix, Healthcare, Marketing",
+      "value": 0.1,
+      "unit": "share of customer volume",
+      "source": "",
+      "status": "estimated",
+      "note": "Typical use: banks send mostly passcodes, retailers mostly marketing, logistics mostly delivery updates."
+    },
+    {
+      "id": "category_mix_Telco_authentication",
+      "group": "Category mix",
+      "industry": "Telco",
+      "category": "authentication",
+      "label": "Category mix, Telco, Authentication (OTP)",
+      "value": 0.35,
+      "unit": "share of customer volume",
+      "source": "",
+      "status": "estimated",
+      "note": "Typical use: banks send mostly passcodes, retailers mostly marketing, logistics mostly delivery updates."
+    },
+    {
+      "id": "category_mix_Telco_utility",
+      "group": "Category mix",
+      "industry": "Telco",
+      "category": "utility",
+      "label": "Category mix, Telco, Utility (transactional)",
+      "value": 0.35,
+      "unit": "share of customer volume",
+      "source": "",
+      "status": "estimated",
+      "note": "Typical use: banks send mostly passcodes, retailers mostly marketing, logistics mostly delivery updates."
+    },
+    {
+      "id": "category_mix_Telco_marketing",
+      "group": "Category mix",
+      "industry": "Telco",
+      "category": "marketing",
+      "label": "Category mix, Telco, Marketing",
+      "value": 0.3,
+      "unit": "share of customer volume",
+      "source": "",
+      "status": "estimated",
+      "note": "Typical use: banks send mostly passcodes, retailers mostly marketing, logistics mostly delivery updates."
+    },
+    {
+      "id": "cost_currency_HR_SMS",
+      "group": "Cost currency",
+      "country": "HR",
+      "channel": "SMS",
+      "label": "Cost currency, Croatia, SMS",
+      "value": "EUR",
+      "unit": "currency code",
+      "source": "",
+      "status": "estimated",
+      "note": "European operators bill in EUR (UK simplified to EUR)."
+    },
+    {
+      "id": "price_HR_SMS_authentication",
+      "group": "Customer price",
+      "country": "HR",
+      "channel": "SMS",
+      "category": "authentication",
+      "label": "Customer list price, SMS, Croatia, Authentication (OTP)",
+      "value": 0.12204,
+      "unit": "EUR per message",
+      "source": "https://www.twilio.com/en-us/sms/pricing/hr",
+      "status": "sourced",
+      "note": "Public CPaaS list price $0.1379 per segment (International Numbers / Alphanumeric, Nov 2026), converted at 1.13. SMS is priced the same for every category."
+    },
+    {
+      "id": "passthrough_HR_SMS_authentication",
+      "group": "Pass-through fee",
+      "country": "HR",
+      "channel": "SMS",
+      "category": "authentication",
+      "label": "Pass-through fee, SMS, Croatia, Authentication (OTP)",
+      "value": 0,
+      "unit": "EUR per message",
+      "source": "https://www.twilio.com/en-us/sms/pricing/hr",
+      "status": "sourced",
+      "note": "No separate carrier fee is listed for this country."
+    },
+    {
+      "id": "cost_HR_SMS_authentication",
+      "group": "Delivery cost",
+      "country": "HR",
+      "channel": "SMS",
+      "category": "authentication",
+      "label": "SMS operator termination cost, Croatia, Authentication (OTP)",
+      "value": 0.07566,
+      "unit": "EUR per message",
+      "source": "",
+      "status": "estimated",
+      "note": "Operator A2P termination rates are not public. Estimated as 62% of the public list price, calibrated so the blended gross margin matches listed peers (see target_margin_min)."
+    },
+    {
+      "id": "price_HR_SMS_utility",
+      "group": "Customer price",
+      "country": "HR",
+      "channel": "SMS",
+      "category": "utility",
+      "label": "Customer list price, SMS, Croatia, Utility (transactional)",
+      "value": 0.12204,
+      "unit": "EUR per message",
+      "source": "https://www.twilio.com/en-us/sms/pricing/hr",
+      "status": "sourced",
+      "note": "Public CPaaS list price $0.1379 per segment (International Numbers / Alphanumeric, Nov 2026), converted at 1.13. SMS is priced the same for every category."
+    },
+    {
+      "id": "passthrough_HR_SMS_utility",
+      "group": "Pass-through fee",
+      "country": "HR",
+      "channel": "SMS",
+      "category": "utility",
+      "label": "Pass-through fee, SMS, Croatia, Utility (transactional)",
+      "value": 0,
+      "unit": "EUR per message",
+      "source": "https://www.twilio.com/en-us/sms/pricing/hr",
+      "status": "sourced",
+      "note": "No separate carrier fee is listed for this country."
+    },
+    {
+      "id": "cost_HR_SMS_utility",
+      "group": "Delivery cost",
+      "country": "HR",
+      "channel": "SMS",
+      "category": "utility",
+      "label": "SMS operator termination cost, Croatia, Utility (transactional)",
+      "value": 0.07566,
+      "unit": "EUR per message",
+      "source": "",
+      "status": "estimated",
+      "note": "Operator A2P termination rates are not public. Estimated as 62% of the public list price, calibrated so the blended gross margin matches listed peers (see target_margin_min)."
+    },
+    {
+      "id": "price_HR_SMS_marketing",
+      "group": "Customer price",
+      "country": "HR",
+      "channel": "SMS",
+      "category": "marketing",
+      "label": "Customer list price, SMS, Croatia, Marketing",
+      "value": 0.12204,
+      "unit": "EUR per message",
+      "source": "https://www.twilio.com/en-us/sms/pricing/hr",
+      "status": "sourced",
+      "note": "Public CPaaS list price $0.1379 per segment (International Numbers / Alphanumeric, Nov 2026), converted at 1.13. SMS is priced the same for every category."
+    },
+    {
+      "id": "passthrough_HR_SMS_marketing",
+      "group": "Pass-through fee",
+      "country": "HR",
+      "channel": "SMS",
+      "category": "marketing",
+      "label": "Pass-through fee, SMS, Croatia, Marketing",
+      "value": 0,
+      "unit": "EUR per message",
+      "source": "https://www.twilio.com/en-us/sms/pricing/hr",
+      "status": "sourced",
+      "note": "No separate carrier fee is listed for this country."
+    },
+    {
+      "id": "cost_HR_SMS_marketing",
+      "group": "Delivery cost",
+      "country": "HR",
+      "channel": "SMS",
+      "category": "marketing",
+      "label": "SMS operator termination cost, Croatia, Marketing",
+      "value": 0.07566,
+      "unit": "EUR per message",
+      "source": "",
+      "status": "estimated",
+      "note": "Operator A2P termination rates are not public. Estimated as 62% of the public list price, calibrated so the blended gross margin matches listed peers (see target_margin_min)."
+    },
+    {
+      "id": "cost_currency_HR_WhatsApp",
+      "group": "Cost currency",
+      "country": "HR",
+      "channel": "WhatsApp",
+      "label": "Cost currency, Croatia, WhatsApp",
+      "value": "USD",
+      "unit": "currency code",
+      "source": "",
+      "status": "estimated",
+      "note": "Meta invoices WhatsApp fees from its USD rate card."
+    },
+    {
+      "id": "cost_HR_WhatsApp_authentication",
+      "group": "Delivery cost",
+      "country": "HR",
+      "channel": "WhatsApp",
+      "category": "authentication",
+      "label": "Meta WhatsApp fee, Croatia, Authentication (OTP)",
+      "value": 0.0212,
+      "unit": "USD per message",
+      "source": "https://developers.facebook.com/docs/whatsapp/pricing",
+      "status": "sourced",
+      "note": "Meta USD list rate card (\"Cost per message in USD on the WhatsApp Business Platform, effective October 1, 2026\"), market \"Rest of Central & Eastern Europe (includes Croatia)\"."
+    },
+    {
+      "id": "passthrough_HR_WhatsApp_authentication",
+      "group": "Pass-through fee",
+      "country": "HR",
+      "channel": "WhatsApp",
+      "category": "authentication",
+      "label": "Meta fee passed on to the customer, Croatia, Authentication (OTP)",
+      "value": 0.01876,
+      "unit": "EUR per message",
+      "source": "https://developers.facebook.com/docs/whatsapp/pricing",
+      "status": "sourced",
+      "note": "Meta fee of $0.0212 converted at 1.13 USD per EUR. Passed on at cost; customer discounts do not apply."
+    },
+    {
+      "id": "price_HR_WhatsApp_authentication",
+      "group": "Customer price",
+      "country": "HR",
+      "channel": "WhatsApp",
+      "category": "authentication",
+      "label": "Customer list price, WhatsApp, Croatia, Authentication (OTP)",
+      "value": 0.02319,
+      "unit": "EUR per message",
+      "source": "https://www.twilio.com/en-us/whatsapp/pricing",
+      "status": "sourced",
+      "note": "Meta fee ($0.0212) plus a $0.005 per-message provider fee, the fee a large public CPaaS lists on top of Meta's rates (Sept 2026). Converted at 1.13."
+    },
+    {
+      "id": "cost_HR_WhatsApp_utility",
+      "group": "Delivery cost",
+      "country": "HR",
+      "channel": "WhatsApp",
+      "category": "utility",
+      "label": "Meta WhatsApp fee, Croatia, Utility (transactional)",
+      "value": 0.0212,
+      "unit": "USD per message",
+      "source": "https://developers.facebook.com/docs/whatsapp/pricing",
+      "status": "sourced",
+      "note": "Meta USD list rate card (\"Cost per message in USD on the WhatsApp Business Platform, effective October 1, 2026\"), market \"Rest of Central & Eastern Europe (includes Croatia)\"."
+    },
+    {
+      "id": "passthrough_HR_WhatsApp_utility",
+      "group": "Pass-through fee",
+      "country": "HR",
+      "channel": "WhatsApp",
+      "category": "utility",
+      "label": "Meta fee passed on to the customer, Croatia, Utility (transactional)",
+      "value": 0.01876,
+      "unit": "EUR per message",
+      "source": "https://developers.facebook.com/docs/whatsapp/pricing",
+      "status": "sourced",
+      "note": "Meta fee of $0.0212 converted at 1.13 USD per EUR. Passed on at cost; customer discounts do not apply."
+    },
+    {
+      "id": "price_HR_WhatsApp_utility",
+      "group": "Customer price",
+      "country": "HR",
+      "channel": "WhatsApp",
+      "category": "utility",
+      "label": "Customer list price, WhatsApp, Croatia, Utility (transactional)",
+      "value": 0.02319,
+      "unit": "EUR per message",
+      "source": "https://www.twilio.com/en-us/whatsapp/pricing",
+      "status": "sourced",
+      "note": "Meta fee ($0.0212) plus a $0.005 per-message provider fee, the fee a large public CPaaS lists on top of Meta's rates (Sept 2026). Converted at 1.13."
+    },
+    {
+      "id": "cost_HR_WhatsApp_marketing",
+      "group": "Delivery cost",
+      "country": "HR",
+      "channel": "WhatsApp",
+      "category": "marketing",
+      "label": "Meta WhatsApp fee, Croatia, Marketing",
+      "value": 0.086,
+      "unit": "USD per message",
+      "source": "https://developers.facebook.com/docs/whatsapp/pricing",
+      "status": "sourced",
+      "note": "Meta USD list rate card (\"Cost per message in USD on the WhatsApp Business Platform, effective October 1, 2026\"), market \"Rest of Central & Eastern Europe (includes Croatia)\"."
+    },
+    {
+      "id": "passthrough_HR_WhatsApp_marketing",
+      "group": "Pass-through fee",
+      "country": "HR",
+      "channel": "WhatsApp",
+      "category": "marketing",
+      "label": "Meta fee passed on to the customer, Croatia, Marketing",
+      "value": 0.07611,
+      "unit": "EUR per message",
+      "source": "https://developers.facebook.com/docs/whatsapp/pricing",
+      "status": "sourced",
+      "note": "Meta fee of $0.086 converted at 1.13 USD per EUR. Passed on at cost; customer discounts do not apply."
+    },
+    {
+      "id": "price_HR_WhatsApp_marketing",
+      "group": "Customer price",
+      "country": "HR",
+      "channel": "WhatsApp",
+      "category": "marketing",
+      "label": "Customer list price, WhatsApp, Croatia, Marketing",
+      "value": 0.08053,
+      "unit": "EUR per message",
+      "source": "https://www.twilio.com/en-us/whatsapp/pricing",
+      "status": "sourced",
+      "note": "Meta fee ($0.086) plus a $0.005 per-message provider fee, the fee a large public CPaaS lists on top of Meta's rates (Sept 2026). Converted at 1.13."
+    },
+    {
+      "id": "cost_currency_HR_Viber",
+      "group": "Cost currency",
+      "country": "HR",
+      "channel": "Viber",
+      "label": "Cost currency, Croatia, Viber",
+      "value": "EUR",
+      "unit": "currency code",
+      "source": "",
+      "status": "estimated",
+      "note": "European operators bill in EUR (UK simplified to EUR)."
+    },
+    {
+      "id": "price_HR_Viber_authentication",
+      "group": "Customer price",
+      "country": "HR",
+      "channel": "Viber",
+      "category": "authentication",
+      "label": "Customer list price, Viber, Croatia, Authentication (OTP)",
+      "value": 0.035,
+      "unit": "EUR per message",
+      "source": "",
+      "status": "estimated",
+      "note": "Viber business message prices are not published. Estimated well below the local SMS price, which is why Viber is popular for business messaging in Croatia."
+    },
+    {
+      "id": "passthrough_HR_Viber_authentication",
+      "group": "Pass-through fee",
+      "country": "HR",
+      "channel": "Viber",
+      "category": "authentication",
+      "label": "Pass-through fee, Viber, Croatia, Authentication (OTP)",
+      "value": 0,
+      "unit": "EUR per message",
+      "source": "",
+      "status": "estimated",
+      "note": "Treated as part of our own fee (no separate pass-through)."
+    },
+    {
+      "id": "cost_HR_Viber_authentication",
+      "group": "Delivery cost",
+      "country": "HR",
+      "channel": "Viber",
+      "category": "authentication",
+      "label": "Viber business message fee, Croatia, Authentication (OTP)",
+      "value": 0.022,
+      "unit": "EUR per message",
+      "source": "",
+      "status": "estimated",
+      "note": "Viber's fee to providers is not public; estimated at about 60% of the customer price."
+    },
+    {
+      "id": "price_HR_Viber_utility",
+      "group": "Customer price",
+      "country": "HR",
+      "channel": "Viber",
+      "category": "utility",
+      "label": "Customer list price, Viber, Croatia, Utility (transactional)",
+      "value": 0.035,
+      "unit": "EUR per message",
+      "source": "",
+      "status": "estimated",
+      "note": "Viber business message prices are not published. Estimated well below the local SMS price, which is why Viber is popular for business messaging in Croatia."
+    },
+    {
+      "id": "passthrough_HR_Viber_utility",
+      "group": "Pass-through fee",
+      "country": "HR",
+      "channel": "Viber",
+      "category": "utility",
+      "label": "Pass-through fee, Viber, Croatia, Utility (transactional)",
+      "value": 0,
+      "unit": "EUR per message",
+      "source": "",
+      "status": "estimated",
+      "note": "Treated as part of our own fee (no separate pass-through)."
+    },
+    {
+      "id": "cost_HR_Viber_utility",
+      "group": "Delivery cost",
+      "country": "HR",
+      "channel": "Viber",
+      "category": "utility",
+      "label": "Viber business message fee, Croatia, Utility (transactional)",
+      "value": 0.022,
+      "unit": "EUR per message",
+      "source": "",
+      "status": "estimated",
+      "note": "Viber's fee to providers is not public; estimated at about 60% of the customer price."
+    },
+    {
+      "id": "price_HR_Viber_marketing",
+      "group": "Customer price",
+      "country": "HR",
+      "channel": "Viber",
+      "category": "marketing",
+      "label": "Customer list price, Viber, Croatia, Marketing",
+      "value": 0.035,
+      "unit": "EUR per message",
+      "source": "",
+      "status": "estimated",
+      "note": "Viber business message prices are not published. Estimated well below the local SMS price, which is why Viber is popular for business messaging in Croatia."
+    },
+    {
+      "id": "passthrough_HR_Viber_marketing",
+      "group": "Pass-through fee",
+      "country": "HR",
+      "channel": "Viber",
+      "category": "marketing",
+      "label": "Pass-through fee, Viber, Croatia, Marketing",
+      "value": 0,
+      "unit": "EUR per message",
+      "source": "",
+      "status": "estimated",
+      "note": "Treated as part of our own fee (no separate pass-through)."
+    },
+    {
+      "id": "cost_HR_Viber_marketing",
+      "group": "Delivery cost",
+      "country": "HR",
+      "channel": "Viber",
+      "category": "marketing",
+      "label": "Viber business message fee, Croatia, Marketing",
+      "value": 0.022,
+      "unit": "EUR per message",
+      "source": "",
+      "status": "estimated",
+      "note": "Viber's fee to providers is not public; estimated at about 60% of the customer price."
+    },
+    {
+      "id": "cost_currency_HR_Voice",
+      "group": "Cost currency",
+      "country": "HR",
+      "channel": "Voice",
+      "label": "Cost currency, Croatia, Voice",
+      "value": "EUR",
+      "unit": "currency code",
+      "source": "",
+      "status": "estimated",
+      "note": "European operators bill in EUR (UK simplified to EUR)."
+    },
+    {
+      "id": "price_HR_Voice_authentication",
+      "group": "Customer price",
+      "country": "HR",
+      "channel": "Voice",
+      "category": "authentication",
+      "label": "Customer list price, voice passcode call, Croatia",
+      "value": 0.08407,
+      "unit": "EUR per call",
+      "source": "https://www.twilio.com/en-us/voice/pricing/hr",
+      "status": "sourced",
+      "note": "Public CPaaS list price $0.095 per minute (Croatia - Mobile - From Eea, Oct 2026), one billed minute per passcode call, converted at 1.13."
+    },
+    {
+      "id": "passthrough_HR_Voice_authentication",
+      "group": "Pass-through fee",
+      "country": "HR",
+      "channel": "Voice",
+      "category": "authentication",
+      "label": "Pass-through fee, Voice, Croatia",
+      "value": 0,
+      "unit": "EUR per call",
+      "source": "https://www.twilio.com/en-us/voice/pricing/hr",
+      "status": "sourced",
+      "note": "No separate pass-through fee."
+    },
+    {
+      "id": "cost_HR_Voice_authentication",
+      "group": "Delivery cost",
+      "country": "HR",
+      "channel": "Voice",
+      "category": "authentication",
+      "label": "Voice termination cost per passcode call, Croatia",
+      "value": 0.05044,
+      "unit": "EUR per call",
+      "source": "",
+      "status": "estimated",
+      "note": "Voice termination rates are not public. Estimated as 60% of the public list price."
+    },
+    {
+      "id": "cost_currency_DE_SMS",
+      "group": "Cost currency",
+      "country": "DE",
+      "channel": "SMS",
+      "label": "Cost currency, Germany, SMS",
+      "value": "EUR",
+      "unit": "currency code",
+      "source": "",
+      "status": "estimated",
+      "note": "European operators bill in EUR (UK simplified to EUR)."
+    },
+    {
+      "id": "price_DE_SMS_authentication",
+      "group": "Customer price",
+      "country": "DE",
+      "channel": "SMS",
+      "category": "authentication",
+      "label": "Customer list price, SMS, Germany, Authentication (OTP)",
+      "value": 0.09912,
+      "unit": "EUR per message",
+      "source": "https://www.twilio.com/en-us/sms/pricing/de",
+      "status": "sourced",
+      "note": "Public CPaaS list price $0.112 per segment (Mobile Numbers / Alphanumeric, Nov 2026), converted at 1.13. SMS is priced the same for every category."
+    },
+    {
+      "id": "passthrough_DE_SMS_authentication",
+      "group": "Pass-through fee",
+      "country": "DE",
+      "channel": "SMS",
+      "category": "authentication",
+      "label": "Pass-through fee, SMS, Germany, Authentication (OTP)",
+      "value": 0,
+      "unit": "EUR per message",
+      "source": "https://www.twilio.com/en-us/sms/pricing/de",
+      "status": "sourced",
+      "note": "No separate carrier fee is listed for this country."
+    },
+    {
+      "id": "cost_DE_SMS_authentication",
+      "group": "Delivery cost",
+      "country": "DE",
+      "channel": "SMS",
+      "category": "authentication",
+      "label": "SMS operator termination cost, Germany, Authentication (OTP)",
+      "value": 0.06145,
+      "unit": "EUR per message",
+      "source": "",
+      "status": "estimated",
+      "note": "Operator A2P termination rates are not public. Estimated as 62% of the public list price, calibrated so the blended gross margin matches listed peers (see target_margin_min)."
+    },
+    {
+      "id": "price_DE_SMS_utility",
+      "group": "Customer price",
+      "country": "DE",
+      "channel": "SMS",
+      "category": "utility",
+      "label": "Customer list price, SMS, Germany, Utility (transactional)",
+      "value": 0.09912,
+      "unit": "EUR per message",
+      "source": "https://www.twilio.com/en-us/sms/pricing/de",
+      "status": "sourced",
+      "note": "Public CPaaS list price $0.112 per segment (Mobile Numbers / Alphanumeric, Nov 2026), converted at 1.13. SMS is priced the same for every category."
+    },
+    {
+      "id": "passthrough_DE_SMS_utility",
+      "group": "Pass-through fee",
+      "country": "DE",
+      "channel": "SMS",
+      "category": "utility",
+      "label": "Pass-through fee, SMS, Germany, Utility (transactional)",
+      "value": 0,
+      "unit": "EUR per message",
+      "source": "https://www.twilio.com/en-us/sms/pricing/de",
+      "status": "sourced",
+      "note": "No separate carrier fee is listed for this country."
+    },
+    {
+      "id": "cost_DE_SMS_utility",
+      "group": "Delivery cost",
+      "country": "DE",
+      "channel": "SMS",
+      "category": "utility",
+      "label": "SMS operator termination cost, Germany, Utility (transactional)",
+      "value": 0.06145,
+      "unit": "EUR per message",
+      "source": "",
+      "status": "estimated",
+      "note": "Operator A2P termination rates are not public. Estimated as 62% of the public list price, calibrated so the blended gross margin matches listed peers (see target_margin_min)."
+    },
+    {
+      "id": "price_DE_SMS_marketing",
+      "group": "Customer price",
+      "country": "DE",
+      "channel": "SMS",
+      "category": "marketing",
+      "label": "Customer list price, SMS, Germany, Marketing",
+      "value": 0.09912,
+      "unit": "EUR per message",
+      "source": "https://www.twilio.com/en-us/sms/pricing/de",
+      "status": "sourced",
+      "note": "Public CPaaS list price $0.112 per segment (Mobile Numbers / Alphanumeric, Nov 2026), converted at 1.13. SMS is priced the same for every category."
+    },
+    {
+      "id": "passthrough_DE_SMS_marketing",
+      "group": "Pass-through fee",
+      "country": "DE",
+      "channel": "SMS",
+      "category": "marketing",
+      "label": "Pass-through fee, SMS, Germany, Marketing",
+      "value": 0,
+      "unit": "EUR per message",
+      "source": "https://www.twilio.com/en-us/sms/pricing/de",
+      "status": "sourced",
+      "note": "No separate carrier fee is listed for this country."
+    },
+    {
+      "id": "cost_DE_SMS_marketing",
+      "group": "Delivery cost",
+      "country": "DE",
+      "channel": "SMS",
+      "category": "marketing",
+      "label": "SMS operator termination cost, Germany, Marketing",
+      "value": 0.06145,
+      "unit": "EUR per message",
+      "source": "",
+      "status": "estimated",
+      "note": "Operator A2P termination rates are not public. Estimated as 62% of the public list price, calibrated so the blended gross margin matches listed peers (see target_margin_min)."
+    },
+    {
+      "id": "cost_currency_DE_WhatsApp",
+      "group": "Cost currency",
+      "country": "DE",
+      "channel": "WhatsApp",
+      "label": "Cost currency, Germany, WhatsApp",
+      "value": "USD",
+      "unit": "currency code",
+      "source": "",
+      "status": "estimated",
+      "note": "Meta invoices WhatsApp fees from its USD rate card."
+    },
+    {
+      "id": "cost_DE_WhatsApp_authentication",
+      "group": "Delivery cost",
+      "country": "DE",
+      "channel": "WhatsApp",
+      "category": "authentication",
+      "label": "Meta WhatsApp fee, Germany, Authentication (OTP)",
+      "value": 0.055,
+      "unit": "USD per message",
+      "source": "https://developers.facebook.com/docs/whatsapp/pricing",
+      "status": "sourced",
+      "note": "Meta USD list rate card (\"Cost per message in USD on the WhatsApp Business Platform, effective October 1, 2026\"), market \"Germany\"."
+    },
+    {
+      "id": "passthrough_DE_WhatsApp_authentication",
+      "group": "Pass-through fee",
+      "country": "DE",
+      "channel": "WhatsApp",
+      "category": "authentication",
+      "label": "Meta fee passed on to the customer, Germany, Authentication (OTP)",
+      "value": 0.04867,
+      "unit": "EUR per message",
+      "source": "https://developers.facebook.com/docs/whatsapp/pricing",
+      "status": "sourced",
+      "note": "Meta fee of $0.055 converted at 1.13 USD per EUR. Passed on at cost; customer discounts do not apply."
+    },
+    {
+      "id": "price_DE_WhatsApp_authentication",
+      "group": "Customer price",
+      "country": "DE",
+      "channel": "WhatsApp",
+      "category": "authentication",
+      "label": "Customer list price, WhatsApp, Germany, Authentication (OTP)",
+      "value": 0.0531,
+      "unit": "EUR per message",
+      "source": "https://www.twilio.com/en-us/whatsapp/pricing",
+      "status": "sourced",
+      "note": "Meta fee ($0.055) plus a $0.005 per-message provider fee, the fee a large public CPaaS lists on top of Meta's rates (Sept 2026). Converted at 1.13."
+    },
+    {
+      "id": "cost_DE_WhatsApp_utility",
+      "group": "Delivery cost",
+      "country": "DE",
+      "channel": "WhatsApp",
+      "category": "utility",
+      "label": "Meta WhatsApp fee, Germany, Utility (transactional)",
+      "value": 0.055,
+      "unit": "USD per message",
+      "source": "https://developers.facebook.com/docs/whatsapp/pricing",
+      "status": "sourced",
+      "note": "Meta USD list rate card (\"Cost per message in USD on the WhatsApp Business Platform, effective October 1, 2026\"), market \"Germany\"."
+    },
+    {
+      "id": "passthrough_DE_WhatsApp_utility",
+      "group": "Pass-through fee",
+      "country": "DE",
+      "channel": "WhatsApp",
+      "category": "utility",
+      "label": "Meta fee passed on to the customer, Germany, Utility (transactional)",
+      "value": 0.04867,
+      "unit": "EUR per message",
+      "source": "https://developers.facebook.com/docs/whatsapp/pricing",
+      "status": "sourced",
+      "note": "Meta fee of $0.055 converted at 1.13 USD per EUR. Passed on at cost; customer discounts do not apply."
+    },
+    {
+      "id": "price_DE_WhatsApp_utility",
+      "group": "Customer price",
+      "country": "DE",
+      "channel": "WhatsApp",
+      "category": "utility",
+      "label": "Customer list price, WhatsApp, Germany, Utility (transactional)",
+      "value": 0.0531,
+      "unit": "EUR per message",
+      "source": "https://www.twilio.com/en-us/whatsapp/pricing",
+      "status": "sourced",
+      "note": "Meta fee ($0.055) plus a $0.005 per-message provider fee, the fee a large public CPaaS lists on top of Meta's rates (Sept 2026). Converted at 1.13."
+    },
+    {
+      "id": "cost_DE_WhatsApp_marketing",
+      "group": "Delivery cost",
+      "country": "DE",
+      "channel": "WhatsApp",
+      "category": "marketing",
+      "label": "Meta WhatsApp fee, Germany, Marketing",
+      "value": 0.1365,
+      "unit": "USD per message",
+      "source": "https://developers.facebook.com/docs/whatsapp/pricing",
+      "status": "sourced",
+      "note": "Meta USD list rate card (\"Cost per message in USD on the WhatsApp Business Platform, effective October 1, 2026\"), market \"Germany\"."
+    },
+    {
+      "id": "passthrough_DE_WhatsApp_marketing",
+      "group": "Pass-through fee",
+      "country": "DE",
+      "channel": "WhatsApp",
+      "category": "marketing",
+      "label": "Meta fee passed on to the customer, Germany, Marketing",
+      "value": 0.1208,
+      "unit": "EUR per message",
+      "source": "https://developers.facebook.com/docs/whatsapp/pricing",
+      "status": "sourced",
+      "note": "Meta fee of $0.1365 converted at 1.13 USD per EUR. Passed on at cost; customer discounts do not apply."
+    },
+    {
+      "id": "price_DE_WhatsApp_marketing",
+      "group": "Customer price",
+      "country": "DE",
+      "channel": "WhatsApp",
+      "category": "marketing",
+      "label": "Customer list price, WhatsApp, Germany, Marketing",
+      "value": 0.12522,
+      "unit": "EUR per message",
+      "source": "https://www.twilio.com/en-us/whatsapp/pricing",
+      "status": "sourced",
+      "note": "Meta fee ($0.1365) plus a $0.005 per-message provider fee, the fee a large public CPaaS lists on top of Meta's rates (Sept 2026). Converted at 1.13."
+    },
+    {
+      "id": "cost_currency_DE_Voice",
+      "group": "Cost currency",
+      "country": "DE",
+      "channel": "Voice",
+      "label": "Cost currency, Germany, Voice",
+      "value": "EUR",
+      "unit": "currency code",
+      "source": "",
+      "status": "estimated",
+      "note": "European operators bill in EUR (UK simplified to EUR)."
+    },
+    {
+      "id": "price_DE_Voice_authentication",
+      "group": "Customer price",
+      "country": "DE",
+      "channel": "Voice",
+      "category": "authentication",
+      "label": "Customer list price, voice passcode call, Germany",
+      "value": 0.03717,
+      "unit": "EUR per call",
+      "source": "https://www.twilio.com/en-us/voice/pricing/de",
+      "status": "sourced",
+      "note": "Public CPaaS list price $0.042 per minute (Germany - Mobile - From Eea, Oct 2026), one billed minute per passcode call, converted at 1.13."
+    },
+    {
+      "id": "passthrough_DE_Voice_authentication",
+      "group": "Pass-through fee",
+      "country": "DE",
+      "channel": "Voice",
+      "category": "authentication",
+      "label": "Pass-through fee, Voice, Germany",
+      "value": 0,
+      "unit": "EUR per call",
+      "source": "https://www.twilio.com/en-us/voice/pricing/de",
+      "status": "sourced",
+      "note": "No separate pass-through fee."
+    },
+    {
+      "id": "cost_DE_Voice_authentication",
+      "group": "Delivery cost",
+      "country": "DE",
+      "channel": "Voice",
+      "category": "authentication",
+      "label": "Voice termination cost per passcode call, Germany",
+      "value": 0.0223,
+      "unit": "EUR per call",
+      "source": "",
+      "status": "estimated",
+      "note": "Voice termination rates are not public. Estimated as 60% of the public list price."
+    },
+    {
+      "id": "cost_currency_FR_SMS",
+      "group": "Cost currency",
+      "country": "FR",
+      "channel": "SMS",
+      "label": "Cost currency, France, SMS",
+      "value": "EUR",
+      "unit": "currency code",
+      "source": "",
+      "status": "estimated",
+      "note": "European operators bill in EUR (UK simplified to EUR)."
+    },
+    {
+      "id": "price_FR_SMS_authentication",
+      "group": "Customer price",
+      "country": "FR",
+      "channel": "SMS",
+      "category": "authentication",
+      "label": "Customer list price, SMS, France, Authentication (OTP)",
+      "value": 0.07062,
+      "unit": "EUR per message",
+      "source": "https://www.twilio.com/en-us/sms/pricing/fr",
+      "status": "sourced",
+      "note": "Public CPaaS list price $0.0798 per segment (International Numbers / Alphanumeric, Nov 2026), converted at 1.13. SMS is priced the same for every category."
+    },
+    {
+      "id": "passthrough_FR_SMS_authentication",
+      "group": "Pass-through fee",
+      "country": "FR",
+      "channel": "SMS",
+      "category": "authentication",
+      "label": "Pass-through fee, SMS, France, Authentication (OTP)",
+      "value": 0,
+      "unit": "EUR per message",
+      "source": "https://www.twilio.com/en-us/sms/pricing/fr",
+      "status": "sourced",
+      "note": "No separate carrier fee is listed for this country."
+    },
+    {
+      "id": "cost_FR_SMS_authentication",
+      "group": "Delivery cost",
+      "country": "FR",
+      "channel": "SMS",
+      "category": "authentication",
+      "label": "SMS operator termination cost, France, Authentication (OTP)",
+      "value": 0.04378,
+      "unit": "EUR per message",
+      "source": "",
+      "status": "estimated",
+      "note": "Operator A2P termination rates are not public. Estimated as 62% of the public list price, calibrated so the blended gross margin matches listed peers (see target_margin_min)."
+    },
+    {
+      "id": "price_FR_SMS_utility",
+      "group": "Customer price",
+      "country": "FR",
+      "channel": "SMS",
+      "category": "utility",
+      "label": "Customer list price, SMS, France, Utility (transactional)",
+      "value": 0.07062,
+      "unit": "EUR per message",
+      "source": "https://www.twilio.com/en-us/sms/pricing/fr",
+      "status": "sourced",
+      "note": "Public CPaaS list price $0.0798 per segment (International Numbers / Alphanumeric, Nov 2026), converted at 1.13. SMS is priced the same for every category."
+    },
+    {
+      "id": "passthrough_FR_SMS_utility",
+      "group": "Pass-through fee",
+      "country": "FR",
+      "channel": "SMS",
+      "category": "utility",
+      "label": "Pass-through fee, SMS, France, Utility (transactional)",
+      "value": 0,
+      "unit": "EUR per message",
+      "source": "https://www.twilio.com/en-us/sms/pricing/fr",
+      "status": "sourced",
+      "note": "No separate carrier fee is listed for this country."
+    },
+    {
+      "id": "cost_FR_SMS_utility",
+      "group": "Delivery cost",
+      "country": "FR",
+      "channel": "SMS",
+      "category": "utility",
+      "label": "SMS operator termination cost, France, Utility (transactional)",
+      "value": 0.04378,
+      "unit": "EUR per message",
+      "source": "",
+      "status": "estimated",
+      "note": "Operator A2P termination rates are not public. Estimated as 62% of the public list price, calibrated so the blended gross margin matches listed peers (see target_margin_min)."
+    },
+    {
+      "id": "price_FR_SMS_marketing",
+      "group": "Customer price",
+      "country": "FR",
+      "channel": "SMS",
+      "category": "marketing",
+      "label": "Customer list price, SMS, France, Marketing",
+      "value": 0.07062,
+      "unit": "EUR per message",
+      "source": "https://www.twilio.com/en-us/sms/pricing/fr",
+      "status": "sourced",
+      "note": "Public CPaaS list price $0.0798 per segment (International Numbers / Alphanumeric, Nov 2026), converted at 1.13. SMS is priced the same for every category."
+    },
+    {
+      "id": "passthrough_FR_SMS_marketing",
+      "group": "Pass-through fee",
+      "country": "FR",
+      "channel": "SMS",
+      "category": "marketing",
+      "label": "Pass-through fee, SMS, France, Marketing",
+      "value": 0,
+      "unit": "EUR per message",
+      "source": "https://www.twilio.com/en-us/sms/pricing/fr",
+      "status": "sourced",
+      "note": "No separate carrier fee is listed for this country."
+    },
+    {
+      "id": "cost_FR_SMS_marketing",
+      "group": "Delivery cost",
+      "country": "FR",
+      "channel": "SMS",
+      "category": "marketing",
+      "label": "SMS operator termination cost, France, Marketing",
+      "value": 0.04378,
+      "unit": "EUR per message",
+      "source": "",
+      "status": "estimated",
+      "note": "Operator A2P termination rates are not public. Estimated as 62% of the public list price, calibrated so the blended gross margin matches listed peers (see target_margin_min)."
+    },
+    {
+      "id": "cost_currency_FR_WhatsApp",
+      "group": "Cost currency",
+      "country": "FR",
+      "channel": "WhatsApp",
+      "label": "Cost currency, France, WhatsApp",
+      "value": "USD",
+      "unit": "currency code",
+      "source": "",
+      "status": "estimated",
+      "note": "Meta invoices WhatsApp fees from its USD rate card."
+    },
+    {
+      "id": "cost_FR_WhatsApp_authentication",
+      "group": "Delivery cost",
+      "country": "FR",
+      "channel": "WhatsApp",
+      "category": "authentication",
+      "label": "Meta WhatsApp fee, France, Authentication (OTP)",
+      "value": 0.03,
+      "unit": "USD per message",
+      "source": "https://developers.facebook.com/docs/whatsapp/pricing",
+      "status": "sourced",
+      "note": "Meta USD list rate card (\"Cost per message in USD on the WhatsApp Business Platform, effective October 1, 2026\"), market \"France\"."
+    },
+    {
+      "id": "passthrough_FR_WhatsApp_authentication",
+      "group": "Pass-through fee",
+      "country": "FR",
+      "channel": "WhatsApp",
+      "category": "authentication",
+      "label": "Meta fee passed on to the customer, France, Authentication (OTP)",
+      "value": 0.02655,
+      "unit": "EUR per message",
+      "source": "https://developers.facebook.com/docs/whatsapp/pricing",
+      "status": "sourced",
+      "note": "Meta fee of $0.03 converted at 1.13 USD per EUR. Passed on at cost; customer discounts do not apply."
+    },
+    {
+      "id": "price_FR_WhatsApp_authentication",
+      "group": "Customer price",
+      "country": "FR",
+      "channel": "WhatsApp",
+      "category": "authentication",
+      "label": "Customer list price, WhatsApp, France, Authentication (OTP)",
+      "value": 0.03097,
+      "unit": "EUR per message",
+      "source": "https://www.twilio.com/en-us/whatsapp/pricing",
+      "status": "sourced",
+      "note": "Meta fee ($0.03) plus a $0.005 per-message provider fee, the fee a large public CPaaS lists on top of Meta's rates (Sept 2026). Converted at 1.13."
+    },
+    {
+      "id": "cost_FR_WhatsApp_utility",
+      "group": "Delivery cost",
+      "country": "FR",
+      "channel": "WhatsApp",
+      "category": "utility",
+      "label": "Meta WhatsApp fee, France, Utility (transactional)",
+      "value": 0.03,
+      "unit": "USD per message",
+      "source": "https://developers.facebook.com/docs/whatsapp/pricing",
+      "status": "sourced",
+      "note": "Meta USD list rate card (\"Cost per message in USD on the WhatsApp Business Platform, effective October 1, 2026\"), market \"France\"."
+    },
+    {
+      "id": "passthrough_FR_WhatsApp_utility",
+      "group": "Pass-through fee",
+      "country": "FR",
+      "channel": "WhatsApp",
+      "category": "utility",
+      "label": "Meta fee passed on to the customer, France, Utility (transactional)",
+      "value": 0.02655,
+      "unit": "EUR per message",
+      "source": "https://developers.facebook.com/docs/whatsapp/pricing",
+      "status": "sourced",
+      "note": "Meta fee of $0.03 converted at 1.13 USD per EUR. Passed on at cost; customer discounts do not apply."
+    },
+    {
+      "id": "price_FR_WhatsApp_utility",
+      "group": "Customer price",
+      "country": "FR",
+      "channel": "WhatsApp",
+      "category": "utility",
+      "label": "Customer list price, WhatsApp, France, Utility (transactional)",
+      "value": 0.03097,
+      "unit": "EUR per message",
+      "source": "https://www.twilio.com/en-us/whatsapp/pricing",
+      "status": "sourced",
+      "note": "Meta fee ($0.03) plus a $0.005 per-message provider fee, the fee a large public CPaaS lists on top of Meta's rates (Sept 2026). Converted at 1.13."
+    },
+    {
+      "id": "cost_FR_WhatsApp_marketing",
+      "group": "Delivery cost",
+      "country": "FR",
+      "channel": "WhatsApp",
+      "category": "marketing",
+      "label": "Meta WhatsApp fee, France, Marketing",
+      "value": 0.0859,
+      "unit": "USD per message",
+      "source": "https://developers.facebook.com/docs/whatsapp/pricing",
+      "status": "sourced",
+      "note": "Meta USD list rate card (\"Cost per message in USD on the WhatsApp Business Platform, effective October 1, 2026\"), market \"France\"."
+    },
+    {
+      "id": "passthrough_FR_WhatsApp_marketing",
+      "group": "Pass-through fee",
+      "country": "FR",
+      "channel": "WhatsApp",
+      "category": "marketing",
+      "label": "Meta fee passed on to the customer, France, Marketing",
+      "value": 0.07602,
+      "unit": "EUR per message",
+      "source": "https://developers.facebook.com/docs/whatsapp/pricing",
+      "status": "sourced",
+      "note": "Meta fee of $0.0859 converted at 1.13 USD per EUR. Passed on at cost; customer discounts do not apply."
+    },
+    {
+      "id": "price_FR_WhatsApp_marketing",
+      "group": "Customer price",
+      "country": "FR",
+      "channel": "WhatsApp",
+      "category": "marketing",
+      "label": "Customer list price, WhatsApp, France, Marketing",
+      "value": 0.08044,
+      "unit": "EUR per message",
+      "source": "https://www.twilio.com/en-us/whatsapp/pricing",
+      "status": "sourced",
+      "note": "Meta fee ($0.0859) plus a $0.005 per-message provider fee, the fee a large public CPaaS lists on top of Meta's rates (Sept 2026). Converted at 1.13."
+    },
+    {
+      "id": "cost_currency_FR_Voice",
+      "group": "Cost currency",
+      "country": "FR",
+      "channel": "Voice",
+      "label": "Cost currency, France, Voice",
+      "value": "EUR",
+      "unit": "currency code",
+      "source": "",
+      "status": "estimated",
+      "note": "European operators bill in EUR (UK simplified to EUR)."
+    },
+    {
+      "id": "price_FR_Voice_authentication",
+      "group": "Customer price",
+      "country": "FR",
+      "channel": "Voice",
+      "category": "authentication",
+      "label": "Customer list price, voice passcode call, France",
+      "value": 0.03575,
+      "unit": "EUR per call",
+      "source": "https://www.twilio.com/en-us/voice/pricing/fr",
+      "status": "sourced",
+      "note": "Public CPaaS list price $0.0404 per minute (France - Mobile - From EEA, Oct 2026), one billed minute per passcode call, converted at 1.13."
+    },
+    {
+      "id": "passthrough_FR_Voice_authentication",
+      "group": "Pass-through fee",
+      "country": "FR",
+      "channel": "Voice",
+      "category": "authentication",
+      "label": "Pass-through fee, Voice, France",
+      "value": 0,
+      "unit": "EUR per call",
+      "source": "https://www.twilio.com/en-us/voice/pricing/fr",
+      "status": "sourced",
+      "note": "No separate pass-through fee."
+    },
+    {
+      "id": "cost_FR_Voice_authentication",
+      "group": "Delivery cost",
+      "country": "FR",
+      "channel": "Voice",
+      "category": "authentication",
+      "label": "Voice termination cost per passcode call, France",
+      "value": 0.02145,
+      "unit": "EUR per call",
+      "source": "",
+      "status": "estimated",
+      "note": "Voice termination rates are not public. Estimated as 60% of the public list price."
+    },
+    {
+      "id": "cost_currency_GB_SMS",
+      "group": "Cost currency",
+      "country": "GB",
+      "channel": "SMS",
+      "label": "Cost currency, United Kingdom, SMS",
+      "value": "EUR",
+      "unit": "currency code",
+      "source": "",
+      "status": "estimated",
+      "note": "European operators bill in EUR (UK simplified to EUR)."
+    },
+    {
+      "id": "price_GB_SMS_authentication",
+      "group": "Customer price",
+      "country": "GB",
+      "channel": "SMS",
+      "category": "authentication",
+      "label": "Customer list price, SMS, United Kingdom, Authentication (OTP)",
+      "value": 0.04956,
+      "unit": "EUR per message",
+      "source": "https://www.twilio.com/en-us/sms/pricing/gb",
+      "status": "sourced",
+      "note": "Public CPaaS list price $0.056 per segment (Mobile Numbers / Alphanumeric, Nov 2026), converted at 1.13. SMS is priced the same for every category."
+    },
+    {
+      "id": "passthrough_GB_SMS_authentication",
+      "group": "Pass-through fee",
+      "country": "GB",
+      "channel": "SMS",
+      "category": "authentication",
+      "label": "Pass-through fee, SMS, United Kingdom, Authentication (OTP)",
+      "value": 0,
+      "unit": "EUR per message",
+      "source": "https://www.twilio.com/en-us/sms/pricing/gb",
+      "status": "sourced",
+      "note": "No separate carrier fee is listed for this country."
+    },
+    {
+      "id": "cost_GB_SMS_authentication",
+      "group": "Delivery cost",
+      "country": "GB",
+      "channel": "SMS",
+      "category": "authentication",
+      "label": "SMS operator termination cost, United Kingdom, Authentication (OTP)",
+      "value": 0.03073,
+      "unit": "EUR per message",
+      "source": "",
+      "status": "estimated",
+      "note": "Operator A2P termination rates are not public. Estimated as 62% of the public list price, calibrated so the blended gross margin matches listed peers (see target_margin_min)."
+    },
+    {
+      "id": "price_GB_SMS_utility",
+      "group": "Customer price",
+      "country": "GB",
+      "channel": "SMS",
+      "category": "utility",
+      "label": "Customer list price, SMS, United Kingdom, Utility (transactional)",
+      "value": 0.04956,
+      "unit": "EUR per message",
+      "source": "https://www.twilio.com/en-us/sms/pricing/gb",
+      "status": "sourced",
+      "note": "Public CPaaS list price $0.056 per segment (Mobile Numbers / Alphanumeric, Nov 2026), converted at 1.13. SMS is priced the same for every category."
+    },
+    {
+      "id": "passthrough_GB_SMS_utility",
+      "group": "Pass-through fee",
+      "country": "GB",
+      "channel": "SMS",
+      "category": "utility",
+      "label": "Pass-through fee, SMS, United Kingdom, Utility (transactional)",
+      "value": 0,
+      "unit": "EUR per message",
+      "source": "https://www.twilio.com/en-us/sms/pricing/gb",
+      "status": "sourced",
+      "note": "No separate carrier fee is listed for this country."
+    },
+    {
+      "id": "cost_GB_SMS_utility",
+      "group": "Delivery cost",
+      "country": "GB",
+      "channel": "SMS",
+      "category": "utility",
+      "label": "SMS operator termination cost, United Kingdom, Utility (transactional)",
+      "value": 0.03073,
+      "unit": "EUR per message",
+      "source": "",
+      "status": "estimated",
+      "note": "Operator A2P termination rates are not public. Estimated as 62% of the public list price, calibrated so the blended gross margin matches listed peers (see target_margin_min)."
+    },
+    {
+      "id": "price_GB_SMS_marketing",
+      "group": "Customer price",
+      "country": "GB",
+      "channel": "SMS",
+      "category": "marketing",
+      "label": "Customer list price, SMS, United Kingdom, Marketing",
+      "value": 0.04956,
+      "unit": "EUR per message",
+      "source": "https://www.twilio.com/en-us/sms/pricing/gb",
+      "status": "sourced",
+      "note": "Public CPaaS list price $0.056 per segment (Mobile Numbers / Alphanumeric, Nov 2026), converted at 1.13. SMS is priced the same for every category."
+    },
+    {
+      "id": "passthrough_GB_SMS_marketing",
+      "group": "Pass-through fee",
+      "country": "GB",
+      "channel": "SMS",
+      "category": "marketing",
+      "label": "Pass-through fee, SMS, United Kingdom, Marketing",
+      "value": 0,
+      "unit": "EUR per message",
+      "source": "https://www.twilio.com/en-us/sms/pricing/gb",
+      "status": "sourced",
+      "note": "No separate carrier fee is listed for this country."
+    },
+    {
+      "id": "cost_GB_SMS_marketing",
+      "group": "Delivery cost",
+      "country": "GB",
+      "channel": "SMS",
+      "category": "marketing",
+      "label": "SMS operator termination cost, United Kingdom, Marketing",
+      "value": 0.03073,
+      "unit": "EUR per message",
+      "source": "",
+      "status": "estimated",
+      "note": "Operator A2P termination rates are not public. Estimated as 62% of the public list price, calibrated so the blended gross margin matches listed peers (see target_margin_min)."
+    },
+    {
+      "id": "cost_currency_GB_WhatsApp",
+      "group": "Cost currency",
+      "country": "GB",
+      "channel": "WhatsApp",
+      "label": "Cost currency, United Kingdom, WhatsApp",
+      "value": "USD",
+      "unit": "currency code",
+      "source": "",
+      "status": "estimated",
+      "note": "Meta invoices WhatsApp fees from its USD rate card."
+    },
+    {
+      "id": "cost_GB_WhatsApp_authentication",
+      "group": "Delivery cost",
+      "country": "GB",
+      "channel": "WhatsApp",
+      "category": "authentication",
+      "label": "Meta WhatsApp fee, United Kingdom, Authentication (OTP)",
+      "value": 0.022,
+      "unit": "USD per message",
+      "source": "https://developers.facebook.com/docs/whatsapp/pricing",
+      "status": "sourced",
+      "note": "Meta USD list rate card (\"Cost per message in USD on the WhatsApp Business Platform, effective October 1, 2026\"), market \"United Kingdom\"."
+    },
+    {
+      "id": "passthrough_GB_WhatsApp_authentication",
+      "group": "Pass-through fee",
+      "country": "GB",
+      "channel": "WhatsApp",
+      "category": "authentication",
+      "label": "Meta fee passed on to the customer, United Kingdom, Authentication (OTP)",
+      "value": 0.01947,
+      "unit": "EUR per message",
+      "source": "https://developers.facebook.com/docs/whatsapp/pricing",
+      "status": "sourced",
+      "note": "Meta fee of $0.022 converted at 1.13 USD per EUR. Passed on at cost; customer discounts do not apply."
+    },
+    {
+      "id": "price_GB_WhatsApp_authentication",
+      "group": "Customer price",
+      "country": "GB",
+      "channel": "WhatsApp",
+      "category": "authentication",
+      "label": "Customer list price, WhatsApp, United Kingdom, Authentication (OTP)",
+      "value": 0.02389,
+      "unit": "EUR per message",
+      "source": "https://www.twilio.com/en-us/whatsapp/pricing",
+      "status": "sourced",
+      "note": "Meta fee ($0.022) plus a $0.005 per-message provider fee, the fee a large public CPaaS lists on top of Meta's rates (Sept 2026). Converted at 1.13."
+    },
+    {
+      "id": "cost_GB_WhatsApp_utility",
+      "group": "Delivery cost",
+      "country": "GB",
+      "channel": "WhatsApp",
+      "category": "utility",
+      "label": "Meta WhatsApp fee, United Kingdom, Utility (transactional)",
+      "value": 0.022,
+      "unit": "USD per message",
+      "source": "https://developers.facebook.com/docs/whatsapp/pricing",
+      "status": "sourced",
+      "note": "Meta USD list rate card (\"Cost per message in USD on the WhatsApp Business Platform, effective October 1, 2026\"), market \"United Kingdom\"."
+    },
+    {
+      "id": "passthrough_GB_WhatsApp_utility",
+      "group": "Pass-through fee",
+      "country": "GB",
+      "channel": "WhatsApp",
+      "category": "utility",
+      "label": "Meta fee passed on to the customer, United Kingdom, Utility (transactional)",
+      "value": 0.01947,
+      "unit": "EUR per message",
+      "source": "https://developers.facebook.com/docs/whatsapp/pricing",
+      "status": "sourced",
+      "note": "Meta fee of $0.022 converted at 1.13 USD per EUR. Passed on at cost; customer discounts do not apply."
+    },
+    {
+      "id": "price_GB_WhatsApp_utility",
+      "group": "Customer price",
+      "country": "GB",
+      "channel": "WhatsApp",
+      "category": "utility",
+      "label": "Customer list price, WhatsApp, United Kingdom, Utility (transactional)",
+      "value": 0.02389,
+      "unit": "EUR per message",
+      "source": "https://www.twilio.com/en-us/whatsapp/pricing",
+      "status": "sourced",
+      "note": "Meta fee ($0.022) plus a $0.005 per-message provider fee, the fee a large public CPaaS lists on top of Meta's rates (Sept 2026). Converted at 1.13."
+    },
+    {
+      "id": "cost_GB_WhatsApp_marketing",
+      "group": "Delivery cost",
+      "country": "GB",
+      "channel": "WhatsApp",
+      "category": "marketing",
+      "label": "Meta WhatsApp fee, United Kingdom, Marketing",
+      "value": 0.0635,
+      "unit": "USD per message",
+      "source": "https://developers.facebook.com/docs/whatsapp/pricing",
+      "status": "sourced",
+      "note": "Meta USD list rate card (\"Cost per message in USD on the WhatsApp Business Platform, effective October 1, 2026\"), market \"United Kingdom\"."
+    },
+    {
+      "id": "passthrough_GB_WhatsApp_marketing",
+      "group": "Pass-through fee",
+      "country": "GB",
+      "channel": "WhatsApp",
+      "category": "marketing",
+      "label": "Meta fee passed on to the customer, United Kingdom, Marketing",
+      "value": 0.05619,
+      "unit": "EUR per message",
+      "source": "https://developers.facebook.com/docs/whatsapp/pricing",
+      "status": "sourced",
+      "note": "Meta fee of $0.0635 converted at 1.13 USD per EUR. Passed on at cost; customer discounts do not apply."
+    },
+    {
+      "id": "price_GB_WhatsApp_marketing",
+      "group": "Customer price",
+      "country": "GB",
+      "channel": "WhatsApp",
+      "category": "marketing",
+      "label": "Customer list price, WhatsApp, United Kingdom, Marketing",
+      "value": 0.06062,
+      "unit": "EUR per message",
+      "source": "https://www.twilio.com/en-us/whatsapp/pricing",
+      "status": "sourced",
+      "note": "Meta fee ($0.0635) plus a $0.005 per-message provider fee, the fee a large public CPaaS lists on top of Meta's rates (Sept 2026). Converted at 1.13."
+    },
+    {
+      "id": "cost_currency_GB_Voice",
+      "group": "Cost currency",
+      "country": "GB",
+      "channel": "Voice",
+      "label": "Cost currency, United Kingdom, Voice",
+      "value": "EUR",
+      "unit": "currency code",
+      "source": "",
+      "status": "estimated",
+      "note": "European operators bill in EUR (UK simplified to EUR)."
+    },
+    {
+      "id": "price_GB_Voice_authentication",
+      "group": "Customer price",
+      "country": "GB",
+      "channel": "Voice",
+      "category": "authentication",
+      "label": "Customer list price, voice passcode call, United Kingdom",
+      "value": 0.02699,
+      "unit": "EUR per call",
+      "source": "https://www.twilio.com/en-us/voice/pricing/gb",
+      "status": "sourced",
+      "note": "Public CPaaS list price $0.0305 per minute (United Kingdom - Mobile, Oct 2026), one billed minute per passcode call, converted at 1.13."
+    },
+    {
+      "id": "passthrough_GB_Voice_authentication",
+      "group": "Pass-through fee",
+      "country": "GB",
+      "channel": "Voice",
+      "category": "authentication",
+      "label": "Pass-through fee, Voice, United Kingdom",
+      "value": 0,
+      "unit": "EUR per call",
+      "source": "https://www.twilio.com/en-us/voice/pricing/gb",
+      "status": "sourced",
+      "note": "No separate pass-through fee."
+    },
+    {
+      "id": "cost_GB_Voice_authentication",
+      "group": "Delivery cost",
+      "country": "GB",
+      "channel": "Voice",
+      "category": "authentication",
+      "label": "Voice termination cost per passcode call, United Kingdom",
+      "value": 0.01619,
+      "unit": "EUR per call",
+      "source": "",
+      "status": "estimated",
+      "note": "Voice termination rates are not public. Estimated as 60% of the public list price."
+    },
+    {
+      "id": "cost_currency_US_SMS",
+      "group": "Cost currency",
+      "country": "US",
+      "channel": "SMS",
+      "label": "Cost currency, United States, SMS",
+      "value": "USD",
+      "unit": "currency code",
+      "source": "",
+      "status": "estimated",
+      "note": "US carriers and aggregators bill in USD."
+    },
+    {
+      "id": "price_US_SMS_authentication",
+      "group": "Customer price",
+      "country": "US",
+      "channel": "SMS",
+      "category": "authentication",
+      "label": "Customer list price, SMS, United States, Authentication (OTP)",
+      "value": 0.01115,
+      "unit": "EUR per message",
+      "source": "https://www.twilio.com/en-us/sms/pricing/us",
+      "status": "sourced",
+      "note": "Public CPaaS list price $0.0083 per segment (long codes, Nov 2026) plus the average carrier fee of $0.0043 (AT&T $0.0035, T-Mobile $0.0045, Verizon $0.005, simple average), converted at 1.13."
+    },
+    {
+      "id": "passthrough_US_SMS_authentication",
+      "group": "Pass-through fee",
+      "country": "US",
+      "channel": "SMS",
+      "category": "authentication",
+      "label": "US carrier fee passed on to the customer, Authentication (OTP)",
+      "value": 0.00381,
+      "unit": "EUR per message",
+      "source": "https://www.twilio.com/en-us/sms/pricing/us",
+      "status": "sourced",
+      "note": "Average of the listed long-code carrier fees ($0.0043), converted at 1.13. Passed on at cost; customer discounts do not apply."
+    },
+    {
+      "id": "cost_US_SMS_authentication",
+      "group": "Delivery cost",
+      "country": "US",
+      "channel": "SMS",
+      "category": "authentication",
+      "label": "SMS delivery cost incl. carrier fee, United States, Authentication (OTP)",
+      "value": 0.0073,
+      "unit": "USD per message",
+      "source": "",
+      "status": "estimated",
+      "note": "Carrier fee $0.0043 (sourced, see pass-through) plus an estimated $0.003 aggregator delivery cost. Wholesale A2P rates are not public."
+    },
+    {
+      "id": "price_US_SMS_utility",
+      "group": "Customer price",
+      "country": "US",
+      "channel": "SMS",
+      "category": "utility",
+      "label": "Customer list price, SMS, United States, Utility (transactional)",
+      "value": 0.01115,
+      "unit": "EUR per message",
+      "source": "https://www.twilio.com/en-us/sms/pricing/us",
+      "status": "sourced",
+      "note": "Public CPaaS list price $0.0083 per segment (long codes, Nov 2026) plus the average carrier fee of $0.0043 (AT&T $0.0035, T-Mobile $0.0045, Verizon $0.005, simple average), converted at 1.13."
+    },
+    {
+      "id": "passthrough_US_SMS_utility",
+      "group": "Pass-through fee",
+      "country": "US",
+      "channel": "SMS",
+      "category": "utility",
+      "label": "US carrier fee passed on to the customer, Utility (transactional)",
+      "value": 0.00381,
+      "unit": "EUR per message",
+      "source": "https://www.twilio.com/en-us/sms/pricing/us",
+      "status": "sourced",
+      "note": "Average of the listed long-code carrier fees ($0.0043), converted at 1.13. Passed on at cost; customer discounts do not apply."
+    },
+    {
+      "id": "cost_US_SMS_utility",
+      "group": "Delivery cost",
+      "country": "US",
+      "channel": "SMS",
+      "category": "utility",
+      "label": "SMS delivery cost incl. carrier fee, United States, Utility (transactional)",
+      "value": 0.0073,
+      "unit": "USD per message",
+      "source": "",
+      "status": "estimated",
+      "note": "Carrier fee $0.0043 (sourced, see pass-through) plus an estimated $0.003 aggregator delivery cost. Wholesale A2P rates are not public."
+    },
+    {
+      "id": "price_US_SMS_marketing",
+      "group": "Customer price",
+      "country": "US",
+      "channel": "SMS",
+      "category": "marketing",
+      "label": "Customer list price, SMS, United States, Marketing",
+      "value": 0.01115,
+      "unit": "EUR per message",
+      "source": "https://www.twilio.com/en-us/sms/pricing/us",
+      "status": "sourced",
+      "note": "Public CPaaS list price $0.0083 per segment (long codes, Nov 2026) plus the average carrier fee of $0.0043 (AT&T $0.0035, T-Mobile $0.0045, Verizon $0.005, simple average), converted at 1.13."
+    },
+    {
+      "id": "passthrough_US_SMS_marketing",
+      "group": "Pass-through fee",
+      "country": "US",
+      "channel": "SMS",
+      "category": "marketing",
+      "label": "US carrier fee passed on to the customer, Marketing",
+      "value": 0.00381,
+      "unit": "EUR per message",
+      "source": "https://www.twilio.com/en-us/sms/pricing/us",
+      "status": "sourced",
+      "note": "Average of the listed long-code carrier fees ($0.0043), converted at 1.13. Passed on at cost; customer discounts do not apply."
+    },
+    {
+      "id": "cost_US_SMS_marketing",
+      "group": "Delivery cost",
+      "country": "US",
+      "channel": "SMS",
+      "category": "marketing",
+      "label": "SMS delivery cost incl. carrier fee, United States, Marketing",
+      "value": 0.0073,
+      "unit": "USD per message",
+      "source": "",
+      "status": "estimated",
+      "note": "Carrier fee $0.0043 (sourced, see pass-through) plus an estimated $0.003 aggregator delivery cost. Wholesale A2P rates are not public."
+    },
+    {
+      "id": "cost_currency_US_WhatsApp",
+      "group": "Cost currency",
+      "country": "US",
+      "channel": "WhatsApp",
+      "label": "Cost currency, United States, WhatsApp",
+      "value": "USD",
+      "unit": "currency code",
+      "source": "",
+      "status": "estimated",
+      "note": "Meta invoices WhatsApp fees from its USD rate card."
+    },
+    {
+      "id": "cost_US_WhatsApp_authentication",
+      "group": "Delivery cost",
+      "country": "US",
+      "channel": "WhatsApp",
+      "category": "authentication",
+      "label": "Meta WhatsApp fee, United States, Authentication (OTP)",
+      "value": 0.0034,
+      "unit": "USD per message",
+      "source": "https://developers.facebook.com/docs/whatsapp/pricing",
+      "status": "sourced",
+      "note": "Meta USD list rate card (\"Cost per message in USD on the WhatsApp Business Platform, effective October 1, 2026\"), market \"North America\"."
+    },
+    {
+      "id": "passthrough_US_WhatsApp_authentication",
+      "group": "Pass-through fee",
+      "country": "US",
+      "channel": "WhatsApp",
+      "category": "authentication",
+      "label": "Meta fee passed on to the customer, United States, Authentication (OTP)",
+      "value": 0.00301,
+      "unit": "EUR per message",
+      "source": "https://developers.facebook.com/docs/whatsapp/pricing",
+      "status": "sourced",
+      "note": "Meta fee of $0.0034 converted at 1.13 USD per EUR. Passed on at cost; customer discounts do not apply."
+    },
+    {
+      "id": "price_US_WhatsApp_authentication",
+      "group": "Customer price",
+      "country": "US",
+      "channel": "WhatsApp",
+      "category": "authentication",
+      "label": "Customer list price, WhatsApp, United States, Authentication (OTP)",
+      "value": 0.00743,
+      "unit": "EUR per message",
+      "source": "https://www.twilio.com/en-us/whatsapp/pricing",
+      "status": "sourced",
+      "note": "Meta fee ($0.0034) plus a $0.005 per-message provider fee, the fee a large public CPaaS lists on top of Meta's rates (Sept 2026). Converted at 1.13."
+    },
+    {
+      "id": "cost_US_WhatsApp_utility",
+      "group": "Delivery cost",
+      "country": "US",
+      "channel": "WhatsApp",
+      "category": "utility",
+      "label": "Meta WhatsApp fee, United States, Utility (transactional)",
+      "value": 0.0034,
+      "unit": "USD per message",
+      "source": "https://developers.facebook.com/docs/whatsapp/pricing",
+      "status": "sourced",
+      "note": "Meta USD list rate card (\"Cost per message in USD on the WhatsApp Business Platform, effective October 1, 2026\"), market \"North America\"."
+    },
+    {
+      "id": "passthrough_US_WhatsApp_utility",
+      "group": "Pass-through fee",
+      "country": "US",
+      "channel": "WhatsApp",
+      "category": "utility",
+      "label": "Meta fee passed on to the customer, United States, Utility (transactional)",
+      "value": 0.00301,
+      "unit": "EUR per message",
+      "source": "https://developers.facebook.com/docs/whatsapp/pricing",
+      "status": "sourced",
+      "note": "Meta fee of $0.0034 converted at 1.13 USD per EUR. Passed on at cost; customer discounts do not apply."
+    },
+    {
+      "id": "price_US_WhatsApp_utility",
+      "group": "Customer price",
+      "country": "US",
+      "channel": "WhatsApp",
+      "category": "utility",
+      "label": "Customer list price, WhatsApp, United States, Utility (transactional)",
+      "value": 0.00743,
+      "unit": "EUR per message",
+      "source": "https://www.twilio.com/en-us/whatsapp/pricing",
+      "status": "sourced",
+      "note": "Meta fee ($0.0034) plus a $0.005 per-message provider fee, the fee a large public CPaaS lists on top of Meta's rates (Sept 2026). Converted at 1.13."
+    },
+    {
+      "id": "cost_US_WhatsApp_marketing",
+      "group": "Delivery cost",
+      "country": "US",
+      "channel": "WhatsApp",
+      "category": "marketing",
+      "label": "Meta WhatsApp fee, United States, Marketing",
+      "value": 0.025,
+      "unit": "USD per message",
+      "source": "https://developers.facebook.com/docs/whatsapp/pricing",
+      "status": "sourced",
+      "note": "Meta USD list rate card (\"Cost per message in USD on the WhatsApp Business Platform, effective October 1, 2026\"), market \"North America\"."
+    },
+    {
+      "id": "passthrough_US_WhatsApp_marketing",
+      "group": "Pass-through fee",
+      "country": "US",
+      "channel": "WhatsApp",
+      "category": "marketing",
+      "label": "Meta fee passed on to the customer, United States, Marketing",
+      "value": 0.02212,
+      "unit": "EUR per message",
+      "source": "https://developers.facebook.com/docs/whatsapp/pricing",
+      "status": "sourced",
+      "note": "Meta fee of $0.025 converted at 1.13 USD per EUR. Passed on at cost; customer discounts do not apply."
+    },
+    {
+      "id": "price_US_WhatsApp_marketing",
+      "group": "Customer price",
+      "country": "US",
+      "channel": "WhatsApp",
+      "category": "marketing",
+      "label": "Customer list price, WhatsApp, United States, Marketing",
+      "value": 0.02655,
+      "unit": "EUR per message",
+      "source": "https://www.twilio.com/en-us/whatsapp/pricing",
+      "status": "sourced",
+      "note": "Meta fee ($0.025) plus a $0.005 per-message provider fee, the fee a large public CPaaS lists on top of Meta's rates (Sept 2026). Converted at 1.13."
+    },
+    {
+      "id": "cost_currency_US_Voice",
+      "group": "Cost currency",
+      "country": "US",
+      "channel": "Voice",
+      "label": "Cost currency, United States, Voice",
+      "value": "USD",
+      "unit": "currency code",
+      "source": "",
+      "status": "estimated",
+      "note": "US carriers and aggregators bill in USD."
+    },
+    {
+      "id": "price_US_Voice_authentication",
+      "group": "Customer price",
+      "country": "US",
+      "channel": "Voice",
+      "category": "authentication",
+      "label": "Customer list price, voice passcode call, United States",
+      "value": 0.01239,
+      "unit": "EUR per call",
+      "source": "https://www.twilio.com/en-us/voice/pricing/us",
+      "status": "sourced",
+      "note": "Public CPaaS list price $0.014 per minute (United States & Canada, Oct 2026), one billed minute per passcode call, converted at 1.13."
+    },
+    {
+      "id": "passthrough_US_Voice_authentication",
+      "group": "Pass-through fee",
+      "country": "US",
+      "channel": "Voice",
+      "category": "authentication",
+      "label": "Pass-through fee, Voice, United States",
+      "value": 0,
+      "unit": "EUR per call",
+      "source": "https://www.twilio.com/en-us/voice/pricing/us",
+      "status": "sourced",
+      "note": "No separate pass-through fee."
+    },
+    {
+      "id": "cost_US_Voice_authentication",
+      "group": "Delivery cost",
+      "country": "US",
+      "channel": "Voice",
+      "category": "authentication",
+      "label": "Voice termination cost per passcode call, United States",
+      "value": 0.0084,
+      "unit": "USD per call",
+      "source": "",
+      "status": "estimated",
+      "note": "Voice termination rates are not public. Estimated as 60% of the public list price."
+    }
+  ]
+}
