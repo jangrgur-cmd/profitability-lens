@@ -24,10 +24,14 @@ export function createCustomersView(model) {
   let fileTag = "all";
   let chart = null;
 
+  /** Shows a customer in the detail panel above the table and brings the panel into view. */
   const selectCustomer = (id) => {
     selectedId = id;
     render(currentRows, fileTag);
-    $("customer-detail").focus?.();
+    const panel = $("customer-detail");
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    panel.scrollIntoView({ block: "start", behavior: reduceMotion ? "auto" : "smooth" });
+    panel.focus({ preventScroll: true });
   };
 
   const columns = [
