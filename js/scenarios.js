@@ -198,11 +198,11 @@ export function applyFxChange(ctx, { fxChange }) {
 
 /** The steps in their fixed order, with labels for the UI and the bridge. */
 export const STEPS = Object.freeze([
-  { key: "volume", label: "Volume" },
-  { key: "migration", label: "SMS → WhatsApp" },
-  { key: "price", label: "Customer price" },
-  { key: "cost", label: "Operator cost" },
-  { key: "fx", label: "Exchange rate" },
+  { key: "volume", label: "Volume", description: "Message volume is multiplied by (1 + change), for all traffic or one category." },
+  { key: "migration", label: "SMS → WhatsApp", description: "A share of SMS volume per category moves to the same customer's WhatsApp traffic in the same month and country, at WhatsApp prices and costs; the conversion ratio sets how many WhatsApp messages replace one SMS." },
+  { key: "price", label: "Customer price", description: "Our own fee is multiplied by (1 + change), for all channels or one; pass-through fees stay as they are." },
+  { key: "cost", label: "Operator cost", description: "Delivery cost is multiplied by (1 + change), for all channels or one and for the chosen countries; customer prices do not follow." },
+  { key: "fx", label: "Exchange rate", description: "The EUR/USD rate is multiplied by (1 + change), which changes the euro cost of every cost billed in dollars." },
 ]);
 
 /**

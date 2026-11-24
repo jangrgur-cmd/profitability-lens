@@ -1,7 +1,7 @@
 // tables.js: sortable data tables.
 //
 // A table is described by columns:
-//   { key, label, type: "text" | "number", value(row), format(value, row), cell(row) }
+//   { key, label, type: "text" | "number", value(row), format(value, row), cell(row), className }
 // - value(row): the raw value used for sorting and CSV (default: row[key])
 // - format(value, row): text shown in the cell (default: the value as text)
 // - cell(row): optional, returns a DOM node instead of plain text
@@ -100,6 +100,7 @@ export function createSortableTable(container, options) {
         const cell = document.createElement(i === 0 ? "th" : "td");
         if (i === 0) cell.scope = "row";
         if (column.type === "number") cell.className = "num";
+        if (column.className) cell.classList.add(column.className);
         if (column.cell) {
           cell.append(column.cell(row));
         } else {

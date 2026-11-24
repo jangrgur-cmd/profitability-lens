@@ -253,12 +253,104 @@
       </div>
     </section>
     <section role="tabpanel" id="panel-assumptions" aria-labelledby="tab-assumptions" tabindex="0" hidden>
-      <h2>Assumptions &amp; method</h2>
-      <p class="placeholder">This view is being built.</p>
+      <h2 class="section-title">Assumptions &amp; method</h2>
+      <p class="section-lede" id="assumptions-summary" aria-live="polite"></p>
+      <p class="disclaimer">
+        For demonstration. Market prices and fees are from public rate cards; customers are illustrative
+        archetypes with estimated volumes. Not affiliated with any company. Not based on any company's real figures.
+      </p>
+
+      <div class="block">
+        <div class="block-head">
+          <h3 class="block-title">Every assumption</h3>
+          <button type="button" class="button-quiet" id="assumptions-csv">Download CSV</button>
+        </div>
+        <div class="table-filters">
+          <label class="inline-select">Group <select id="a-group"></select></label>
+          <label class="inline-select">Status <select id="a-status"></select></label>
+        </div>
+        <div id="assumptions-table"></div>
+      </div>
+
+      <div class="block">
+        <div class="block-head">
+          <h3 class="block-title">Customer archetypes and their estimated volumes</h3>
+          <button type="button" class="button-quiet" id="archetypes-csv">Download CSV</button>
+        </div>
+        <div id="archetypes-table"></div>
+      </div>
+
+      <div class="method">
+        <div class="block">
+          <h3 class="block-title">How the numbers are calculated</h3>
+          <dl class="formulas">
+            <div>
+              <dt>Revenue</dt>
+              <dd><code>volume × (pass-through + (list price − pass-through) × (1 − customer discount))</code>
+                The discount applies only to our own fee. Third-party fees passed on at cost (Meta's WhatsApp fee,
+                US carrier fees) are charged in full.</dd>
+            </div>
+            <div>
+              <dt>Delivery cost</dt>
+              <dd><code>volume × cost per message × exchange rate to EUR</code>
+                What we pay operators (SMS, voice), Meta (WhatsApp) or Viber. USD costs are converted at the EUR/USD rate.</dd>
+            </div>
+            <div>
+              <dt>Platform cost</dt>
+              <dd><code>volume × platform cost per message</code>
+                Our own infrastructure and support cost, so gross margin is not overstated.</dd>
+            </div>
+            <div>
+              <dt>Gross profit</dt>
+              <dd><code>revenue − delivery cost − platform cost</code></dd>
+            </div>
+            <div>
+              <dt>Gross margin</dt>
+              <dd><code>gross profit ÷ revenue</code> Shown as "n/a" when revenue is zero.</dd>
+            </div>
+            <div>
+              <dt>Route</dt>
+              <dd>One country × channel combination, e.g. "Germany SMS". A route is loss-making when its gross profit
+                over the selected period is below zero.</dd>
+            </div>
+            <div>
+              <dt>Whale curve</dt>
+              <dd>Customers sorted by gross profit, highest first, against their cumulative share of total gross
+                profit. It rises above 100&nbsp;% when some customers lose money.</dd>
+            </div>
+            <div>
+              <dt>Revenue and cost per message</dt>
+              <dd><code>revenue ÷ messages</code> and <code>(delivery cost + platform cost) ÷ messages</code>.
+                Voice is counted per call.</dd>
+            </div>
+          </dl>
+        </div>
+
+        <div class="block">
+          <h3 class="block-title">Scenario order of operations</h3>
+          <ol class="steps-list" id="method-steps"></ol>
+          <p class="block-note">Each bar in the margin bridge is the change in gross profit caused by one step, given the
+            steps before it, so the bars add up exactly to the total change.</p>
+        </div>
+
+        <div class="block">
+          <h3 class="block-title">How the traffic data is made</h3>
+          <p class="prose">
+            A small Node script (<code>scripts/generate-data.mjs</code>) turns the assumptions into one row per month,
+            customer, country, channel and category. Monthly volume = the customer's estimated base volume × its share
+            of traffic in that country × the channel's share × the category's share × a seasonality index × a little
+            random noise. The noise comes from a seeded random number generator, so the same assumptions always
+            produce exactly the same data. Revenue, cost and profit are not stored; they are calculated in the
+            browser, so scenarios can recalculate them.
+          </p>
+        </div>
+      </div>
     </section>
+
     <section role="tabpanel" id="panel-checks" aria-labelledby="tab-checks" tabindex="0" hidden>
-      <h2>Data checks</h2>
-      <p class="placeholder">This view is being built.</p>
+      <h2 class="section-title">Data checks</h2>
+      <p class="section-lede" id="checks-summary" aria-live="polite"></p>
+      <ul class="checks" id="checks-list"></ul>
     </section>
   </main>
 
