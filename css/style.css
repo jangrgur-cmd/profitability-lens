@@ -637,6 +637,8 @@ main { padding-block: var(--space-6) var(--space-7); }
   text-align: right;
 }
 
+.inline-select input[type="number"]:invalid { border-color: var(--loss); outline-color: var(--loss); }
+
 .country-checks { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-3); margin-top: var(--space-3); font-size: var(--step--1); }
 .country-checks label { display: inline-flex; align-items: center; gap: 0.3em; }
 .country-checks input { accent-color: var(--accent); }

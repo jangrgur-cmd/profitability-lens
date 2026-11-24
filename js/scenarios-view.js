@@ -109,6 +109,11 @@ export function createScenariosView(model, onChange) {
     });
   });
   form.addEventListener("submit", (event) => event.preventDefault());
+  // When the conversion-ratio field is left with an empty or out-of-range value,
+  // show the value the model is actually using instead of the rejected one.
+  form.elements.conversionRatio.addEventListener("change", (event) => {
+    if (!event.target.checkValidity() || event.target.value === "") event.target.value = String(current.conversionRatio);
+  });
 
   /** Writes a scenario into the controls and their read-outs. */
   function syncControls(s) {
@@ -136,7 +141,7 @@ export function createScenariosView(model, onChange) {
 
   // --- Results ----------------------------------------------------------------------
 
-  function renderSummary(bridge, s) {
+  function renderSummary(bridge, s, filters) {
     const { baseline, scenario, steps } = bridge;
     const box = $("scenario-summary");
     if (baseline.volume === 0) {
@@ -152,9 +157,14 @@ export function createScenariosView(model, onChange) {
     const direction = delta >= 0 ? "rises" : "falls";
     const biggest = steps.reduce((a, b) => (Math.abs(b.delta) > Math.abs(a.delta) ? b : a));
     const driver = Math.abs(biggest.delta) > 0.5 ? ` Largest effect: ${biggest.label} (${signedEur(biggest.delta)}).` : "";
+    // Migration moves volume between SMS and WhatsApp; a channel filter hides one side of that move.
+    const migrating = Object.values(s.migration).some((v) => v > 0);
+    const channelNote = migrating && filters.channel !== "all"
+      ? ` Note: the channel filter shows only ${filters.channel}, so traffic moving between SMS and WhatsApp is only half visible; set Channel to "All channels" to see the full effect.`
+      : "";
     box.textContent =
       `In this scenario gross profit ${direction} by ${formatEur(Math.abs(delta))}${rel === null ? "" : ` (${signedPct(rel)})`} to ${formatEur(scenario.grossProfit)}, ` +
-      `and the margin moves from ${formatPct(baseline.grossMarginPct)} to ${formatPct(scenario.grossMarginPct)}.${driver}`;
+      `and the margin moves from ${formatPct(baseline.grossMarginPct)} to ${formatPct(scenario.grossMarginPct)}.${driver}${channelNote}`;
   }
 
   function renderCompare({ baseline, scenario }) {
@@ -235,7 +245,7 @@ export function createScenariosView(model, onChange) {
     const select = (rows) => filterRows(rows, filters, customersById);
     const states = runScenario(model.rows, model.ctx, current, model.rates);
     const bridge = marginBridge(states, select);
-    renderSummary(bridge, current);
+    renderSummary(bridge, current, filters);
     renderCompare(bridge);
     if (!chart) chart = createBridgeChart($("bridge-chart"));
     updateBridgeChart(chart, bridge);
