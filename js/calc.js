@@ -204,9 +204,26 @@ export function channelTotals(rows, ctx) {
 // ---------------------------------------------------------------------------
 
 /**
+ * Cost headroom: how much delivery cost (operator, Meta or Viber fees) could
+ * rise, with customer prices unchanged, before gross profit reaches zero.
+ *
+ * If delivery cost rises by a share x, gross profit falls by x × delivery cost,
+ * so profit hits zero when x = gross profit ÷ delivery cost.
+ *
+ * Example: €20 gross profit on €80 delivery cost → headroom 0.25 (+25 %).
+ * A negative value means the route already loses money: costs would have to
+ * fall by that much to break even. Returns null when there is no delivery cost.
+ * @param {{grossProfit: number, deliveryCost: number}} totals
+ * @returns {number|null}
+ */
+export function costHeadroom({ grossProfit, deliveryCost }) {
+  return deliveryCost > 0 ? grossProfit / deliveryCost : null;
+}
+
+/**
  * Route profitability. A route is one country × channel combination
- * (e.g. "Nigeria SMS"). A route is loss-making if its gross profit over the
- * selected rows is below zero.
+ * (e.g. "Germany SMS"). A route is loss-making if its gross profit over the
+ * selected rows is below zero. Each route also gets its cost headroom.
  * @returns {object[]} one entry per route, sorted by gross profit (lowest first,
  *   so loss-making routes come first)
  */
@@ -214,7 +231,7 @@ export function routeProfitability(rows, ctx) {
   return [...groupAndSummarize(rows, ctx, (r) => `${r.country}|${r.channel}`)]
     .map(([key, totals]) => {
       const [country, channel] = key.split("|");
-      return { country, channel, ...totals };
+      return { country, channel, ...totals, costHeadroom: costHeadroom(totals) };
     })
     .sort((a, b) => a.grossProfit - b.grossProfit);
 }

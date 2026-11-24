@@ -10,7 +10,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { buildCalcContext, summarize } from "../js/calc.js";
+import { buildCalcContext, summarize, routeProfitability, filterRows } from "../js/calc.js";
 import {
   DEFAULT_SCENARIO, makeScenario, isDefaultScenario, applyVolumeChange, applyMigration, applyPriceChange,
   applyCostChange, applyFxChange, runScenario, marginBridge, mostAffected, PRESETS,
@@ -157,5 +157,19 @@ test("presets use only valid parameters", () => {
     const s = makeScenario(preset.scenario);
     assert.ok(!isDefaultScenario(s), `${preset.id} must change something`);
     assert.ok(preset.description.length > 0);
+  }
+});
+
+test("raising a route's delivery cost by its headroom brings its gross profit to zero (real data)", () => {
+  const assumptionsFile = JSON.parse(readFileSync(new URL("../data/assumptions.json", import.meta.url), "utf8"));
+  const traffic = JSON.parse(readFileSync(new URL("../data/traffic.json", import.meta.url), "utf8"));
+  const realCtx = buildCalcContext(assumptionsFile);
+  const realRates = new Map(assumptionsFile.assumptions.map((a) => [a.id, a.value]));
+  for (const route of routeProfitability(traffic, realCtx)) {
+    const scenario = makeScenario({ costChange: route.costHeadroom, costChannel: route.channel, costCountries: [route.country] });
+    const states = runScenario(traffic, realCtx, scenario, realRates);
+    const last = states[states.length - 1];
+    const routeRows = filterRows(last.rows, { country: route.country, channel: route.channel });
+    near(summarize(routeRows, last.ctx).grossProfit, 0, 1e-6);
   }
 });

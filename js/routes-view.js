@@ -29,6 +29,15 @@ function lossBadge() {
   return badge;
 }
 
+/** Headroom cell: "+25.1%" in green, or "−6.9%" in red when the route already loses money. */
+function headroomCell(route) {
+  const span = document.createElement("span");
+  const v = route.costHeadroom;
+  span.className = toneClass(v);
+  span.textContent = v === null ? "n/a" : (v > 0 ? "+" : "") + formatPct(v);
+  return span;
+}
+
 /** Margin cell: the percentage, plus the loss badge when the route loses money. */
 function marginCell(route) {
   const span = document.createElement("span");
@@ -72,6 +81,7 @@ export function createRoutesView(model) {
     { key: "platformCost", label: "Platform cost", type: "number", format: formatEur },
     { key: "grossProfit", label: "Gross profit", type: "number", format: formatEur },
     { key: "grossMarginPct", label: "Margin", type: "number", cell: marginCell },
+    { key: "costHeadroom", label: "Cost headroom", type: "number", cell: headroomCell },
   ];
   const csvColumns = [
     { label: "country_code", key: "country" },
@@ -83,6 +93,7 @@ export function createRoutesView(model) {
     { label: "platform_cost_eur", key: "platformCost" },
     { label: "gross_profit_eur", key: "grossProfit" },
     { label: "gross_margin", key: "grossMarginPct" },
+    { label: "cost_headroom", key: "costHeadroom" },
     { label: "loss_making", csv: (r) => (r.lossMaking ? "yes" : "no") },
   ];
 

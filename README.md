@@ -6,6 +6,14 @@
 
 Runs entirely in the browser. Market prices come from public rate cards; customers are illustrative archetypes.
 
+### 60-second tour
+
+1. [**The headline:**](https://jangrgur-cmd.github.io/messaging-profitability/) revenue, gross profit and margin for the whole model year, with monthly trend and channel mix.
+2. [**Which routes lose money:**](https://jangrgur-cmd.github.io/messaging-profitability/#tab=routes) margin for every country × channel, and how much delivery cost each route can absorb before it breaks even.
+3. [**A 15% operator price increase in Europe:**](https://jangrgur-cmd.github.io/messaging-profitability/#tab=scenarios&sc=15&scc=SMS&sco=HR%2CDE%2CFR%2CGB) the margin bridge shows where the profit goes.
+4. [**A 10% stronger dollar:**](https://jangrgur-cmd.github.io/messaging-profitability/#tab=scenarios&fx=-10) what happens when fees billed in USD cost more in euros.
+5. [**Where every number comes from:**](https://jangrgur-cmd.github.io/messaging-profitability/#tab=assumptions) each assumption with its status and public source.
+
 ![Overview tab: headline result, KPIs, monthly trend and channel mix](docs/screenshots/overview.png)
 
 ![Scenarios tab: operator price increase preset with the margin bridge](docs/screenshots/scenarios.png)
@@ -21,7 +29,7 @@ I built it while applying for Infobip's Business Analytics (Profitability Manage
 ## What you can do with it
 
 - **See where the money is made:** revenue, gross profit and margin by month, country, channel, customer and message category, with a filter bar that applies to every view.
-- **Find what loses money:** a country × channel margin heatmap with loss-making routes flagged, a ranked customer table and a whale curve showing how concentrated profit is.
+- **Find what loses money:** a country × channel margin heatmap with loss-making routes flagged, each route's cost headroom (how far delivery cost can rise before it breaks even), a ranked customer table and a whale curve showing how concentrated profit is.
 - **Run what-if scenarios:** change operator costs, the EUR/USD rate, customer prices, volumes or the share of SMS moving to WhatsApp, and read the result in a margin bridge that attributes the change to each step. Three presets are included.
 - **Check every input:** each of the 209 assumptions is listed with its value, status (sourced or estimated) and a link to its public source, next to plain-English explanations of every formula.
 - **Trust the numbers:** automatic data checks (totals reconcile, no negative values, every row matches its assumptions, the default scenario equals the baseline), CSV export of every table, and shareable links that reproduce any view.

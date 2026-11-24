@@ -18,7 +18,7 @@ import { readFileSync } from "node:fs";
 import {
   buildCalcContext, fxToEur, rowRevenue, rowDeliveryCost, rowPlatformCost, rowMetrics,
   grossMarginPct, summarize, groupAndSummarize, monthlyTotals, channelTotals,
-  routeProfitability, customerProfitability, whaleCurve, filterRows, availableFilterValues,
+  routeProfitability, customerProfitability, whaleCurve, filterRows, availableFilterValues, costHeadroom,
 } from "../js/calc.js";
 
 const ctx = { eurUsd: 1.25, discountByCustomer: { A: 0.1, B: 0 } };
@@ -143,6 +143,16 @@ test("routeProfitability flags loss-making routes and sorts lowest profit first"
   assert.deepEqual(routes.map((r) => `${r.country} ${r.channel}`), ["NG SMS", "HR WhatsApp", "HR SMS", "US SMS"]);
   assert.equal(routes[0].lossMaking, true);
   assert.ok(routes.slice(1).every((r) => !r.lossMaking));
+});
+
+test("costHeadroom is gross profit ÷ delivery cost", () => {
+  // HR SMS: 14 profit on 30 delivery cost → costs can rise 46.7 % before profit is zero.
+  near(costHeadroom({ grossProfit: 14, deliveryCost: 30 }), 14 / 30);
+  // NG SMS already loses 5.5 on 25 → costs would have to fall 22 % to break even.
+  near(costHeadroom({ grossProfit: -5.5, deliveryCost: 25 }), -0.22);
+  assert.equal(costHeadroom({ grossProfit: 3, deliveryCost: 0 }), null);
+  const ng = routeProfitability(rows, ctx).find((r) => r.country === "NG");
+  near(ng.costHeadroom, -0.22);
 });
 
 test("customerProfitability ranks customers by gross profit", () => {

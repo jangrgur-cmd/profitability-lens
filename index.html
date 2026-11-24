@@ -5,6 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Messaging profitability model</title>
   <meta name="description" content="Interactive model of a business-messaging provider's gross margin by country, channel and customer, priced from public rate cards, with what-if scenarios. Customers are illustrative.">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <meta name="theme-color" content="#2f54eb">
+  <link rel="canonical" href="https://jangrgur-cmd.github.io/messaging-profitability/">
+
+  <!-- Link previews (LinkedIn, Slack, email): title, description and image card. -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://jangrgur-cmd.github.io/messaging-profitability/">
+  <meta property="og:title" content="Messaging profitability model">
+  <meta property="og:description" content="Interactive dashboard: where a European business-messaging provider makes and loses money, and what happens when operator prices, FX or channel mix change. Built by Jan Grgur Glivar.">
+  <meta property="og:image" content="https://jangrgur-cmd.github.io/messaging-profitability/docs/screenshots/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Messaging profitability model: headline result, KPIs and monthly revenue and gross profit chart">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="author" content="Jan Grgur Glivar">
+
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -117,6 +134,8 @@
           <h3 class="block-title">All routes</h3>
           <button type="button" class="button-quiet" id="routes-csv">Download CSV</button>
         </div>
+        <p class="block-note">Cost headroom: how much the route's delivery cost (operator, Meta or Viber fees) could rise,
+          with customer prices unchanged, before it stops making money. A negative value means the route already loses money.</p>
         <div id="routes-table"></div>
       </div>
     </section>
@@ -308,6 +327,13 @@
             <div>
               <dt>Gross margin</dt>
               <dd><code>gross profit ÷ revenue</code> Shown as "n/a" when revenue is zero.</dd>
+            </div>
+            <div>
+              <dt>Cost headroom</dt>
+              <dd><code>gross profit ÷ delivery cost</code>
+                How far delivery cost can rise, with prices unchanged, before a route breaks even: the margin of safety
+                to bring into an operator negotiation. Raising that route's operator cost by this amount on the Scenarios
+                tab brings its gross profit to zero.</dd>
             </div>
             <div>
               <dt>Route</dt>
