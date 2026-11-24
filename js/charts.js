@@ -32,7 +32,7 @@ function palette() {
 function applyDefaults() {
   const p = palette();
   Chart.defaults.font.family = getComputedStyle(document.body).fontFamily;
-  Chart.defaults.font.size = 12;
+  Chart.defaults.font.size = 13;
   Chart.defaults.color = p.muted;
   Chart.defaults.borderColor = p.rule;
   // A short, smooth transition when filters change; none for people who ask
@@ -46,11 +46,19 @@ function applyDefaults() {
     Chart.defaults.animation.duration = 450;
     Chart.defaults.animation.easing = "easeOutCubic";
   }
-  Chart.defaults.plugins.legend.labels.boxWidth = 10;
-  Chart.defaults.plugins.legend.labels.boxHeight = 10;
+  // Round legend markers, roomy tooltips, slightly rounded bars.
+  Chart.defaults.plugins.legend.labels.usePointStyle = true;
+  Chart.defaults.plugins.legend.labels.pointStyle = "circle";
+  Chart.defaults.plugins.legend.labels.boxWidth = 8;
+  Chart.defaults.plugins.legend.labels.boxHeight = 8;
+  Chart.defaults.plugins.legend.labels.padding = 16;
   Chart.defaults.plugins.tooltip.backgroundColor = p.ink;
-  Chart.defaults.plugins.tooltip.padding = 10;
-  Chart.defaults.plugins.tooltip.cornerRadius = 3;
+  Chart.defaults.plugins.tooltip.padding = 12;
+  Chart.defaults.plugins.tooltip.cornerRadius = 8;
+  Chart.defaults.plugins.tooltip.titleFont = { weight: "600" };
+  Chart.defaults.elements.bar.borderRadius = 4;
+  Chart.defaults.scale.grid.color = p.rule;
+  Chart.defaults.scale.border.display = false;
 }
 
 let defaultsApplied = false;
@@ -73,8 +81,8 @@ export function createTrendChart(canvas) {
     data: {
       labels: [],
       datasets: [
-        { type: "bar", label: "Revenue", data: [], backgroundColor: p.revenue, yAxisID: "eur", order: 2, borderRadius: 2 },
-        { type: "bar", label: "Gross profit", data: [], backgroundColor: [], yAxisID: "eur", order: 1, borderRadius: 2 },
+        { type: "bar", label: "Revenue", data: [], backgroundColor: p.revenue, yAxisID: "eur", order: 2, borderRadius: 4 },
+        { type: "bar", label: "Gross profit", data: [], backgroundColor: [], yAxisID: "eur", order: 1, borderRadius: 4 },
         {
           type: "line", label: "Gross margin", data: [], yAxisID: "pct", order: 0,
           borderColor: p.ink, backgroundColor: p.ink, borderWidth: 2, pointRadius: 3, tension: 0.25,
@@ -341,17 +349,29 @@ export function updateWhaleChart(chart, curve, nameOf) {
 // Margin bridge: waterfall from baseline to scenario gross profit
 // ---------------------------------------------------------------------------
 
+/** Splits a label at its middle space: "Customer price" → ["Customer", "price"]. */
+function twoLines(label) {
+  const words = String(label).split(" ");
+  if (words.length < 2) return label;
+  const half = Math.ceil(words.length / 2);
+  return [words.slice(0, half).join(" "), words.slice(half).join(" ")];
+}
+
 /** Creates the margin-bridge (waterfall) chart. */
 export function createBridgeChart(canvas) {
   ensureDefaults();
   return new Chart(canvas, {
     type: "bar",
-    data: { labels: [], datasets: [{ label: "Gross profit", data: [], deltas: [], margins: [], backgroundColor: [], borderRadius: 2, barPercentage: 0.7 }] },
+    data: { labels: [], datasets: [{ label: "Gross profit", data: [], deltas: [], margins: [], backgroundColor: [], borderRadius: 6, barPercentage: 0.7 }] },
     options: {
       responsive: true,
       maintainAspectRatio: false,
       scales: {
-        x: { grid: { display: false } },
+        x: {
+          grid: { display: false },
+          // Two-word step names go on two lines, so the labels never need tilting.
+          ticks: { maxRotation: 0, autoSkip: false, callback(value) { return twoLines(this.getLabelForValue(value)); } },
+        },
         y: { ticks: { callback: (v) => formatEur(v), maxTicksLimit: 6 } },
       },
       plugins: {
