@@ -2064,7 +2064,7 @@
       "unit": "EUR per message",
       "source": "",
       "status": "estimated",
-      "note": "Viber's fee to providers is not public. Estimated."
+      "note": "Viber's fee to providers is not public; estimated at about 60% of the customer price."
     },
     {
       "id": "price_HR_Viber_utility",
@@ -2103,7 +2103,7 @@
       "unit": "EUR per message",
       "source": "",
       "status": "estimated",
-      "note": "Viber's fee to providers is not public. Estimated."
+      "note": "Viber's fee to providers is not public; estimated at about 60% of the customer price."
     },
     {
       "id": "price_HR_Viber_marketing",
@@ -2142,7 +2142,7 @@
       "unit": "EUR per message",
       "source": "",
       "status": "estimated",
-      "note": "Viber's fee to providers is not public. Estimated."
+      "note": "Viber's fee to providers is not public; estimated at about 60% of the customer price."
     },
     {
       "id": "cost_currency_HR_Voice",

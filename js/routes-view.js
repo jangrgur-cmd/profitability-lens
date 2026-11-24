@@ -3,7 +3,7 @@
 import { routeProfitability } from "./calc.js";
 import { createSortableTable } from "./tables.js";
 import { toCsv, downloadCsv } from "./export.js";
-import { formatEur, formatPct, formatCount } from "./format.js";
+import { formatEur, formatPct, formatCount, toneClass } from "./format.js";
 
 const $ = (id) => document.getElementById(id);
 
@@ -32,10 +32,33 @@ function lossBadge() {
 /** Margin cell: the percentage, plus the loss badge when the route loses money. */
 function marginCell(route) {
   const span = document.createElement("span");
+  span.className = toneClass(route.grossMarginPct);
   span.textContent = formatPct(route.grossMarginPct);
   if (route.lossMaking) span.append(lossBadge());
   return span;
 }
+
+/**
+ * Fills an element with a sentence made of plain text and coloured figures.
+ * @param {HTMLElement} target
+ * @param {(string|{text: string, cls: string})[]} parts
+ */
+function setSentence(target, parts) {
+  target.replaceChildren(
+    ...parts.map((p) => {
+      if (typeof p === "string") return document.createTextNode(p);
+      const span = document.createElement("span");
+      span.className = p.cls;
+      span.textContent = p.text;
+      return span;
+    }),
+  );
+}
+
+/** A margin as a coloured sentence part. */
+const pct = (v) => ({ text: formatPct(v), cls: toneClass(v) });
+/** An amount as a coloured sentence part. */
+const eur = (v) => ({ text: formatEur(v), cls: toneClass(v) });
 
 export function createRoutesView(model) {
   const { countryNames, dimensions } = model;
@@ -75,22 +98,28 @@ export function createRoutesView(model) {
   });
 
   function renderSummary(routes) {
-    const el = $("routes-summary");
+    const box = $("routes-summary");
     if (routes.length === 0) {
-      el.textContent = "No routes have traffic with these filters.";
+      box.textContent = "No routes have traffic with these filters.";
       return;
     }
     const losers = routes.filter((r) => r.lossMaking);
     const best = routes.reduce((a, b) => (b.grossProfit > a.grossProfit ? b : a));
-    const bestText = `${routeName(best)} earns the most gross profit (${formatEur(best.grossProfit)}).`;
-    if (losers.length === 0) {
-      const thinnest = routes.reduce((a, b) => (b.grossMarginPct < a.grossMarginPct ? b : a));
-      el.textContent = `All ${routes.length} routes are profitable in this selection; the thinnest is ${routeName(thinnest)} at ${formatPct(thinnest.grossMarginPct)}. ${bestText}`;
+    const bestPart = [` ${routeName(best)} earns the most gross profit (`, eur(best.grossProfit), ")."];
+    if (routes.length === 1) {
+      const only = routes[0];
+      const verb = only.lossMaking ? "loses money" : "is profitable";
+      setSentence(box, [`The only route in this selection, ${routeName(only)}, ${verb}: a `, pct(only.grossMarginPct), " margin on ", formatEur(only.revenue), " revenue."]);
       return;
     }
-    const list = losers.map((r) => `${routeName(r)} (${formatPct(r.grossMarginPct)}, ${formatEur(r.grossProfit)})`).join(", ");
+    if (losers.length === 0) {
+      const thinnest = routes.reduce((a, b) => (b.grossMarginPct < a.grossMarginPct ? b : a));
+      setSentence(box, [`All ${routes.length} routes are profitable in this selection; the thinnest is ${routeName(thinnest)} at `, pct(thinnest.grossMarginPct), ".", ...bestPart]);
+      return;
+    }
     const verb = losers.length === 1 ? "loses" : "lose";
-    el.textContent = `${losers.length} of ${routes.length} routes ${verb} money in this selection: ${list}. ${bestText}`;
+    const list = losers.flatMap((r, i) => [i === 0 ? "" : ", ", `${routeName(r)} (`, pct(r.grossMarginPct), ", ", eur(r.grossProfit), ")"]);
+    setSentence(box, [`${losers.length} of ${routes.length} routes ${verb} money in this selection: `, ...list, ".", ...bestPart]);
   }
 
   // The heatmap grid is built once; each render only updates the cells, so

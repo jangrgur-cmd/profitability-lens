@@ -3,7 +3,7 @@
 // The hash only lists settings that differ from the defaults, so the plain
 // link stays clean and a shared link reproduces exactly the same view:
 //   #tab=scenarios&country=DE&sc=15&scc=SMS&sco=HR,DE,FR,GB
-// Scenario shares are stored as whole percentages (sc=15 means +15 %).
+// Scenario shares are stored as whole percentages (sc=15 means +15%).
 
 import { DEFAULT_SCENARIO, LIMITS, makeScenario } from "./scenarios.js";
 

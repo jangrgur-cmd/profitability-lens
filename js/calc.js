@@ -116,7 +116,7 @@ export function rowMetrics(row, ctx) {
  * Gross margin as a share of revenue: gross_profit / revenue.
  * Returns null when revenue is 0 (the UI shows "n/a"), because a margin on
  * zero revenue has no meaning.
- * @returns {number|null} e.g. 0.223 for 22.3 %
+ * @returns {number|null} e.g. 0.223 for 22.3%
  */
 export function grossMarginPct(grossProfit, revenue) {
   return revenue === 0 ? null : grossProfit / revenue;
@@ -246,8 +246,8 @@ export function customerProfitability(rows, ctx) {
  * plot the cumulative share of customers (x) against the cumulative share of
  * total gross profit (y).
  *
- * When some customers lose money, the curve rises above 100 % and then falls
- * back to 100 % at the end: the profitable customers earn more than the total,
+ * When some customers lose money, the curve rises above 100% and then falls
+ * back to 100% at the end: the profitable customers earn more than the total,
  * and the loss-makers give part of it back. The peak shows how much profit the
  * profitable customers generate on their own.
  *

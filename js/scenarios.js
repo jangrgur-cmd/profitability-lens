@@ -18,7 +18,7 @@ import { summarize } from "./calc.js";
 
 /** A scenario where nothing changes. Every parameter defaults to "no change". */
 export const DEFAULT_SCENARIO = Object.freeze({
-  volumeChange: 0, // share, e.g. 0.1 = +10 %
+  volumeChange: 0, // share, e.g. 0.1 = +10%
   volumeCategory: "all",
   migration: Object.freeze({ authentication: 0, utility: 0, marketing: 0 }), // share of SMS volume moved
   conversionRatio: 1, // WhatsApp messages that replace one SMS
@@ -27,7 +27,7 @@ export const DEFAULT_SCENARIO = Object.freeze({
   costChange: 0,
   costChannel: "all",
   costCountries: Object.freeze([]), // empty = all countries
-  fxChange: 0, // change in the EUR/USD rate, e.g. −0.1 = the euro buys 10 % fewer dollars
+  fxChange: 0, // change in the EUR/USD rate, e.g. −0.1 = the euro buys 10% fewer dollars
 });
 
 /** Allowed ranges, from the spec. */
@@ -202,7 +202,7 @@ export const STEPS = Object.freeze([
   { key: "migration", label: "SMS → WhatsApp", description: "A share of SMS volume per category moves to the same customer's WhatsApp traffic in the same month and country, at WhatsApp prices and costs; the conversion ratio sets how many WhatsApp messages replace one SMS." },
   { key: "price", label: "Customer price", description: "Our own fee is multiplied by (1 + change), for all channels or one; pass-through fees stay as they are." },
   { key: "cost", label: "Operator cost", description: "Delivery cost is multiplied by (1 + change), for all channels or one and for the chosen countries; customer prices do not follow." },
-  { key: "fx", label: "Exchange rate", description: "The EUR/USD rate is multiplied by (1 + change), which changes the euro cost of every cost billed in dollars." },
+  { key: "fx", label: "Exchange rate", description: "The EUR/USD rate is multiplied by (1 + change), which changes the euro value of every cost billed in dollars." },
 ]);
 
 /**
@@ -293,19 +293,19 @@ export const PRESETS = Object.freeze([
   {
     id: "operator-increase",
     label: "Operator price increase",
-    description: "European operators raise SMS termination by 15 % in Croatia, Germany, France and the UK; customer prices stay put.",
+    description: "European operators raise SMS termination costs by 15% in Croatia, Germany, France and the UK; customer prices stay the same.",
     scenario: { costChange: 0.15, costChannel: "SMS", costCountries: ["HR", "DE", "FR", "GB"] },
   },
   {
     id: "shift-to-whatsapp",
     label: "Shift to WhatsApp",
-    description: "25 % of marketing and utility SMS moves to WhatsApp, one message for one message.",
+    description: "25% of marketing and utility SMS moves to WhatsApp, with one WhatsApp message replacing each SMS.",
     scenario: { migration: { marketing: 0.25, utility: 0.25 } },
   },
   {
     id: "strong-dollar",
     label: "Strong dollar",
-    description: "EUR/USD falls 10 %, so Meta's fees and US costs, billed in dollars, cost more in euros.",
+    description: "EUR/USD falls 10%, so Meta's fees and US costs, which are billed in dollars, cost more in euros.",
     scenario: { fxChange: -0.1 },
   },
 ]);

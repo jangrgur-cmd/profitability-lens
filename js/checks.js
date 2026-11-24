@@ -119,7 +119,7 @@ function checkSourcing(assumptions) {
     label: "Sourced assumptions link a source; estimates explain their reasoning",
     scope: "all",
     pass: noUrl.length === 0 && noNote.length === 0,
-    detail: `${count("sourced")} sourced, ${count("estimated")} estimated, ${count("placeholder")} placeholder.` +
+    detail: `${count("sourced")} sourced, ${count("estimated")} estimated, ${count("placeholder")} ${count("placeholder") === 1 ? "placeholder" : "placeholders"}.` +
       (noUrl.length + noNote.length === 0 ? "" : ` Problems: ${[...noUrl, ...noNote].slice(0, 3).map((a) => a.id).join(", ")}.`),
   };
 }

@@ -101,7 +101,7 @@ export function createTrendChart(canvas) {
           grid: { color: p.rule },
         },
         pct: {
-          // Start at 0 % so small month-to-month margin moves are not exaggerated.
+          // Start at 0% so small month-to-month margin moves are not exaggerated.
           position: "right",
           beginAtZero: true,
           suggestedMax: 0.3,
@@ -157,7 +157,7 @@ function describeTrend(months, monthLabels) {
 }
 
 // ---------------------------------------------------------------------------
-// Channel mix: three 100 % bars (messages, revenue, gross profit) split by channel
+// Channel mix: three 100% bars (messages, revenue, gross profit) split by channel
 // ---------------------------------------------------------------------------
 
 const MIX_ROWS = ["Messages", "Revenue", "Gross profit"];
@@ -274,7 +274,7 @@ export function createWhaleChart(canvas) {
           backgroundColor: p.ink,
         },
         {
-          label: "100 % of gross profit",
+          label: "100% of gross profit",
           data: [{ x: 0, y: 1 }, { x: 1, y: 1 }],
           borderColor: p.muted,
           borderWidth: 1,
@@ -337,9 +337,10 @@ export function updateWhaleChart(chart, curve, nameOf) {
   if (curve.points.length === 0) summary = "No customers match these filters.";
   else if (!valid) summary = "Total gross profit in this selection is zero or negative, so profit shares cannot be shown.";
   else if (curve.peak.profitSharePct > 1 + 1e-9) {
-    summary = `The curve peaks at ${formatPct(curve.peak.profitSharePct)} of gross profit after the ${curve.peak.rank} most profitable customers; the remaining customers lose money and give back the difference.`;
+    const leaders = curve.peak.rank === 1 ? "the most profitable customer" : `the ${curve.peak.rank} most profitable customers`;
+    summary = `The curve peaks at ${formatPct(curve.peak.profitSharePct)} of gross profit after ${leaders}; the remaining customers lose money and give back the difference.`;
   } else {
-    summary = "Every customer in this selection is profitable, so the curve rises steadily to 100 % without overshooting.";
+    summary = "Every customer in this selection is profitable, so the curve rises steadily to 100% without overshooting.";
   }
   chart.canvas.setAttribute("aria-label", `Whale curve chart. ${summary}`);
   return summary;

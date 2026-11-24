@@ -3,7 +3,7 @@
 import { filterRows } from "./calc.js";
 import { runScenario, marginBridge, mostAffected, makeScenario, isDefaultScenario, PRESETS, LIMITS } from "./scenarios.js";
 import { createBridgeChart, updateBridgeChart } from "./charts.js";
-import { formatEur, formatPct, formatCount } from "./format.js";
+import { formatEur, formatPct, formatCount, toneClass } from "./format.js";
 
 const $ = (id) => document.getElementById(id);
 
@@ -19,6 +19,17 @@ function el(tag, className, text) {
 const signedPct = (share) => (share > 0 ? `+${formatPct(share)}` : formatPct(share));
 /** "+€1.2M" / "−€310.5k". */
 const signedEur = (v) => (v > 0 ? `+${formatEur(v)}` : formatEur(v));
+
+/** Step name inside a sentence: "Operator cost" → "operator cost"; "SMS → WhatsApp" stays as is. */
+const inSentence = (label) => label.replace(/^([A-Z])(?=[a-z])/, (c) => c.toLowerCase());
+
+/** Fills an element with plain text and coloured figures: parts are strings or { text, cls }. */
+function setSentence(target, parts) {
+  target.replaceChildren(...parts.map((p) => {
+    if (typeof p === "string") return document.createTextNode(p);
+    return el("span", p.cls, p.text);
+  }));
+}
 
 /** Same scenario? Used to highlight the active preset. */
 function sameScenario(a, b) {
@@ -117,20 +128,23 @@ export function createScenariosView(model, onChange) {
 
   /** Writes a scenario into the controls and their read-outs. */
   function syncControls(s) {
-    const setRange = (name, share, outputId, text) => {
+    // Read-outs are green when the change raises profit and red when it lowers it
+    // (higherIsBetter = false for costs); migration can go either way, so it stays neutral.
+    const setRange = (name, share, outputId, text, higherIsBetter = null) => {
       form.elements[name].value = String(Math.round(share * 100));
       const out = $(outputId);
       out.textContent = text ?? signedPct(share);
-      out.classList.toggle("is-changed", share !== 0);
+      out.className = higherIsBetter === null ? (share !== 0 ? "is-changed" : "") : toneClass(share, higherIsBetter);
     };
-    setRange("volumeChange", s.volumeChange, "o-volume");
+    setRange("volumeChange", s.volumeChange, "o-volume", undefined, true);
     setRange("migration.authentication", s.migration.authentication, "o-ma", formatPct(s.migration.authentication));
     setRange("migration.utility", s.migration.utility, "o-mu", formatPct(s.migration.utility));
     setRange("migration.marketing", s.migration.marketing, "o-mm", formatPct(s.migration.marketing));
-    setRange("priceChange", s.priceChange, "o-price");
-    setRange("costChange", s.costChange, "o-cost");
+    setRange("priceChange", s.priceChange, "o-price", undefined, true);
+    setRange("costChange", s.costChange, "o-cost", undefined, false);
     const rate = model.ctx.eurUsd * (1 + s.fxChange);
-    setRange("fxChange", s.fxChange, "o-fx", `${signedPct(s.fxChange)} (${rate.toFixed(3)} USD per EUR)`);
+    // A higher EUR/USD (stronger euro) makes dollar costs cheaper, so it raises profit.
+    setRange("fxChange", s.fxChange, "o-fx", `${signedPct(s.fxChange)} (${rate.toFixed(3)} USD per EUR)`, true);
     if (document.activeElement !== form.elements.conversionRatio) form.elements.conversionRatio.value = String(s.conversionRatio);
     form.elements.volumeCategory.value = s.volumeCategory;
     form.elements.priceChannel.value = s.priceChannel;
@@ -154,17 +168,24 @@ export function createScenariosView(model, onChange) {
     }
     const delta = scenario.grossProfit - baseline.grossProfit;
     const rel = baseline.grossProfit !== 0 ? delta / Math.abs(baseline.grossProfit) : null;
-    const direction = delta >= 0 ? "rises" : "falls";
-    const biggest = steps.reduce((a, b) => (Math.abs(b.delta) > Math.abs(a.delta) ? b : a));
-    const driver = Math.abs(biggest.delta) > 0.5 ? ` Largest effect: ${biggest.label} (${signedEur(biggest.delta)}).` : "";
+    const tone = toneClass(delta);
+    const biggest = steps.reduce((x, y) => (Math.abs(y.delta) > Math.abs(x.delta) ? y : x));
     // Migration moves volume between SMS and WhatsApp; a channel filter hides one side of that move.
     const migrating = Object.values(s.migration).some((v) => v > 0);
-    const channelNote = migrating && filters.channel !== "all"
-      ? ` Note: the channel filter shows only ${filters.channel}, so traffic moving between SMS and WhatsApp is only half visible; set Channel to "All channels" to see the full effect.`
-      : "";
-    box.textContent =
-      `In this scenario gross profit ${direction} by ${formatEur(Math.abs(delta))}${rel === null ? "" : ` (${signedPct(rel)})`} to ${formatEur(scenario.grossProfit)}, ` +
-      `and the margin moves from ${formatPct(baseline.grossMarginPct)} to ${formatPct(scenario.grossMarginPct)}.${driver}${channelNote}`;
+    const parts = [
+      `In this scenario gross profit ${delta >= 0 ? "rises" : "falls"} by `,
+      { text: formatEur(Math.abs(delta)) + (rel === null ? "" : ` (${signedPct(rel)})`), cls: tone },
+      ` to ${formatEur(scenario.grossProfit)}, and the margin moves from `,
+      { text: formatPct(baseline.grossMarginPct), cls: toneClass(baseline.grossMarginPct) },
+      " to ",
+      { text: formatPct(scenario.grossMarginPct), cls: toneClass(scenario.grossMarginPct) },
+      ".",
+    ];
+    if (Math.abs(biggest.delta) > 0.5) parts.push(` The largest effect comes from ${inSentence(biggest.label)} (`, { text: signedEur(biggest.delta), cls: toneClass(biggest.delta) }, ").");
+    if (migrating && filters.channel !== "all") {
+      parts.push(` Note: the channel filter shows only ${filters.channel}, so traffic moving between SMS and WhatsApp is only half visible; set Channel to "All channels" to see the full effect.`);
+    }
+    setSentence(box, parts);
   }
 
   function renderCompare({ baseline, scenario }) {

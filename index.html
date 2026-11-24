@@ -20,8 +20,8 @@
       <h1>Messaging profitability model</h1>
       <p class="lede">
         Where a European business-messaging provider makes and loses money across five markets,
-        four channels and 36 customer types, priced from public rate cards, and what happens when
-        prices, costs or exchange rates move.
+        four channels and 36 customer types, and what happens when prices, costs or exchange rates
+        move. Market prices come from public rate cards.
       </p>
     </div>
 
@@ -129,7 +129,7 @@
         <figcaption>
           <h3>Whale curve</h3>
           <p>Customers sorted from most to least profitable, against their cumulative share of gross profit.
-            The curve rises above 100&nbsp;% when some customers lose money.</p>
+            The curve rises above 100% when some customers lose money.</p>
         </figcaption>
         <div class="chart-box chart-box--short">
           <canvas id="whale-chart" role="img"></canvas>
@@ -211,7 +211,8 @@
             <label class="inline-select">Applies to
               <select name="costChannel"></select>
             </label>
-            <div class="country-checks" id="cost-countries" role="group" aria-label="Countries the cost change applies to (none ticked = all)"></div>
+            <div class="country-checks" id="cost-countries" role="group" aria-label="Countries the cost change applies to"></div>
+            <p class="hint">With no country ticked, the change applies to all countries.</p>
           </fieldset>
 
           <fieldset class="step">
@@ -316,7 +317,7 @@
             <div>
               <dt>Whale curve</dt>
               <dd>Customers sorted by gross profit, highest first, against their cumulative share of total gross
-                profit. It rises above 100&nbsp;% when some customers lose money.</dd>
+                profit. It rises above 100% when some customers lose money.</dd>
             </div>
             <div>
               <dt>Revenue and cost per message</dt>

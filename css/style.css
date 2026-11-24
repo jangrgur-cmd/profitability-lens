@@ -371,6 +371,11 @@ main { padding-block: var(--space-6) var(--space-7); }
   margin-left: 0.4em;
 }
 
+/* Sign colours: green for gains and positive margins, red for losses. Always
+   paired with a sign (+/−) or a word, so colour is never the only signal. */
+.pos { color: var(--profit); }
+.neg { color: var(--loss); }
+
 /* ---------- Charts ---------- */
 
 .charts {
@@ -673,6 +678,8 @@ main { padding-block: var(--space-6) var(--space-7); }
 .slider > span { display: flex; justify-content: space-between; gap: var(--space-2); }
 .slider output { color: var(--ink); font-weight: 650; }
 .slider output.is-changed { color: var(--accent-strong); }
+.slider output.pos { color: var(--profit); }
+.slider output.neg { color: var(--loss); }
 .slider input[type="range"] { width: 100%; margin: var(--space-2) 0 0; accent-color: var(--accent); }
 
 .inline-select {
@@ -697,6 +704,7 @@ main { padding-block: var(--space-6) var(--space-7); }
 .inline-select input[type="number"]:invalid { border-color: var(--loss); outline-color: var(--loss); }
 
 .country-checks { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-3); margin-top: var(--space-3); font-size: var(--step--1); }
+.hint { margin: var(--space-2) 0 0; font-size: 0.8125rem; color: var(--ink-faint); }
 .country-checks label { display: inline-flex; align-items: center; gap: 0.35em; }
 .country-checks input { accent-color: var(--accent); width: 1rem; height: 1rem; }
 

@@ -3,7 +3,7 @@
 import { loadModel } from "./data.js";
 import { filterRows, availableFilterValues, summarize, monthlyTotals, channelTotals } from "./calc.js";
 import { createTrendChart, updateTrendChart, createMixChart, updateMixChart } from "./charts.js";
-import { formatEur, formatPct, formatPerMessage, formatCount, formatInteger } from "./format.js";
+import { formatEur, formatPct, formatPerMessage, formatCount, formatInteger, toneClass } from "./format.js";
 import { TABS, parseHash, serializeHash, filtersAreDefault, defaultState } from "./state.js";
 import { createRoutesView } from "./routes-view.js";
 import { createCustomersView } from "./customers-view.js";
@@ -166,7 +166,7 @@ function periodText({ monthFrom, monthTo }) {
   return `${labels[monthFrom - 1]}–${labels[monthTo - 1]}`;
 }
 
-/** Describes the filtered slice, e.g. "SMS in Nigeria, marketing, Banking customers". */
+/** Describes the filtered slice, e.g. "SMS in Germany, marketing traffic, Banking customers". */
 function scopeText({ country, channel, category, industry }) {
   const { countryNames, categoryLabels } = app.model;
   const parts = [];
@@ -199,7 +199,10 @@ function renderStatement(totals, filters) {
   figure.textContent = isLoss
     ? `a ${formatEur(Math.abs(totals.grossProfit))} gross loss`
     : `${formatEur(totals.grossProfit)} gross profit`;
-  el.append(figure, ` on ${formatEur(totals.revenue)} revenue, a ${formatPct(totals.grossMarginPct)} margin.`);
+  const margin = document.createElement("span");
+  margin.className = toneClass(totals.grossMarginPct);
+  margin.textContent = formatPct(totals.grossMarginPct);
+  el.append(figure, ` on ${formatEur(totals.revenue)} revenue, a `, margin, " margin.");
 }
 
 /** Renders the row of five headline figures. */
@@ -210,10 +213,11 @@ function renderKpis(totals) {
     {
       label: "Gross profit",
       value: formatEur(totals.grossProfit),
+      tone: toneClass(totals.grossProfit),
       loss: isLoss,
       detail: `after ${formatEur(totals.deliveryCost)} delivery and ${formatEur(totals.platformCost)} platform cost`,
     },
-    { label: "Gross margin", value: formatPct(totals.grossMarginPct), loss: isLoss, detail: "gross profit ÷ revenue" },
+    { label: "Gross margin", value: formatPct(totals.grossMarginPct), tone: toneClass(totals.grossMarginPct), loss: isLoss, detail: "gross profit ÷ revenue" },
     { label: "Messages", value: formatCount(totals.volume), detail: `${formatInteger(totals.volume)} (voice counted per call)` },
     {
       label: "Revenue per message",
@@ -228,7 +232,7 @@ function renderKpis(totals) {
       dt.textContent = item.label;
       const dd = document.createElement("dd");
       const value = document.createElement("span");
-      value.className = `value${item.loss ? " value--loss" : ""}`;
+      value.className = `value ${item.tone ?? ""}`.trim();
       value.textContent = item.value;
       if (item.loss) {
         const mark = document.createElement("span");
@@ -281,6 +285,8 @@ function setState(change) {
 function render() {
   const { model, state } = app;
   showTab(state.tab);
+  // Tabs work before the data has loaded (or if it failed to load); there is nothing else to draw yet.
+  if (!model) return;
   syncFilterControls(state.filters);
 
   const rows = filterRows(model.rows, state.filters, model.customersById);

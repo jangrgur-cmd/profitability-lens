@@ -59,3 +59,14 @@ export function formatInteger(value) {
   if (value === null || value === undefined || Number.isNaN(value)) return "n/a";
   return signed(Math.abs(Math.round(value)).toLocaleString("en-US"), value);
 }
+
+/**
+ * CSS class for colouring a figure by sign: "pos" (green) for a gain or a
+ * positive margin, "neg" (red) for a loss, "" for zero or n/a.
+ * Pass `higherIsBetter = false` for figures where an increase hurts profit
+ * (e.g. a cost increase), so the colour always means "good" or "bad".
+ */
+export function toneClass(value, higherIsBetter = true) {
+  if (value === null || value === undefined || Number.isNaN(value) || value === 0) return "";
+  return (value > 0) === higherIsBetter ? "pos" : "neg";
+}
