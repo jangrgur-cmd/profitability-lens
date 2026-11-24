@@ -162,7 +162,11 @@ When on: each ratio expands to "Show the math" (formula → formula with the use
 ## 9. Commands
 
 ```
-node --test                                    # all tests (root and modules/messaging/tests)
+node --test                                        # all tests (root and modules/messaging/tests)
 node modules/messaging/scripts/generate-data.mjs   # regenerate traffic.json after editing assumptions
-npx serve .                                    # or: python -m http.server — then open the printed URL
+node scripts/build-assumptions-doc.mjs             # regenerate docs/assumptions.md after editing assumptions
+node modules/messaging/scripts/update-golden.mjs   # ONLY when a change to the dashboard's numbers is intended
+npx serve .                                        # or: python -m http.server — then open the printed URL
 ```
+
+`modules/messaging/tests/golden.test.mjs` locks every number the messaging dashboard shows (totals, groupings, presets, a scenario using every step, data checks, formatting) against `tests/golden/expected.json`. A refactor must leave it green without regenerating the expected values.
