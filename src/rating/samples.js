@@ -1,0 +1,89 @@
+// samples.js: three FICTIONAL example companies for "Load example".
+//
+// The companies, names and figures are invented for learning. Any resemblance
+// to a real business is a coincidence. Each one shows a different situation:
+// a healthy manufacturer, a leveraged hotel that reports costs by nature
+// (no COGS), and a loss-making software start-up without prior-year figures.
+
+/**
+ * @typedef {object} Sample
+ * @property {string} id
+ * @property {string} name
+ * @property {string} description one sentence on what the example teaches
+ * @property {string} industryId
+ * @property {true} fictional
+ * @property {Record<string, number|null>} values in EUR
+ */
+
+/** @type {Sample[]} */
+export const SAMPLES = [
+  {
+    id: "bakery",
+    name: "Pekara Lastavica d.o.o.",
+    description: "Fictional regional bakery: steady margins, modest debt and two years of figures.",
+    industryId: "manufacturing",
+    fictional: true,
+    values: {
+      revenue: 2_400_000,
+      cogs: 1_450_000,
+      opex: 680_000,
+      da: 120_000,
+      otherIncome: -5_000,
+      interest: 30_000,
+      tax: 21_000,
+      assets: 1_900_000,
+      equity: 1_050_000,
+      currentLiabilities: 420_000,
+      debt: 380_000,
+      cash: 160_000,
+      priorAssets: 1_750_000,
+      priorEquity: 940_000,
+    },
+  },
+  {
+    id: "hotel",
+    name: "Hotel Borovina d.d.",
+    description: "Fictional seaside hotel: costs reported by nature (no COGS), heavy depreciation and a large bank loan.",
+    industryId: "tourism",
+    fictional: true,
+    values: {
+      revenue: 3_200_000,
+      cogs: null,
+      opex: 2_300_000,
+      da: 520_000,
+      otherIncome: 0,
+      interest: 260_000,
+      tax: 22_000,
+      assets: 9_800_000,
+      equity: 2_600_000,
+      currentLiabilities: 1_100_000,
+      debt: 6_200_000,
+      cash: 350_000,
+      priorAssets: 9_500_000,
+      priorEquity: 2_480_000,
+    },
+  },
+  {
+    id: "startup",
+    name: "Oblak Software d.o.o.",
+    description: "Fictional software start-up: high gross margin, but spending on growth produces a net loss. No prior-year figures.",
+    industryId: "software",
+    fictional: true,
+    values: {
+      revenue: 850_000,
+      cogs: 170_000,
+      opex: 980_000,
+      da: 60_000,
+      otherIncome: 4_000,
+      interest: 0,
+      tax: 0,
+      assets: 1_400_000,
+      equity: 900_000,
+      currentLiabilities: 380_000,
+      debt: 0,
+      cash: 700_000,
+      priorAssets: null,
+      priorEquity: null,
+    },
+  },
+];

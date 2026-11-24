@@ -1,7 +1,7 @@
 // charts.js: thin wrappers around Chart.js (loaded globally from lib/).
 // Each chart is created once and then updated in place when filters change.
 
-import { formatEur, formatPct, formatCount } from "./format.js";
+import { formatEur, formatPct, formatCount } from "../../../src/shared/format.js";
 
 const Chart = window.Chart;
 

@@ -3,7 +3,7 @@
 import { routeProfitability } from "./calc.js";
 import { createSortableTable } from "./tables.js";
 import { toCsv, downloadCsv } from "./export.js";
-import { formatEur, formatPct, formatCount, toneClass } from "./format.js";
+import { formatEur, formatPct, formatSignedPct, formatCount, toneClass } from "../../../src/shared/format.js";
 
 const $ = (id) => document.getElementById(id);
 
@@ -34,7 +34,7 @@ function headroomCell(route) {
   const span = document.createElement("span");
   const v = route.costHeadroom;
   span.className = toneClass(v);
-  span.textContent = v === null ? "n/a" : (v > 0 ? "+" : "") + formatPct(v);
+  span.textContent = formatSignedPct(v);
   return span;
 }
 

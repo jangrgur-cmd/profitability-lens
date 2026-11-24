@@ -4,7 +4,7 @@ import { customerProfitability, whaleCurve, routeProfitability } from "./calc.js
 import { createSortableTable } from "./tables.js";
 import { toCsv, downloadCsv } from "./export.js";
 import { createWhaleChart, updateWhaleChart } from "./charts.js";
-import { formatEur, formatPct, formatCount, toneClass } from "./format.js";
+import { formatEur, formatPct, formatCount, toneClass } from "../../../src/shared/format.js";
 
 const $ = (id) => document.getElementById(id);
 

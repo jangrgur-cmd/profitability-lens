@@ -51,7 +51,7 @@ One repo, one site, shared navigation between modules. All calculation code is p
 └── LICENSE
 ```
 
-Exact file names inside `src/shared/` are settled in Phase 1 when the messaging module's shared logic is extracted.
+Settled in Phase 1: `src/shared/` holds `parse.js`, `format.js` and `margin.js`; UI helpers (status styles, nav, Learn mode) join it in Phase 2. The rating method and definition choices are in `docs/methodology.md`.
 
 ### 3.1 Number parsing (`src/shared/parse.js`)
 

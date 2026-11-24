@@ -24,7 +24,7 @@ import {
 import { runScenario, marginBridge, mostAffected, makeScenario, PRESETS } from "../../js/scenarios.js";
 import { buildModel } from "../../js/data.js";
 import { runDataChecks } from "../../js/checks.js";
-import { formatEur, formatPct, formatPerMessage, formatCount, formatInteger } from "../../js/format.js";
+import { formatEur, formatPct, formatPerMessage, formatCount, formatInteger } from "../../../../src/shared/format.js";
 
 /** A scenario that moves every lever at once, so each step is exercised. */
 const ALL_STEPS_SCENARIO = {

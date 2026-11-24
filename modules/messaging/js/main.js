@@ -3,7 +3,7 @@
 import { loadModel } from "./data.js";
 import { filterRows, availableFilterValues, summarize, monthlyTotals, channelTotals } from "./calc.js";
 import { createTrendChart, updateTrendChart, createMixChart, updateMixChart } from "./charts.js";
-import { formatEur, formatPct, formatPerMessage, formatCount, formatInteger, toneClass } from "./format.js";
+import { formatEur, formatPct, formatPerMessage, formatCount, formatInteger, toneClass } from "../../../src/shared/format.js";
 import { TABS, parseHash, serializeHash, filtersAreDefault, defaultState } from "./state.js";
 import { createRoutesView } from "./routes-view.js";
 import { createCustomersView } from "./customers-view.js";

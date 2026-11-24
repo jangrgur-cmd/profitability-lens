@@ -7,7 +7,7 @@
 
 import { summarize, groupAndSummarize } from "./calc.js";
 import { runScenario, marginBridge, makeScenario } from "./scenarios.js";
-import { formatEur, formatInteger, formatPct } from "./format.js";
+import { formatEur, formatInteger, formatPct } from "../../../src/shared/format.js";
 
 /** Two money totals are "equal" if they differ by less than one hundredth of a cent. */
 const TOLERANCE_EUR = 0.0001;

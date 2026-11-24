@@ -4,7 +4,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { formatEur, formatPct, formatPerMessage, formatCount, formatInteger } from "../js/format.js";
+import { formatEur, formatPct, formatPerMessage, formatCount, formatInteger } from "../../../src/shared/format.js";
 import { parseHash, serializeHash, defaultState, filtersAreDefault } from "../js/state.js";
 import { toCsv } from "../js/export.js";
 import { sortRows } from "../js/tables.js";

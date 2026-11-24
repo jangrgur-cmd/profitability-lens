@@ -1,7 +1,7 @@
 // checks-view.js: the Data checks tab (pass/fail list).
 
 import { runDataChecks } from "./checks.js";
-import { formatInteger } from "./format.js";
+import { formatInteger } from "../../../src/shared/format.js";
 
 const $ = (id) => document.getElementById(id);
 

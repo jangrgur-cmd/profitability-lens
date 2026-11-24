@@ -12,6 +12,8 @@
 // A context looks like:
 //   { eurUsd: 1.08, discountByCustomer: { C01: 0.2, C02: 0.2, ... } }
 
+import { margin, safeDivide } from "../../../src/shared/margin.js";
+
 // ---------------------------------------------------------------------------
 // Context
 // ---------------------------------------------------------------------------
@@ -119,12 +121,12 @@ export function rowMetrics(row, ctx) {
  * @returns {number|null} e.g. 0.223 for 22.3%
  */
 export function grossMarginPct(grossProfit, revenue) {
-  return revenue === 0 ? null : grossProfit / revenue;
+  return margin(grossProfit, revenue);
 }
 
 /** Safe division for per-message figures: null when there are no messages. */
 function perMessage(amount, volume) {
-  return volume === 0 ? null : amount / volume;
+  return safeDivide(amount, volume);
 }
 
 /**

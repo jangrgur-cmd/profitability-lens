@@ -3,7 +3,7 @@
 import { createSortableTable } from "./tables.js";
 import { toCsv, downloadCsv } from "./export.js";
 import { STEPS } from "./scenarios.js";
-import { formatCount, formatPct } from "./format.js";
+import { formatCount, formatPct } from "../../../src/shared/format.js";
 
 const $ = (id) => document.getElementById(id);
 

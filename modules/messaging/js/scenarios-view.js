@@ -3,7 +3,7 @@
 import { filterRows } from "./calc.js";
 import { runScenario, marginBridge, mostAffected, makeScenario, isDefaultScenario, PRESETS, LIMITS } from "./scenarios.js";
 import { createBridgeChart, updateBridgeChart } from "./charts.js";
-import { formatEur, formatPct, formatCount, toneClass } from "./format.js";
+import { formatEur, formatPct, formatCount, formatSignedPct, formatSignedEur, formatPp, toneClass } from "../../../src/shared/format.js";
 
 const $ = (id) => document.getElementById(id);
 
@@ -14,11 +14,6 @@ function el(tag, className, text) {
   if (text !== undefined) node.textContent = text;
   return node;
 }
-
-/** "+15.0%" / "−10.0%" / "0.0%": a share with an explicit sign. */
-const signedPct = (share) => (share > 0 ? `+${formatPct(share)}` : formatPct(share));
-/** "+€1.2M" / "−€310.5k". */
-const signedEur = (v) => (v > 0 ? `+${formatEur(v)}` : formatEur(v));
 
 /** Step name inside a sentence: "Operator cost" → "operator cost"; "SMS → WhatsApp" stays as is. */
 const inSentence = (label) => label.replace(/^([A-Z])(?=[a-z])/, (c) => c.toLowerCase());
@@ -133,7 +128,7 @@ export function createScenariosView(model, onChange) {
     const setRange = (name, share, outputId, text, higherIsBetter = null) => {
       form.elements[name].value = String(Math.round(share * 100));
       const out = $(outputId);
-      out.textContent = text ?? signedPct(share);
+      out.textContent = text ?? formatSignedPct(share);
       out.className = higherIsBetter === null ? (share !== 0 ? "is-changed" : "") : toneClass(share, higherIsBetter);
     };
     setRange("volumeChange", s.volumeChange, "o-volume", undefined, true);
@@ -144,7 +139,7 @@ export function createScenariosView(model, onChange) {
     setRange("costChange", s.costChange, "o-cost", undefined, false);
     const rate = model.ctx.eurUsd * (1 + s.fxChange);
     // A higher EUR/USD (stronger euro) makes dollar costs cheaper, so it raises profit.
-    setRange("fxChange", s.fxChange, "o-fx", `${signedPct(s.fxChange)} (${rate.toFixed(3)} USD per EUR)`, true);
+    setRange("fxChange", s.fxChange, "o-fx", `${formatSignedPct(s.fxChange)} (${rate.toFixed(3)} USD per EUR)`, true);
     if (document.activeElement !== form.elements.conversionRatio) form.elements.conversionRatio.value = String(s.conversionRatio);
     form.elements.volumeCategory.value = s.volumeCategory;
     form.elements.priceChannel.value = s.priceChannel;
@@ -174,14 +169,14 @@ export function createScenariosView(model, onChange) {
     const migrating = Object.values(s.migration).some((v) => v > 0);
     const parts = [
       `In this scenario gross profit ${delta >= 0 ? "rises" : "falls"} by `,
-      { text: formatEur(Math.abs(delta)) + (rel === null ? "" : ` (${signedPct(rel)})`), cls: tone },
+      { text: formatEur(Math.abs(delta)) + (rel === null ? "" : ` (${formatSignedPct(rel)})`), cls: tone },
       ` to ${formatEur(scenario.grossProfit)}, and the margin moves from `,
       { text: formatPct(baseline.grossMarginPct), cls: toneClass(baseline.grossMarginPct) },
       " to ",
       { text: formatPct(scenario.grossMarginPct), cls: toneClass(scenario.grossMarginPct) },
       ".",
     ];
-    if (Math.abs(biggest.delta) > 0.5) parts.push(` The largest effect comes from ${inSentence(biggest.label)} (`, { text: signedEur(biggest.delta), cls: toneClass(biggest.delta) }, ").");
+    if (Math.abs(biggest.delta) > 0.5) parts.push(` The largest effect comes from ${inSentence(biggest.label)} (`, { text: formatSignedEur(biggest.delta), cls: toneClass(biggest.delta) }, ").");
     if (migrating && filters.channel !== "all") {
       parts.push(` Note: the channel filter shows only ${filters.channel}, so traffic moving between SMS and WhatsApp is only half visible; set Channel to "All channels" to see the full effect.`);
     }
@@ -214,9 +209,9 @@ export function createScenariosView(model, onChange) {
       let changeClass = "";
       if (b !== null && s !== null && Math.abs(s - b) > 1e-9) {
         const diff = s - b;
-        if (isMargin) changeText = `${diff > 0 ? "+" : "−⁠"}${Math.abs(diff * 100).toFixed(1)} pp`;
+        if (isMargin) changeText = formatPp(diff);
         else if (format === formatCount) changeText = `${diff > 0 ? "+" : ""}${formatCount(diff)}`;
-        else changeText = `${signedEur(diff)}${b !== 0 ? ` (${signedPct(diff / Math.abs(b))})` : ""}`;
+        else changeText = `${formatSignedEur(diff)}${b !== 0 ? ` (${formatSignedPct(diff / Math.abs(b))})` : ""}`;
         changeClass = (diff > 0) === higherIsBetter ? "up" : "down";
       }
       tr.append(th, el("td", "", format(b)), el("td", "", format(s)), el("td", changeClass, changeText));
@@ -249,7 +244,7 @@ export function createScenariosView(model, onChange) {
         name,
         el("td", "", formatEur(item.baseline)),
         el("td", "", formatEur(item.scenario)),
-        el("td", item.delta >= 0 ? "up" : "down", signedEur(item.delta)),
+        el("td", item.delta >= 0 ? "up" : "down", formatSignedEur(item.delta)),
       );
       tbody.append(tr);
     }
