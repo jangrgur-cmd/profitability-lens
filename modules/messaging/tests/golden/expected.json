@@ -1,0 +1,2286 @@
+{
+ "rowCount": 4080,
+ "total": {
+  "volume": 3337933796,
+  "revenue": 112248232.34308372,
+  "deliveryCost": 87420338.83224483,
+  "platformCost": 1766081.3829999964,
+  "grossProfit": 23061812.1278387,
+  "totalCost": 89186420.21524483,
+  "grossMarginPct": 0.2054536775006923,
+  "revenuePerMessage": 0.03362805831487609,
+  "costPerMessage": 0.02671905006687701,
+  "lossMaking": false
+ },
+ "byCountry": {
+  "US": {
+   "volume": 1689006600,
+   "revenue": 15664870.655051008,
+   "deliveryCost": 11180336.554778768,
+   "platformCost": 901787.9129999995,
+   "grossProfit": 3582746.187272233,
+   "totalCost": 12082124.467778767,
+   "grossMarginPct": 0.2287121461878784,
+   "revenuePerMessage": 0.009274605945915787,
+   "costPerMessage": 0.007153390914978524,
+   "lossMaking": false
+  },
+  "GB": {
+   "volume": 477354537,
+   "revenue": 18457249.498934023,
+   "deliveryCost": 14492588.752136892,
+   "platformCost": 248153.01000000004,
+   "grossProfit": 3716507.736797098,
+   "totalCost": 14740741.762136891,
+   "grossMarginPct": 0.20135761490420015,
+   "revenuePerMessage": 0.03866570456191982,
+   "costPerMessage": 0.030880070512741123,
+   "lossMaking": false
+  },
+  "FR": {
+   "volume": 554904934,
+   "revenue": 29715521.174360022,
+   "deliveryCost": 23535908.8128835,
+   "platformCost": 291101.3149999998,
+   "grossProfit": 5888511.046476458,
+   "totalCost": 23827010.1278835,
+   "grossMarginPct": 0.1981628056235254,
+   "revenuePerMessage": 0.053550652289496535,
+   "costPerMessage": 0.042938904788839924,
+   "lossMaking": false
+  },
+  "DE": {
+   "volume": 529193478,
+   "revenue": 40774083.671401046,
+   "deliveryCost": 33011635.992885817,
+   "platformCost": 279399.49800000025,
+   "grossProfit": 7483048.180515164,
+   "totalCost": 33291035.490885817,
+   "grossMarginPct": 0.18352461923660043,
+   "revenuePerMessage": 0.07704948259283166,
+   "costPerMessage": 0.06290900563760504,
+   "lossMaking": false
+  },
+  "HR": {
+   "volume": 87474247,
+   "revenue": 7636507.3433380015,
+   "deliveryCost": 5199868.719560175,
+   "platformCost": 45639.647000000026,
+   "grossProfit": 2390998.976777825,
+   "totalCost": 5245508.366560175,
+   "grossMarginPct": 0.31310111668571944,
+   "revenuePerMessage": 0.08730006379292413,
+   "costPerMessage": 0.059966316332625016,
+   "lossMaking": false
+  }
+ },
+ "byChannel": [
+  {
+   "channel": "SMS",
+   "volume": 2797525396,
+   "revenue": 90309101.43626565,
+   "deliveryCost": 67542591.67488635,
+   "platformCost": 1398762.6980000031,
+   "grossProfit": 21367747.0633796,
+   "totalCost": 68941354.37288634,
+   "grossMarginPct": 0.23660679514632954,
+   "revenuePerMessage": 0.03228178073571478,
+   "costPerMessage": 0.02464369205422089,
+   "lossMaking": false
+  },
+  {
+   "channel": "WhatsApp",
+   "volume": 454469278,
+   "revenue": 20140777.101409,
+   "deliveryCost": 18546047.335398227,
+   "platformCost": 227234.639,
+   "grossProfit": 1367495.1270107683,
+   "totalCost": 18773281.974398226,
+   "grossMarginPct": 0.06789684033170208,
+   "revenuePerMessage": 0.04431713666112542,
+   "costPerMessage": 0.04130814310928675,
+   "lossMaking": false
+  },
+  {
+   "channel": "Voice",
+   "volume": 64742990,
+   "revenue": 1106608.3699090004,
+   "deliveryCost": 865384.9179606191,
+   "platformCost": 129485.97999999998,
+   "grossProfit": 111737.47194838054,
+   "totalCost": 994870.8979606191,
+   "grossMarginPct": 0.10097291416435702,
+   "revenuePerMessage": 0.01709232721425131,
+   "costPerMessage": 0.015366465125577596,
+   "lossMaking": false
+  },
+  {
+   "channel": "Viber",
+   "volume": 21196132,
+   "revenue": 691745.4354999998,
+   "deliveryCost": 466314.90400000016,
+   "platformCost": 10598.066000000006,
+   "grossProfit": 214832.4655000001,
+   "totalCost": 476912.97000000015,
+   "grossMarginPct": 0.31056578688476244,
+   "revenuePerMessage": 0.03263545610585931,
+   "costPerMessage": 0.022500000000000006,
+   "lossMaking": false
+  }
+ ],
+ "byCategory": {
+  "authentication": {
+   "volume": 863126614,
+   "revenue": 29002189.443734054,
+   "deliveryCost": 22104756.140389126,
+   "platformCost": 528677.7919999999,
+   "grossProfit": 6368755.511344876,
+   "totalCost": 22633433.932389125,
+   "grossMarginPct": 0.21959567996411564,
+   "revenuePerMessage": 0.03360131523384361,
+   "costPerMessage": 0.026222611567379064,
+   "lossMaking": false
+  },
+  "utility": {
+   "volume": 1580011820,
+   "revenue": 49928327.347934015,
+   "deliveryCost": 38558205.68454267,
+   "platformCost": 790005.910000001,
+   "grossProfit": 10580115.753391262,
+   "totalCost": 39348211.594542675,
+   "grossMarginPct": 0.21190607247188417,
+   "revenuePerMessage": 0.03159997078245529,
+   "costPerMessage": 0.024903745083718853,
+   "lossMaking": false
+  },
+  "marketing": {
+   "volume": 894795362,
+   "revenue": 33317715.551416025,
+   "deliveryCost": 26757377.00731334,
+   "platformCost": 447397.6810000005,
+   "grossProfit": 6112940.863102637,
+   "totalCost": 27204774.688313343,
+   "grossMarginPct": 0.1834741896895399,
+   "revenuePerMessage": 0.03723501145216712,
+   "costPerMessage": 0.03040334789789997,
+   "lossMaking": false
+  }
+ },
+ "byMonth": [
+  {
+   "month": 1,
+   "volume": 257257566,
+   "revenue": 8718225.761605006,
+   "deliveryCost": 6782950.680867612,
+   "platformCost": 136498.88399999987,
+   "grossProfit": 1798776.1967373881,
+   "totalCost": 6919449.564867612,
+   "grossMarginPct": 0.20632365413834358,
+   "revenuePerMessage": 0.03388909370931779,
+   "costPerMessage": 0.02689697205977457,
+   "lossMaking": false
+  },
+  {
+   "month": 2,
+   "volume": 255603218,
+   "revenue": 8558268.976697007,
+   "deliveryCost": 6663080.478318754,
+   "platformCost": 135288.8845,
+   "grossProfit": 1759899.6138782406,
+   "totalCost": 6798369.362818753,
+   "grossMarginPct": 0.20563733374940726,
+   "revenuePerMessage": 0.033482633918548735,
+   "costPerMessage": 0.026597354352630855,
+   "lossMaking": false
+  },
+  {
+   "month": 3,
+   "volume": 275912580,
+   "revenue": 9196125.974949991,
+   "deliveryCost": 7155628.986375489,
+   "platformCost": 146141.2995000002,
+   "grossProfit": 1894355.6890745133,
+   "totalCost": 7301770.28587549,
+   "grossMarginPct": 0.20599496942894094,
+   "revenuePerMessage": 0.03332985387962373,
+   "costPerMessage": 0.026464071648619608,
+   "lossMaking": false
+  },
+  {
+   "month": 4,
+   "volume": 269523224,
+   "revenue": 9111857.003155002,
+   "deliveryCost": 7097346.583645315,
+   "platformCost": 142860.10299999997,
+   "grossProfit": 1871650.3165096908,
+   "totalCost": 7240206.686645315,
+   "grossMarginPct": 0.20540821874856327,
+   "revenuePerMessage": 0.03380731674222998,
+   "costPerMessage": 0.026863016029540054,
+   "lossMaking": false
+  },
+  {
+   "month": 5,
+   "volume": 281888297,
+   "revenue": 9435065.762784006,
+   "deliveryCost": 7346201.895518321,
+   "platformCost": 149029.10049999983,
+   "grossProfit": 1939834.7667656813,
+   "totalCost": 7495230.99601832,
+   "grossMarginPct": 0.20559843625226562,
+   "revenuePerMessage": 0.03347093818082134,
+   "costPerMessage": 0.026589365630948207,
+   "lossMaking": false
+  },
+  {
+   "month": 6,
+   "volume": 265125534,
+   "revenue": 8932702.110743007,
+   "deliveryCost": 6951100.855219026,
+   "platformCost": 140713.257,
+   "grossProfit": 1840887.9985239736,
+   "totalCost": 7091814.112219026,
+   "grossMarginPct": 0.20608411382150654,
+   "revenuePerMessage": 0.033692349340984286,
+   "costPerMessage": 0.026748891384482894,
+   "lossMaking": false
+  },
+  {
+   "month": 7,
+   "volume": 262368741,
+   "revenue": 8750982.717989998,
+   "deliveryCost": 6805170.865866285,
+   "platformCost": 138855.74250000005,
+   "grossProfit": 1806956.109623716,
+   "totalCost": 6944026.6083662845,
+   "grossMarginPct": 0.206486079090184,
+   "revenuePerMessage": 0.03335375504199259,
+   "costPerMessage": 0.026466668940437095,
+   "lossMaking": false
+  },
+  {
+   "month": 8,
+   "volume": 263044194,
+   "revenue": 8852537.653013997,
+   "deliveryCost": 6888684.158269821,
+   "platformCost": 139315.71600000001,
+   "grossProfit": 1824537.778744178,
+   "totalCost": 7027999.874269821,
+   "grossMarginPct": 0.20610336270334675,
+   "revenuePerMessage": 0.03365418380233854,
+   "costPerMessage": 0.02671794335164007,
+   "lossMaking": false
+  },
+  {
+   "month": 9,
+   "volume": 282254452,
+   "revenue": 9422804.712284995,
+   "deliveryCost": 7336008.793259827,
+   "platformCost": 149437.0414999999,
+   "grossProfit": 1937358.8775251766,
+   "totalCost": 7485445.834759828,
+   "grossMarginPct": 0.20560320803415805,
+   "revenuePerMessage": 0.033384078251084574,
+   "costPerMessage": 0.026520204665398256,
+   "lossMaking": false
+  },
+  {
+   "month": 10,
+   "volume": 288115824,
+   "revenue": 9732089.696902007,
+   "deliveryCost": 7579835.841448758,
+   "platformCost": 152257.7325,
+   "grossProfit": 1999996.122953239,
+   "totalCost": 7732093.573948758,
+   "grossMarginPct": 0.2055053113197151,
+   "revenuePerMessage": 0.03377839357029556,
+   "costPerMessage": 0.02683675428375207,
+   "lossMaking": false
+  },
+  {
+   "month": 11,
+   "volume": 315593337,
+   "revenue": 10669916.250958001,
+   "deliveryCost": 8329033.741785223,
+   "platformCost": 166316.97000000026,
+   "grossProfit": 2174565.5391727807,
+   "totalCost": 8495350.711785223,
+   "grossMarginPct": 0.20380343088236863,
+   "revenuePerMessage": 0.03380906692259476,
+   "costPerMessage": 0.026918663088838352,
+   "lossMaking": false
+  },
+  {
+   "month": 12,
+   "volume": 321246829,
+   "revenue": 10867655.722001007,
+   "deliveryCost": 8485295.951670796,
+   "platformCost": 169366.65200000003,
+   "grossProfit": 2212993.118330204,
+   "totalCost": 8654662.603670796,
+   "grossMarginPct": 0.20363113949682027,
+   "revenuePerMessage": 0.03382961243798303,
+   "costPerMessage": 0.02694084990850072,
+   "lossMaking": false
+  }
+ ],
+ "routes": [
+  {
+   "country": "US",
+   "channel": "Voice",
+   "volume": 38189742,
+   "revenue": 339290.0781690001,
+   "deliveryCost": 283888.34761061944,
+   "platformCost": 76379.48400000001,
+   "grossProfit": -20977.75344161946,
+   "totalCost": 360267.83161061944,
+   "grossMarginPct": -0.06182837280367055,
+   "revenuePerMessage": 0.00888432496268239,
+   "costPerMessage": 0.00943362831858407,
+   "lossMaking": true,
+   "costHeadroom": -0.0738943800201074
+  },
+  {
+   "country": "GB",
+   "channel": "Voice",
+   "volume": 6317161,
+   "revenue": 130563.115574,
+   "deliveryCost": 102274.83658999999,
+   "platformCost": 12634.322,
+   "grossProfit": 15653.956984000002,
+   "totalCost": 114909.15858999999,
+   "grossMarginPct": 0.11989570649551266,
+   "revenuePerMessage": 0.02066800506968241,
+   "costPerMessage": 0.018189999999999998,
+   "lossMaking": false,
+   "costHeadroom": 0.15305775600261953
+  },
+  {
+   "country": "HR",
+   "channel": "WhatsApp",
+   "volume": 7511447,
+   "revenue": 349518.23732699995,
+   "deliveryCost": 319255.476460177,
+   "platformCost": 3755.723500000001,
+   "grossProfit": 26507.037366823028,
+   "totalCost": 323011.199960177,
+   "grossMarginPct": 0.07583878188886536,
+   "revenuePerMessage": 0.0465314123000535,
+   "costPerMessage": 0.04300252667164889,
+   "lossMaking": false,
+   "costHeadroom": 0.08302766693535307
+  },
+  {
+   "country": "HR",
+   "channel": "Voice",
+   "volume": 1268349,
+   "revenue": 95967.09038700003,
+   "deliveryCost": 63975.52356000001,
+   "platformCost": 2536.698,
+   "grossProfit": 29454.86882700001,
+   "totalCost": 66512.22156,
+   "grossMarginPct": 0.3069267673763927,
+   "revenuePerMessage": 0.07566300000000002,
+   "costPerMessage": 0.05244000000000001,
+   "lossMaking": false,
+   "costHeadroom": 0.4604084060269628
+  },
+  {
+   "country": "FR",
+   "channel": "Voice",
+   "volume": 9099232,
+   "revenue": 253922.7119,
+   "deliveryCost": 195178.5264,
+   "platformCost": 18198.464000000004,
+   "grossProfit": 40545.72149999999,
+   "totalCost": 213376.9904,
+   "grossMarginPct": 0.15967741206217007,
+   "revenuePerMessage": 0.027905949853789858,
+   "costPerMessage": 0.023450000000000002,
+   "lossMaking": false,
+   "costHeadroom": 0.20773658992027308
+  },
+  {
+   "country": "DE",
+   "channel": "Voice",
+   "volume": 9868506,
+   "revenue": 286865.373879,
+   "deliveryCost": 220067.68380000003,
+   "platformCost": 19737.012000000002,
+   "grossProfit": 47060.67807900002,
+   "totalCost": 239804.69580000004,
+   "grossMarginPct": 0.16405144142231065,
+   "revenuePerMessage": 0.029068774329062578,
+   "costPerMessage": 0.024300000000000006,
+   "lossMaking": false,
+   "costHeadroom": 0.21384638246917384
+  },
+  {
+   "country": "HR",
+   "channel": "Viber",
+   "volume": 21196132,
+   "revenue": 691745.4354999998,
+   "deliveryCost": 466314.90400000016,
+   "platformCost": 10598.066000000006,
+   "grossProfit": 214832.4655000001,
+   "totalCost": 476912.97000000015,
+   "grossMarginPct": 0.31056578688476244,
+   "revenuePerMessage": 0.03263545610585931,
+   "costPerMessage": 0.022500000000000006,
+   "lossMaking": false,
+   "costHeadroom": 0.46070255026633256
+  },
+  {
+   "country": "US",
+   "channel": "WhatsApp",
+   "volume": 82542819,
+   "revenue": 1025944.307526,
+   "deliveryCost": 765120.34460177,
+   "platformCost": 41271.40950000001,
+   "grossProfit": 219552.55342423,
+   "totalCost": 806391.75410177,
+   "grossMarginPct": 0.21400045968739487,
+   "revenuePerMessage": 0.012429237575784756,
+   "costPerMessage": 0.009769375021002977,
+   "lossMaking": false,
+   "costHeadroom": 0.28695166057635385
+  },
+  {
+   "country": "GB",
+   "channel": "WhatsApp",
+   "volume": 95683056,
+   "revenue": 3196571.502696,
+   "deliveryCost": 2855675.661946903,
+   "platformCost": 47841.528000000006,
+   "grossProfit": 293054.31274909724,
+   "totalCost": 2903517.189946903,
+   "grossMarginPct": 0.09167769671409952,
+   "revenuePerMessage": 0.033407916054604275,
+   "costPerMessage": 0.03034515525870017,
+   "lossMaking": false,
+   "costHeadroom": 0.10262170758891531
+  },
+  {
+   "country": "FR",
+   "channel": "WhatsApp",
+   "volume": 126315126,
+   "revenue": 5425633.20201,
+   "deliveryCost": 4975432.869203543,
+   "platformCost": 63157.56300000004,
+   "grossProfit": 387042.7698064597,
+   "totalCost": 5038590.432203543,
+   "grossMarginPct": 0.0713359630841013,
+   "revenuePerMessage": 0.04295315512735981,
+   "costPerMessage": 0.039889050438848814,
+   "lossMaking": false,
+   "costHeadroom": 0.07779077318119192
+  },
+  {
+   "country": "DE",
+   "channel": "WhatsApp",
+   "volume": 142416830,
+   "revenue": 10143109.851850009,
+   "deliveryCost": 9630562.983185843,
+   "platformCost": 71208.41499999995,
+   "grossProfit": 441338.4536641584,
+   "totalCost": 9701771.398185842,
+   "grossMarginPct": 0.04351115783130973,
+   "revenuePerMessage": 0.07122128649998746,
+   "costPerMessage": 0.06812236586213752,
+   "lossMaking": false,
+   "costHeadroom": 0.04582685918099476
+  },
+  {
+   "country": "HR",
+   "channel": "SMS",
+   "volume": 57498319,
+   "revenue": 6499276.580123999,
+   "deliveryCost": 4350322.815540001,
+   "platformCost": 28749.159500000012,
+   "grossProfit": 2120204.6050839997,
+   "totalCost": 4379071.975040001,
+   "grossMarginPct": 0.326221630814725,
+   "revenuePerMessage": 0.11303420157594518,
+   "costPerMessage": 0.07616000000000002,
+   "lossMaking": false,
+   "costHeadroom": 0.4873671897428653
+  },
+  {
+   "country": "US",
+   "channel": "SMS",
+   "volume": 1568274039,
+   "revenue": 14299636.269356005,
+   "deliveryCost": 10131327.862566372,
+   "platformCost": 784137.0194999999,
+   "grossProfit": 3384171.3872896237,
+   "totalCost": 10915464.882066373,
+   "grossMarginPct": 0.23666136141811336,
+   "revenuePerMessage": 0.00911807242468547,
+   "costPerMessage": 0.006960176991150443,
+   "lossMaking": false,
+   "costHeadroom": 0.33403038902665394
+  },
+  {
+   "country": "GB",
+   "channel": "SMS",
+   "volume": 375354320,
+   "revenue": 15130114.880664008,
+   "deliveryCost": 11534638.253600009,
+   "platformCost": 187677.16000000003,
+   "grossProfit": 3407799.4670639997,
+   "totalCost": 11722315.413600009,
+   "grossMarginPct": 0.22523288778323164,
+   "revenuePerMessage": 0.04030888702883187,
+   "costPerMessage": 0.031230000000000025,
+   "lossMaking": false,
+   "costHeadroom": 0.2954405150937795
+  },
+  {
+   "country": "FR",
+   "channel": "SMS",
+   "volume": 419490576,
+   "revenue": 24035965.260449998,
+   "deliveryCost": 18365297.41728,
+   "platformCost": 209745.2880000001,
+   "grossProfit": 5460922.555169997,
+   "totalCost": 18575042.70528,
+   "grossMarginPct": 0.22719797170599498,
+   "revenuePerMessage": 0.0572979862614363,
+   "costPerMessage": 0.04427999999999999,
+   "lossMaking": false,
+   "costHeadroom": 0.29735007449603224
+  },
+  {
+   "country": "DE",
+   "channel": "SMS",
+   "volume": 376908142,
+   "revenue": 30344108.445671987,
+   "deliveryCost": 23161005.325899985,
+   "platformCost": 188454.0710000001,
+   "grossProfit": 6994649.048772004,
+   "totalCost": 23349459.396899983,
+   "grossMarginPct": 0.23051094288353227,
+   "revenuePerMessage": 0.08050796749748108,
+   "costPerMessage": 0.061949999999999956,
+   "lossMaking": false,
+   "costHeadroom": 0.3020010984130374
+  }
+ ],
+ "customers": [
+  {
+   "customer_id": "C10",
+   "discount": 0.2,
+   "volume": 182025406,
+   "revenue": 12586931.150470002,
+   "deliveryCost": 10314148.009414779,
+   "platformCost": 91012.703,
+   "grossProfit": 2181770.438055223,
+   "totalCost": 10405160.712414779,
+   "grossMarginPct": 0.17333617003011528,
+   "revenuePerMessage": 0.06914930957753228,
+   "costPerMessage": 0.057163233095136066,
+   "lossMaking": false,
+   "rank": 1
+  },
+  {
+   "customer_id": "C09",
+   "discount": 0.2,
+   "volume": 107553022,
+   "revenue": 8127234.882312001,
+   "deliveryCost": 6292133.8901499985,
+   "platformCost": 65922.0785,
+   "grossProfit": 1769178.9136620006,
+   "totalCost": 6358055.968649998,
+   "grossMarginPct": 0.2176852200386649,
+   "revenuePerMessage": 0.07556491422725435,
+   "costPerMessage": 0.059115549246491636,
+   "lossMaking": false,
+   "rank": 2
+  },
+  {
+   "customer_id": "C01",
+   "discount": 0.3,
+   "volume": 718233603,
+   "revenue": 11569552.495144002,
+   "deliveryCost": 9484057.813228223,
+   "platformCost": 402221.6160000001,
+   "grossProfit": 1683273.065915769,
+   "totalCost": 9886279.429228224,
+   "grossMarginPct": 0.14549163129881437,
+   "revenuePerMessage": 0.01610834197511642,
+   "costPerMessage": 0.013764713023637553,
+   "lossMaking": false,
+   "rank": 3
+  },
+  {
+   "customer_id": "C15",
+   "discount": 0.2,
+   "volume": 144168996,
+   "revenue": 7232224.145586003,
+   "deliveryCost": 5744400.460947256,
+   "platformCost": 82721.19299999996,
+   "grossProfit": 1405102.4916387438,
+   "totalCost": 5827121.653947256,
+   "grossMarginPct": 0.194283592896704,
+   "revenuePerMessage": 0.050164906091084954,
+   "costPerMessage": 0.040418687898383196,
+   "lossMaking": false,
+   "rank": 4
+  },
+  {
+   "customer_id": "C05",
+   "discount": 0.2,
+   "volume": 180355695,
+   "revenue": 5363675.930516001,
+   "deliveryCost": 4274357.394887614,
+   "platformCost": 90177.84749999995,
+   "grossProfit": 999140.6881283894,
+   "totalCost": 4364535.242387614,
+   "grossMarginPct": 0.18627909312042817,
+   "revenuePerMessage": 0.029739432018024165,
+   "costPerMessage": 0.024199597591790013,
+   "lossMaking": false,
+   "rank": 5
+  },
+  {
+   "customer_id": "C16",
+   "discount": 0.2,
+   "volume": 95752699,
+   "revenue": 5536425.393564002,
+   "deliveryCost": 4530797.733336105,
+   "platformCost": 47876.349500000004,
+   "grossProfit": 957751.3107278941,
+   "totalCost": 4578674.082836105,
+   "grossMarginPct": 0.17299091790187643,
+   "revenuePerMessage": 0.05782004529777277,
+   "costPerMessage": 0.04781770258858296,
+   "lossMaking": false,
+   "rank": 6
+  },
+  {
+   "customer_id": "C32",
+   "discount": 0.1,
+   "volume": 48229766,
+   "revenue": 4503748.850789999,
+   "deliveryCost": 3522860.10104531,
+   "platformCost": 24114.883,
+   "grossProfit": 956773.8667446906,
+   "totalCost": 3546974.98404531,
+   "grossMarginPct": 0.2124394362214189,
+   "revenuePerMessage": 0.09338110516211086,
+   "costPerMessage": 0.07354327582773904,
+   "lossMaking": false,
+   "rank": 7
+  },
+  {
+   "customer_id": "C11",
+   "discount": 0.2,
+   "volume": 72367358,
+   "revenue": 4912730.28339,
+   "deliveryCost": 4093263.570602474,
+   "platformCost": 36183.67899999999,
+   "grossProfit": 783283.033787522,
+   "totalCost": 4129447.249602474,
+   "grossMarginPct": 0.159439453950039,
+   "revenuePerMessage": 0.06788599748784528,
+   "costPerMessage": 0.05706229111752945,
+   "lossMaking": false,
+   "rank": 8
+  },
+  {
+   "customer_id": "C20",
+   "discount": 0.2,
+   "volume": 94984431,
+   "revenue": 3693528.0128160026,
+   "deliveryCost": 2860557.993150001,
+   "platformCost": 53508.05850000001,
+   "grossProfit": 779461.9611659998,
+   "totalCost": 2914066.0516500007,
+   "grossMarginPct": 0.2110345335033011,
+   "revenuePerMessage": 0.038885614978480025,
+   "costPerMessage": 0.030679407361507496,
+   "lossMaking": false,
+   "rank": 9
+  },
+  {
+   "customer_id": "C12",
+   "discount": 0.2,
+   "volume": 60366619,
+   "revenue": 4674734.929394,
+   "deliveryCost": 3896742.6155663733,
+   "platformCost": 30183.30950000001,
+   "grossProfit": 747809.0043276286,
+   "totalCost": 3926925.9250663733,
+   "grossMarginPct": 0.15996821544372986,
+   "revenuePerMessage": 0.0774390715735463,
+   "costPerMessage": 0.06505128148830686,
+   "lossMaking": false,
+   "rank": 10
+  },
+  {
+   "customer_id": "C34",
+   "discount": 0.1,
+   "volume": 47642116,
+   "revenue": 2818719.5746079995,
+   "deliveryCost": 2059161.359667257,
+   "platformCost": 23821.058000000005,
+   "grossProfit": 735737.1569407438,
+   "totalCost": 2082982.417667257,
+   "grossMarginPct": 0.2610182167706637,
+   "revenuePerMessage": 0.059164449677424055,
+   "costPerMessage": 0.043721450526405185,
+   "lossMaking": false,
+   "rank": 11
+  },
+  {
+   "customer_id": "C02",
+   "discount": 0.3,
+   "volume": 361948508,
+   "revenue": 3452219.8506530016,
+   "deliveryCost": 2538115.245840708,
+   "platformCost": 180974.25400000007,
+   "grossProfit": 733130.350812292,
+   "totalCost": 2719089.499840708,
+   "grossMarginPct": 0.2123649079515076,
+   "revenuePerMessage": 0.009537875621393643,
+   "costPerMessage": 0.007512365543003449,
+   "lossMaking": false,
+   "rank": 12
+  },
+  {
+   "customer_id": "C17",
+   "discount": 0.2,
+   "volume": 71824050,
+   "revenue": 3792782.7238100003,
+   "deliveryCost": 3042275.6379488492,
+   "platformCost": 35912.024999999994,
+   "grossProfit": 714595.060861151,
+   "totalCost": 3078187.662948849,
+   "grossMarginPct": 0.1884091741863114,
+   "revenuePerMessage": 0.052806583920149315,
+   "costPerMessage": 0.04285733905215383,
+   "lossMaking": false,
+   "rank": 13
+  },
+  {
+   "customer_id": "C23",
+   "discount": 0.1,
+   "volume": 36104341,
+   "revenue": 2005614.4114799998,
+   "deliveryCost": 1381693.31348,
+   "platformCost": 18052.17050000001,
+   "grossProfit": 605868.9275,
+   "totalCost": 1399745.48398,
+   "grossMarginPct": 0.3020864449477665,
+   "revenuePerMessage": 0.055550506003696334,
+   "costPerMessage": 0.03876945112999016,
+   "lossMaking": false,
+   "rank": 14
+  },
+  {
+   "customer_id": "C18",
+   "discount": 0.2,
+   "volume": 60355827,
+   "revenue": 3096272.060851998,
+   "deliveryCost": 2462145.708798407,
+   "platformCost": 30177.9135,
+   "grossProfit": 603948.4385535932,
+   "totalCost": 2492323.622298407,
+   "grossMarginPct": 0.1950566444692219,
+   "revenuePerMessage": 0.051300300480548434,
+   "costPerMessage": 0.041293836008549877,
+   "lossMaking": false,
+   "rank": 15
+  },
+  {
+   "customer_id": "C04",
+   "discount": 0.3,
+   "volume": 263755607,
+   "revenue": 3264415.3540009996,
+   "deliveryCost": 2551367.4014738053,
+   "platformCost": 131877.80349999998,
+   "grossProfit": 581170.1490271948,
+   "totalCost": 2683245.204973805,
+   "grossMarginPct": 0.17803192486363267,
+   "revenuePerMessage": 0.012376667139443976,
+   "costPerMessage": 0.010173225265212296,
+   "lossMaking": false,
+   "rank": 16
+  },
+  {
+   "customer_id": "C13",
+   "discount": 0.1,
+   "volume": 30067190,
+   "revenue": 2320593.5329769976,
+   "deliveryCost": 1734742.6702784072,
+   "platformCost": 15033.595000000005,
+   "grossProfit": 570817.2676985929,
+   "totalCost": 1749776.2652784071,
+   "grossMarginPct": 0.2459789961434194,
+   "revenuePerMessage": 0.07718025971090074,
+   "costPerMessage": 0.05819553690512506,
+   "lossMaking": false,
+   "rank": 17
+  },
+  {
+   "customer_id": "C26",
+   "discount": 0.1,
+   "volume": 21685080,
+   "revenue": 1839944.5980389998,
+   "deliveryCost": 1267223.9366799996,
+   "platformCost": 12745.063500000002,
+   "grossProfit": 559975.5978590001,
+   "totalCost": 1279969.0001799995,
+   "grossMarginPct": 0.3043437277708352,
+   "revenuePerMessage": 0.08484841181305303,
+   "costPerMessage": 0.05902532986643349,
+   "lossMaking": false,
+   "rank": 18
+  },
+  {
+   "customer_id": "C22",
+   "discount": 0.1,
+   "volume": 47977717,
+   "revenue": 1906500.709346999,
+   "deliveryCost": 1372738.6189125662,
+   "platformCost": 23988.8585,
+   "grossProfit": 509773.2319344336,
+   "totalCost": 1396727.4774125663,
+   "grossMarginPct": 0.26738685668207146,
+   "revenuePerMessage": 0.03973721195085208,
+   "costPerMessage": 0.029112003754004516,
+   "lossMaking": false,
+   "rank": 19
+  },
+  {
+   "customer_id": "C19",
+   "discount": 0.1,
+   "volume": 23994833,
+   "revenue": 1525063.5958140001,
+   "deliveryCost": 1050493.7887399998,
+   "platformCost": 11997.4165,
+   "grossProfit": 462572.3905740002,
+   "totalCost": 1062491.2052399998,
+   "grossMarginPct": 0.3033135089209857,
+   "revenuePerMessage": 0.063558,
+   "costPerMessage": 0.04427999999999999,
+   "lossMaking": false,
+   "rank": 20
+  },
+  {
+   "customer_id": "C03",
+   "discount": 0.3,
+   "volume": 239583030,
+   "revenue": 2140990.421265001,
+   "deliveryCost": 1557655.0829203539,
+   "platformCost": 135056.23049999998,
+   "grossProfit": 448279.1078446464,
+   "totalCost": 1692711.313420354,
+   "grossMarginPct": 0.20937931500869647,
+   "revenuePerMessage": 0.008936319159437132,
+   "costPerMessage": 0.007065238775135091,
+   "lossMaking": false,
+   "rank": 21
+  },
+  {
+   "customer_id": "C21",
+   "discount": 0.2,
+   "volume": 59532031,
+   "revenue": 2477027.297112,
+   "deliveryCost": 2034982.82427708,
+   "platformCost": 29766.015500000005,
+   "grossProfit": 412278.4573349203,
+   "totalCost": 2064748.8397770799,
+   "grossMarginPct": 0.16644082114702627,
+   "revenuePerMessage": 0.04160831161819425,
+   "costPerMessage": 0.03468299006592065,
+   "lossMaking": false,
+   "rank": 22
+  },
+  {
+   "customer_id": "C07",
+   "discount": 0.1,
+   "volume": 47585453,
+   "revenue": 1306213.73106,
+   "deliveryCost": 876057.2087688497,
+   "platformCost": 23792.726499999986,
+   "grossProfit": 406363.79579115036,
+   "totalCost": 899849.9352688497,
+   "grossMarginPct": 0.3111005390070305,
+   "revenuePerMessage": 0.02744985386731529,
+   "costPerMessage": 0.018910189533529284,
+   "lossMaking": false,
+   "rank": 23
+  },
+  {
+   "customer_id": "C25",
+   "discount": 0.1,
+   "volume": 18066580,
+   "revenue": 1413516.5610029993,
+   "deliveryCost": 999201.5888867257,
+   "platformCost": 9033.289999999999,
+   "grossProfit": 405281.6821162743,
+   "totalCost": 1008234.8788867258,
+   "grossMarginPct": 0.2867187363045083,
+   "revenuePerMessage": 0.07823929935842862,
+   "costPerMessage": 0.055806626317029887,
+   "lossMaking": false,
+   "rank": 24
+  },
+  {
+   "customer_id": "C35",
+   "discount": 0.1,
+   "volume": 35936740,
+   "revenue": 1502484.906102,
+   "deliveryCost": 1102906.4554074334,
+   "platformCost": 17968.370000000006,
+   "grossProfit": 381610.0806945662,
+   "totalCost": 1120874.8254074336,
+   "grossMarginPct": 0.25398596627809295,
+   "revenuePerMessage": 0.041809159820896384,
+   "costPerMessage": 0.031190219964510792,
+   "lossMaking": false,
+   "rank": 25
+  },
+  {
+   "customer_id": "C24",
+   "discount": 0.1,
+   "volume": 35656464,
+   "revenue": 1416301.8259649999,
+   "deliveryCost": 1020324.8515208854,
+   "platformCost": 17828.232000000007,
+   "grossProfit": 378148.74244411517,
+   "totalCost": 1038153.0835208853,
+   "grossMarginPct": 0.2669972851206789,
+   "revenuePerMessage": 0.03972075935418049,
+   "costPerMessage": 0.029115424443682508,
+   "lossMaking": false,
+   "rank": 26
+  },
+  {
+   "customer_id": "C14",
+   "discount": 0.1,
+   "volume": 18021781,
+   "revenue": 1425255.531458,
+   "deliveryCost": 1073001.9287973451,
+   "platformCost": 9010.8905,
+   "grossProfit": 343242.712160655,
+   "totalCost": 1082012.8192973451,
+   "grossMarginPct": 0.24082889319470066,
+   "revenuePerMessage": 0.07908516541500532,
+   "costPerMessage": 0.06003917255998978,
+   "lossMaking": false,
+   "rank": 27
+  },
+  {
+   "customer_id": "C06",
+   "discount": 0.2,
+   "volume": 96351405,
+   "revenue": 1268529.546062,
+   "deliveryCost": 904663.7988367263,
+   "platformCost": 53915.56649999996,
+   "grossProfit": 309950.1807252747,
+   "totalCost": 958579.3653367263,
+   "grossMarginPct": 0.24433816436320177,
+   "revenuePerMessage": 0.013165656962262254,
+   "costPerMessage": 0.009948784507467497,
+   "lossMaking": false,
+   "rank": 28
+  },
+  {
+   "customer_id": "C31",
+   "discount": 0,
+   "volume": 8313596,
+   "revenue": 787175.0587200002,
+   "deliveryCost": 488805.00588,
+   "platformCost": 4156.797999999999,
+   "grossProfit": 294213.2548399999,
+   "totalCost": 492961.80388,
+   "grossMarginPct": 0.37375835474057134,
+   "revenuePerMessage": 0.09468526720807702,
+   "costPerMessage": 0.05929585751821474,
+   "lossMaking": false,
+   "rank": 29
+  },
+  {
+   "customer_id": "C33",
+   "discount": 0.1,
+   "volume": 17892256,
+   "revenue": 1016335.3607580005,
+   "deliveryCost": 730763.2799362831,
+   "platformCost": 8946.127999999995,
+   "grossProfit": 276625.9528217168,
+   "totalCost": 739709.4079362832,
+   "grossMarginPct": 0.2721797976362884,
+   "revenuePerMessage": 0.056803086249045426,
+   "costPerMessage": 0.04134243372866357,
+   "lossMaking": false,
+   "rank": 30
+  },
+  {
+   "customer_id": "C27",
+   "discount": 0.1,
+   "volume": 12092792,
+   "revenue": 982729.5027959994,
+   "deliveryCost": 705855.1162244247,
+   "platformCost": 6046.395999999997,
+   "grossProfit": 270827.99057157536,
+   "totalCost": 711901.5122244246,
+   "grossMarginPct": 0.27558752413663457,
+   "revenuePerMessage": 0.08126572447421566,
+   "costPerMessage": 0.05886990466919671,
+   "lossMaking": false,
+   "rank": 31
+  },
+  {
+   "customer_id": "C29",
+   "discount": 0,
+   "volume": 7212994,
+   "revenue": 682863.8472799999,
+   "deliveryCost": 424032.26062,
+   "platformCost": 3606.4970000000003,
+   "grossProfit": 255225.08965999988,
+   "totalCost": 427638.75762,
+   "grossMarginPct": 0.3737569219349051,
+   "revenuePerMessage": 0.09467134553002537,
+   "costPerMessage": 0.05928727482928725,
+   "lossMaking": false,
+   "rank": 32
+  },
+  {
+   "customer_id": "C28",
+   "discount": 0,
+   "volume": 9594849,
+   "revenue": 748730.9832399999,
+   "deliveryCost": 496221.9495492921,
+   "platformCost": 4797.424499999996,
+   "grossProfit": 247711.6091907081,
+   "totalCost": 501019.3740492921,
+   "grossMarginPct": 0.3308419375391416,
+   "revenuePerMessage": 0.07803468123781832,
+   "costPerMessage": 0.052217536101849246,
+   "lossMaking": false,
+   "rank": 33
+  },
+  {
+   "customer_id": "C08",
+   "discount": 0.1,
+   "volume": 36183758,
+   "revenue": 378019.20970800007,
+   "deliveryCost": 235249.00194690272,
+   "platformCost": 20396.341000000008,
+   "grossProfit": 122373.86676109736,
+   "totalCost": 255645.34294690273,
+   "grossMarginPct": 0.32372393682221795,
+   "revenuePerMessage": 0.010447206995691273,
+   "costPerMessage": 0.007065196018249479,
+   "lossMaking": false,
+   "rank": 34
+  },
+  {
+   "customer_id": "C30",
+   "discount": 0,
+   "volume": 2400716,
+   "revenue": 227948.74639999997,
+   "deliveryCost": 141544.44010000004,
+   "platformCost": 1200.3580000000004,
+   "grossProfit": 85203.94829999997,
+   "totalCost": 142744.79810000004,
+   "grossMarginPct": 0.37378555331243524,
+   "revenuePerMessage": 0.09495031748861589,
+   "costPerMessage": 0.059459260528942216,
+   "lossMaking": false,
+   "rank": 35
+  },
+  {
+   "customer_id": "C36",
+   "discount": 0.1,
+   "volume": 24116487,
+   "revenue": 251197.328592,
+   "deliveryCost": 155796.7744247788,
+   "platformCost": 12058.2435,
+   "grossProfit": 83342.31066722123,
+   "totalCost": 167855.0179247788,
+   "grossMarginPct": 0.3317802427850957,
+   "revenuePerMessage": 0.010416,
+   "costPerMessage": 0.006960176991150444,
+   "lossMaking": false,
+   "rank": 36
+  }
+ ],
+ "whale": {
+  "peak": {
+   "rank": 36,
+   "customer_id": "C36",
+   "grossProfit": 83342.31066722123,
+   "cumulativeProfit": 23061812.127838787,
+   "customerSharePct": 1,
+   "profitSharePct": 1
+  },
+  "totalGrossProfit": 23061812.127838787,
+  "profitShares": [
+   0.09460533395905715,
+   0.1713199869037127,
+   0.24430961393669967,
+   0.3052372844879046,
+   0.3485617501712534,
+   0.39009150097395623,
+   0.43157886811756985,
+   0.46554337313762384,
+   0.4993421898500834,
+   0.5317684796915881,
+   0.5636713133831611,
+   0.5954611114592326,
+   0.6264471873538731,
+   0.6527187103435446,
+   0.6789069576159497,
+   0.704107498917977,
+   0.7288591214068939,
+   0.7531406303687603,
+   0.7752452780481621,
+   0.7953032157336233,
+   0.8147413719964397,
+   0.8326184778825485,
+   0.8502391138299124,
+   0.8678128274595991,
+   0.8843600995724401,
+   0.9007572820812526,
+   0.9156408788367006,
+   0.929080853935237,
+   0.9418384487508172,
+   0.9538334277788438,
+   0.9655769971510291,
+   0.9766439977945695,
+   0.9873852009497062,
+   0.992691543143578,
+   0.9963861334831267,
+   1
+  ]
+ },
+ "filtered": {
+  "rowCount": 42,
+  "total": {
+   "volume": 10597398,
+   "revenue": 899392.3537410003,
+   "deliveryCost": 619404.7385000001,
+   "platformCost": 6255.2775,
+   "grossProfit": 273732.33774099994,
+   "totalCost": 625660.0160000001,
+   "grossMarginPct": 0.30435252935208645,
+   "revenuePerMessage": 0.08486916823742963,
+   "costPerMessage": 0.059039022220360136,
+   "lossMaking": false
+  },
+  "routes": [
+   {
+    "country": "HR",
+    "channel": "Voice",
+    "volume": 637719,
+    "revenue": 48251.73269700001,
+    "deliveryCost": 32166.54636,
+    "platformCost": 1275.438,
+    "grossProfit": 14809.748337000006,
+    "totalCost": 33441.98436,
+    "grossMarginPct": 0.3069267673763928,
+    "revenuePerMessage": 0.07566300000000001,
+    "costPerMessage": 0.05244,
+    "lossMaking": false,
+    "costHeadroom": 0.4604084060269629
+   },
+   {
+    "country": "HR",
+    "channel": "Viber",
+    "volume": 3099350,
+    "revenue": 97629.525,
+    "deliveryCost": 68185.70000000001,
+    "platformCost": 1549.675,
+    "grossProfit": 27894.150000000027,
+    "totalCost": 69735.37500000001,
+    "grossMarginPct": 0.28571428571428603,
+    "revenuePerMessage": 0.0315,
+    "costPerMessage": 0.022500000000000006,
+    "lossMaking": false,
+    "costHeadroom": 0.4090909090909094
+   },
+   {
+    "country": "HR",
+    "channel": "SMS",
+    "volume": 6860329,
+    "revenue": 753511.0960440002,
+    "deliveryCost": 519052.49214000005,
+    "platformCost": 3430.1645,
+    "grossProfit": 231028.439404,
+    "totalCost": 522482.65664000006,
+    "grossMarginPct": 0.3066025711060125,
+    "revenuePerMessage": 0.10983600000000003,
+    "costPerMessage": 0.07616,
+    "lossMaking": false,
+    "costHeadroom": 0.445096484271742
+   }
+  ]
+ },
+ "availableWhenCroatia": {
+  "country": [
+   "DE",
+   "FR",
+   "GB",
+   "HR",
+   "US"
+  ],
+  "channel": [
+   "SMS",
+   "Viber",
+   "Voice",
+   "WhatsApp"
+  ],
+  "category": [
+   "authentication",
+   "marketing",
+   "utility"
+  ],
+  "industry": [
+   "Banking",
+   "E-commerce",
+   "Gaming",
+   "Healthcare",
+   "Logistics",
+   "Retail",
+   "Telco",
+   "Travel"
+  ]
+ },
+ "presets": {
+  "operator-increase": {
+   "bridge": {
+    "baseline": {
+     "volume": 3337933796,
+     "revenue": 112248232.34308372,
+     "deliveryCost": 87420338.83224483,
+     "platformCost": 1766081.3829999964,
+     "grossProfit": 23061812.1278387,
+     "totalCost": 89186420.21524483,
+     "grossMarginPct": 0.2054536775006923,
+     "revenuePerMessage": 0.03362805831487609,
+     "costPerMessage": 0.02671905006687701,
+     "lossMaking": false
+    },
+    "scenario": {
+     "volume": 3337933796,
+     "revenue": 112248232.34308372,
+     "deliveryCost": 96032028.40409277,
+     "platformCost": 1766081.3829999964,
+     "grossProfit": 14450122.555990776,
+     "totalCost": 97798109.78709278,
+     "grossMarginPct": 0.12873363129518478,
+     "revenuePerMessage": 0.03362805831487609,
+     "costPerMessage": 0.02929899625459581,
+     "lossMaking": false
+    },
+    "steps": [
+     {
+      "key": "volume",
+      "label": "Volume",
+      "delta": 0,
+      "marginAfter": 0.2054536775006923
+     },
+     {
+      "key": "migration",
+      "label": "SMS → WhatsApp",
+      "delta": 0,
+      "marginAfter": 0.2054536775006923
+     },
+     {
+      "key": "price",
+      "label": "Customer price",
+      "delta": 0,
+      "marginAfter": 0.2054536775006923
+     },
+     {
+      "key": "cost",
+      "label": "Operator cost",
+      "delta": -8611689.571847925,
+      "marginAfter": 0.12873363129518478
+     },
+     {
+      "key": "fx",
+      "label": "Exchange rate",
+      "delta": 0,
+      "marginAfter": 0.12873363129518478
+     }
+    ]
+   },
+   "stepTotals": [
+    {
+     "key": "baseline",
+     "volume": 3337933796,
+     "revenue": 112248232.34308372,
+     "deliveryCost": 87420338.83224483,
+     "platformCost": 1766081.3829999964,
+     "grossProfit": 23061812.1278387,
+     "totalCost": 89186420.21524483,
+     "grossMarginPct": 0.2054536775006923,
+     "revenuePerMessage": 0.03362805831487609,
+     "costPerMessage": 0.02671905006687701,
+     "lossMaking": false
+    },
+    {
+     "key": "volume",
+     "volume": 3337933796,
+     "revenue": 112248232.34308372,
+     "deliveryCost": 87420338.83224483,
+     "platformCost": 1766081.3829999964,
+     "grossProfit": 23061812.1278387,
+     "totalCost": 89186420.21524483,
+     "grossMarginPct": 0.2054536775006923,
+     "revenuePerMessage": 0.03362805831487609,
+     "costPerMessage": 0.02671905006687701,
+     "lossMaking": false
+    },
+    {
+     "key": "migration",
+     "volume": 3337933796,
+     "revenue": 112248232.34308372,
+     "deliveryCost": 87420338.83224483,
+     "platformCost": 1766081.3829999964,
+     "grossProfit": 23061812.1278387,
+     "totalCost": 89186420.21524483,
+     "grossMarginPct": 0.2054536775006923,
+     "revenuePerMessage": 0.03362805831487609,
+     "costPerMessage": 0.02671905006687701,
+     "lossMaking": false
+    },
+    {
+     "key": "price",
+     "volume": 3337933796,
+     "revenue": 112248232.34308372,
+     "deliveryCost": 87420338.83224483,
+     "platformCost": 1766081.3829999964,
+     "grossProfit": 23061812.1278387,
+     "totalCost": 89186420.21524483,
+     "grossMarginPct": 0.2054536775006923,
+     "revenuePerMessage": 0.03362805831487609,
+     "costPerMessage": 0.02671905006687701,
+     "lossMaking": false
+    },
+    {
+     "key": "cost",
+     "volume": 3337933796,
+     "revenue": 112248232.34308372,
+     "deliveryCost": 96032028.40409277,
+     "platformCost": 1766081.3829999964,
+     "grossProfit": 14450122.555990776,
+     "totalCost": 97798109.78709278,
+     "grossMarginPct": 0.12873363129518478,
+     "revenuePerMessage": 0.03362805831487609,
+     "costPerMessage": 0.02929899625459581,
+     "lossMaking": false
+    },
+    {
+     "key": "fx",
+     "volume": 3337933796,
+     "revenue": 112248232.34308372,
+     "deliveryCost": 96032028.40409277,
+     "platformCost": 1766081.3829999964,
+     "grossProfit": 14450122.555990776,
+     "totalCost": 97798109.78709278,
+     "grossMarginPct": 0.12873363129518478,
+     "revenuePerMessage": 0.03362805831487609,
+     "costPerMessage": 0.02929899625459581,
+     "lossMaking": false
+    }
+   ],
+   "rowCount": 4080,
+   "eurUsd": 1.13,
+   "mostAffectedRoutes": [
+    {
+     "key": "DE|SMS",
+     "baseline": 6994649.048772004,
+     "scenario": 3520498.2498870036,
+     "delta": -3474150.798885001,
+     "baselineMargin": 0.23051094288353227,
+     "scenarioMargin": 0.11601916913097297
+    },
+    {
+     "key": "FR|SMS",
+     "baseline": 5460922.555169997,
+     "scenario": 2706127.9425780056,
+     "delta": -2754794.612591991,
+     "baselineMargin": 0.22719797170599498,
+     "scenarioMargin": 0.11258661398678281
+    },
+    {
+     "key": "GB|SMS",
+     "baseline": 3407799.4670639997,
+     "scenario": 1677603.729024002,
+     "delta": -1730195.7380399976,
+     "baselineMargin": 0.22523288778323164,
+     "scenarioMargin": 0.11087845282443605
+    },
+    {
+     "key": "HR|SMS",
+     "baseline": 2120204.6050839997,
+     "scenario": 1467656.1827530004,
+     "delta": -652548.4223309993,
+     "baselineMargin": 0.326221630814725,
+     "scenarioMargin": 0.22581839142549603
+    }
+   ],
+   "mostAffectedCustomers": [
+    {
+     "key": "C10",
+     "baseline": 2181770.438055223,
+     "scenario": 1119151.2898067222,
+     "delta": -1062619.1482485007,
+     "baselineMargin": 0.17333617003011528,
+     "scenarioMargin": 0.08891375319590372
+    },
+    {
+     "key": "C09",
+     "baseline": 1769178.9136620006,
+     "scenario": 852443.4456645015,
+     "delta": -916735.467997499,
+     "baselineMargin": 0.2176852200386649,
+     "scenarioMargin": 0.10488726584237738
+    },
+    {
+     "key": "C15",
+     "baseline": 1405102.4916387438,
+     "scenario": 723817.5415017438,
+     "delta": -681284.950137,
+     "baselineMargin": 0.194283592896704,
+     "scenarioMargin": 0.10008228823266033
+    },
+    {
+     "key": "C01",
+     "baseline": 1683273.065915769,
+     "scenario": 1075087.1054232693,
+     "delta": -608185.9604924996,
+     "baselineMargin": 0.14549163129881437,
+     "scenarioMargin": 0.09292382794187651
+    },
+    {
+     "key": "C16",
+     "baseline": 957751.3107278941,
+     "scenario": 480605.8504088944,
+     "delta": -477145.46031899966,
+     "baselineMargin": 0.17299091790187643,
+     "scenarioMargin": 0.08680797016927029
+    }
+   ]
+  },
+  "shift-to-whatsapp": {
+   "bridge": {
+    "baseline": {
+     "volume": 3337933796,
+     "revenue": 112248232.34308372,
+     "deliveryCost": 87420338.83224483,
+     "platformCost": 1766081.3829999964,
+     "grossProfit": 23061812.1278387,
+     "totalCost": 89186420.21524483,
+     "grossMarginPct": 0.2054536775006923,
+     "revenuePerMessage": 0.03362805831487609,
+     "costPerMessage": 0.02671905006687701,
+     "lossMaking": false
+    },
+    "scenario": {
+     "volume": 3337933796,
+     "revenue": 111546506.12457587,
+     "deliveryCost": 89077923.38815717,
+     "platformCost": 1766081.3830000015,
+     "grossProfit": 20702501.353418402,
+     "totalCost": 90844004.77115718,
+     "grossMarginPct": 0.1855952469752635,
+     "revenuePerMessage": 0.033417830592759865,
+     "costPerMessage": 0.027215640070518996,
+     "lossMaking": false
+    },
+    "steps": [
+     {
+      "key": "volume",
+      "label": "Volume",
+      "delta": 0,
+      "marginAfter": 0.2054536775006923
+     },
+     {
+      "key": "migration",
+      "label": "SMS → WhatsApp",
+      "delta": -2359310.7744202986,
+      "marginAfter": 0.1855952469752635
+     },
+     {
+      "key": "price",
+      "label": "Customer price",
+      "delta": 0,
+      "marginAfter": 0.1855952469752635
+     },
+     {
+      "key": "cost",
+      "label": "Operator cost",
+      "delta": 0,
+      "marginAfter": 0.1855952469752635
+     },
+     {
+      "key": "fx",
+      "label": "Exchange rate",
+      "delta": 0,
+      "marginAfter": 0.1855952469752635
+     }
+    ]
+   },
+   "stepTotals": [
+    {
+     "key": "baseline",
+     "volume": 3337933796,
+     "revenue": 112248232.34308372,
+     "deliveryCost": 87420338.83224483,
+     "platformCost": 1766081.3829999964,
+     "grossProfit": 23061812.1278387,
+     "totalCost": 89186420.21524483,
+     "grossMarginPct": 0.2054536775006923,
+     "revenuePerMessage": 0.03362805831487609,
+     "costPerMessage": 0.02671905006687701,
+     "lossMaking": false
+    },
+    {
+     "key": "volume",
+     "volume": 3337933796,
+     "revenue": 112248232.34308372,
+     "deliveryCost": 87420338.83224483,
+     "platformCost": 1766081.3829999964,
+     "grossProfit": 23061812.1278387,
+     "totalCost": 89186420.21524483,
+     "grossMarginPct": 0.2054536775006923,
+     "revenuePerMessage": 0.03362805831487609,
+     "costPerMessage": 0.02671905006687701,
+     "lossMaking": false
+    },
+    {
+     "key": "migration",
+     "volume": 3337933796,
+     "revenue": 111546506.12457587,
+     "deliveryCost": 89077923.38815717,
+     "platformCost": 1766081.3830000015,
+     "grossProfit": 20702501.353418402,
+     "totalCost": 90844004.77115718,
+     "grossMarginPct": 0.1855952469752635,
+     "revenuePerMessage": 0.033417830592759865,
+     "costPerMessage": 0.027215640070518996,
+     "lossMaking": false
+    },
+    {
+     "key": "price",
+     "volume": 3337933796,
+     "revenue": 111546506.12457587,
+     "deliveryCost": 89077923.38815717,
+     "platformCost": 1766081.3830000015,
+     "grossProfit": 20702501.353418402,
+     "totalCost": 90844004.77115718,
+     "grossMarginPct": 0.1855952469752635,
+     "revenuePerMessage": 0.033417830592759865,
+     "costPerMessage": 0.027215640070518996,
+     "lossMaking": false
+    },
+    {
+     "key": "cost",
+     "volume": 3337933796,
+     "revenue": 111546506.12457587,
+     "deliveryCost": 89077923.38815717,
+     "platformCost": 1766081.3830000015,
+     "grossProfit": 20702501.353418402,
+     "totalCost": 90844004.77115718,
+     "grossMarginPct": 0.1855952469752635,
+     "revenuePerMessage": 0.033417830592759865,
+     "costPerMessage": 0.027215640070518996,
+     "lossMaking": false
+    },
+    {
+     "key": "fx",
+     "volume": 3337933796,
+     "revenue": 111546506.12457587,
+     "deliveryCost": 89077923.38815717,
+     "platformCost": 1766081.3830000015,
+     "grossProfit": 20702501.353418402,
+     "totalCost": 90844004.77115718,
+     "grossMarginPct": 0.1855952469752635,
+     "revenuePerMessage": 0.033417830592759865,
+     "costPerMessage": 0.027215640070518996,
+     "lossMaking": false
+    }
+   ],
+   "rowCount": 4464,
+   "eurUsd": 1.13,
+   "mostAffectedRoutes": [
+    {
+     "key": "DE|SMS",
+     "baseline": 6994649.048772004,
+     "scenario": 5725862.730504004,
+     "delta": -1268786.3182680001,
+     "baselineMargin": 0.23051094288353227,
+     "scenarioMargin": 0.230223316608546
+    },
+    {
+     "key": "FR|SMS",
+     "baseline": 5460922.555169997,
+     "scenario": 4490275.674025501,
+     "delta": -970646.8811444957,
+     "baselineMargin": 0.22719797170599498,
+     "scenarioMargin": 0.22769649248429394
+    },
+    {
+     "key": "US|WhatsApp",
+     "baseline": 219552.55342423,
+     "scenario": 1039229.8156234707,
+     "delta": 819677.2621992407,
+     "baselineMargin": 0.21400045968739487,
+     "scenarioMargin": 0.20464966682861932
+    },
+    {
+     "key": "US|SMS",
+     "baseline": 3384171.3872896237,
+     "scenario": 2730146.3703514133,
+     "delta": -654025.0169382105,
+     "baselineMargin": 0.23666136141811336,
+     "scenarioMargin": 0.2368492264468842
+    },
+    {
+     "key": "GB|SMS",
+     "baseline": 3407799.4670639997,
+     "scenario": 2815255.437492002,
+     "delta": -592544.0295719979,
+     "baselineMargin": 0.22523288778323164,
+     "scenarioMargin": 0.22587492019615837
+    }
+   ],
+   "mostAffectedCustomers": [
+    {
+     "key": "C10",
+     "baseline": 2181770.438055223,
+     "scenario": 1815203.6668146332,
+     "delta": -366566.7712405897,
+     "baselineMargin": 0.17333617003011528,
+     "scenarioMargin": 0.15054890304587837
+    },
+    {
+     "key": "C32",
+     "baseline": 956773.8667446906,
+     "scenario": 779244.4113508003,
+     "delta": -177529.45539389027,
+     "baselineMargin": 0.2124394362214189,
+     "scenarioMargin": 0.17067531780353168
+    },
+    {
+     "key": "C09",
+     "baseline": 1769178.9136620006,
+     "scenario": 1607636.4050665582,
+     "delta": -161542.5085954424,
+     "baselineMargin": 0.2176852200386649,
+     "scenarioMargin": 0.20089773936983382
+    },
+    {
+     "key": "C16",
+     "baseline": 957751.3107278941,
+     "scenario": 807627.3401534691,
+     "delta": -150123.97057442495,
+     "baselineMargin": 0.17299091790187643,
+     "scenarioMargin": 0.1419246886777004
+    },
+    {
+     "key": "C11",
+     "baseline": 783283.033787522,
+     "scenario": 670984.2244500134,
+     "delta": -112298.80933750863,
+     "baselineMargin": 0.159439453950039,
+     "scenarioMargin": 0.13422872777466208
+    }
+   ]
+  },
+  "strong-dollar": {
+   "bridge": {
+    "baseline": {
+     "volume": 3337933796,
+     "revenue": 112248232.34308372,
+     "deliveryCost": 87420338.83224483,
+     "platformCost": 1766081.3829999964,
+     "grossProfit": 23061812.1278387,
+     "totalCost": 89186420.21524483,
+     "grossMarginPct": 0.2054536775006923,
+     "revenuePerMessage": 0.03362805831487609,
+     "costPerMessage": 0.02671905006687701,
+     "lossMaking": false
+    },
+    "scenario": {
+     "volume": 3337933796,
+     "revenue": 112248232.34308372,
+     "deliveryCost": 90638257.00397576,
+     "platformCost": 1766081.3829999964,
+     "grossProfit": 19843893.95610821,
+     "totalCost": 92404338.38697577,
+     "grossMarginPct": 0.17678580358803225,
+     "revenuePerMessage": 0.03362805831487609,
+     "costPerMessage": 0.02768309500257559,
+     "lossMaking": false
+    },
+    "steps": [
+     {
+      "key": "volume",
+      "label": "Volume",
+      "delta": 0,
+      "marginAfter": 0.2054536775006923
+     },
+     {
+      "key": "migration",
+      "label": "SMS → WhatsApp",
+      "delta": 0,
+      "marginAfter": 0.2054536775006923
+     },
+     {
+      "key": "price",
+      "label": "Customer price",
+      "delta": 0,
+      "marginAfter": 0.2054536775006923
+     },
+     {
+      "key": "cost",
+      "label": "Operator cost",
+      "delta": 0,
+      "marginAfter": 0.2054536775006923
+     },
+     {
+      "key": "fx",
+      "label": "Exchange rate",
+      "delta": -3217918.1717304923,
+      "marginAfter": 0.17678580358803225
+     }
+    ]
+   },
+   "stepTotals": [
+    {
+     "key": "baseline",
+     "volume": 3337933796,
+     "revenue": 112248232.34308372,
+     "deliveryCost": 87420338.83224483,
+     "platformCost": 1766081.3829999964,
+     "grossProfit": 23061812.1278387,
+     "totalCost": 89186420.21524483,
+     "grossMarginPct": 0.2054536775006923,
+     "revenuePerMessage": 0.03362805831487609,
+     "costPerMessage": 0.02671905006687701,
+     "lossMaking": false
+    },
+    {
+     "key": "volume",
+     "volume": 3337933796,
+     "revenue": 112248232.34308372,
+     "deliveryCost": 87420338.83224483,
+     "platformCost": 1766081.3829999964,
+     "grossProfit": 23061812.1278387,
+     "totalCost": 89186420.21524483,
+     "grossMarginPct": 0.2054536775006923,
+     "revenuePerMessage": 0.03362805831487609,
+     "costPerMessage": 0.02671905006687701,
+     "lossMaking": false
+    },
+    {
+     "key": "migration",
+     "volume": 3337933796,
+     "revenue": 112248232.34308372,
+     "deliveryCost": 87420338.83224483,
+     "platformCost": 1766081.3829999964,
+     "grossProfit": 23061812.1278387,
+     "totalCost": 89186420.21524483,
+     "grossMarginPct": 0.2054536775006923,
+     "revenuePerMessage": 0.03362805831487609,
+     "costPerMessage": 0.02671905006687701,
+     "lossMaking": false
+    },
+    {
+     "key": "price",
+     "volume": 3337933796,
+     "revenue": 112248232.34308372,
+     "deliveryCost": 87420338.83224483,
+     "platformCost": 1766081.3829999964,
+     "grossProfit": 23061812.1278387,
+     "totalCost": 89186420.21524483,
+     "grossMarginPct": 0.2054536775006923,
+     "revenuePerMessage": 0.03362805831487609,
+     "costPerMessage": 0.02671905006687701,
+     "lossMaking": false
+    },
+    {
+     "key": "cost",
+     "volume": 3337933796,
+     "revenue": 112248232.34308372,
+     "deliveryCost": 87420338.83224483,
+     "platformCost": 1766081.3829999964,
+     "grossProfit": 23061812.1278387,
+     "totalCost": 89186420.21524483,
+     "grossMarginPct": 0.2054536775006923,
+     "revenuePerMessage": 0.03362805831487609,
+     "costPerMessage": 0.02671905006687701,
+     "lossMaking": false
+    },
+    {
+     "key": "fx",
+     "volume": 3337933796,
+     "revenue": 112248232.34308372,
+     "deliveryCost": 90638257.00397576,
+     "platformCost": 1766081.3829999964,
+     "grossProfit": 19843893.95610821,
+     "totalCost": 92404338.38697577,
+     "grossMarginPct": 0.17678580358803225,
+     "revenuePerMessage": 0.03362805831487609,
+     "costPerMessage": 0.02768309500257559,
+     "lossMaking": false
+    }
+   ],
+   "rowCount": 4080,
+   "eurUsd": 1.017,
+   "mostAffectedRoutes": [
+    {
+     "key": "US|SMS",
+     "baseline": 3384171.3872896237,
+     "scenario": 2258468.2914489205,
+     "delta": -1125703.0958407032,
+     "baselineMargin": 0.23666136141811336,
+     "scenarioMargin": 0.1579388628428821
+    },
+    {
+     "key": "DE|WhatsApp",
+     "baseline": 441338.4536641584,
+     "scenario": -628724.1000231564,
+     "delta": -1070062.5536873147,
+     "baselineMargin": 0.04351115783130973,
+     "scenarioMargin": -0.061985338737949584
+    },
+    {
+     "key": "FR|WhatsApp",
+     "baseline": 387042.7698064597,
+     "scenario": -165783.10454948884,
+     "delta": -552825.8743559485,
+     "baselineMargin": 0.0713359630841013,
+     "scenarioMargin": -0.030555531193681176
+    },
+    {
+     "key": "GB|WhatsApp",
+     "baseline": 293054.31274909724,
+     "scenario": -24242.9830227807,
+     "delta": -317297.2957718779,
+     "baselineMargin": 0.09167769671409952,
+     "scenarioMargin": -0.007584057795151486
+    },
+    {
+     "key": "US|WhatsApp",
+     "baseline": 219552.55342423,
+     "scenario": 134539.18180181115,
+     "delta": -85013.37162241884,
+     "baselineMargin": 0.21400045968739487,
+     "scenarioMargin": 0.13113692508928082
+    }
+   ],
+   "mostAffectedCustomers": [
+    {
+     "key": "C01",
+     "baseline": 1683273.065915769,
+     "scenario": 1092486.874204855,
+     "delta": -590786.191710914,
+     "baselineMargin": 0.14549163129881437,
+     "scenarioMargin": 0.09442775549559033
+    },
+    {
+     "key": "C10",
+     "baseline": 2181770.438055223,
+     "scenario": 1822879.2875635792,
+     "delta": -358891.1504916437,
+     "baselineMargin": 0.17333617003011528,
+     "scenarioMargin": 0.14482317141263715
+    },
+    {
+     "key": "C02",
+     "baseline": 733130.350812292,
+     "scenario": 451117.5457188804,
+     "delta": -282012.80509341153,
+     "baselineMargin": 0.2123649079515076,
+     "scenarioMargin": 0.13067462827825108
+    },
+    {
+     "key": "C05",
+     "baseline": 999140.6881283894,
+     "scenario": 778000.8205964328,
+     "delta": -221139.86753195664,
+     "baselineMargin": 0.18627909312042817,
+     "scenarioMargin": 0.1450499304348514
+    },
+    {
+     "key": "C04",
+     "baseline": 581170.1490271948,
+     "scenario": 394169.7274834387,
+     "delta": -187000.42154375615,
+     "baselineMargin": 0.17803192486363267,
+     "scenarioMargin": 0.12074741867646478
+    }
+   ]
+  }
+ },
+ "allSteps": {
+  "bridge": {
+   "baseline": {
+    "volume": 3337933796,
+    "revenue": 112248232.34308372,
+    "deliveryCost": 87420338.83224483,
+    "platformCost": 1766081.3829999964,
+    "grossProfit": 23061812.1278387,
+    "totalCost": 89186420.21524483,
+    "grossMarginPct": 0.2054536775006923,
+    "revenuePerMessage": 0.03362805831487609,
+    "costPerMessage": 0.02671905006687701,
+    "lossMaking": false
+   },
+   "scenario": {
+    "volume": 3721650426.8049994,
+    "revenue": 121848692.77461444,
+    "deliveryCost": 107711330.1631174,
+    "platformCost": 1957939.698402496,
+    "grossProfit": 12179422.913094375,
+    "totalCost": 109669269.86151989,
+    "grossMarginPct": 0.09995530223391774,
+    "revenuePerMessage": 0.032740499187404966,
+    "costPerMessage": 0.02946791269583852,
+    "lossMaking": false
+   },
+   "steps": [
+    {
+     "key": "volume",
+     "label": "Volume",
+     "delta": 611294.0863102563,
+     "marginAfter": 0.20482008492571474
+    },
+    {
+     "key": "migration",
+     "label": "SMS → WhatsApp",
+     "delta": -1879186.810743343,
+     "marginAfter": 0.17392404465822392
+    },
+    {
+     "key": "price",
+     "label": "Customer price",
+     "delta": -3458417.270075429,
+     "marginAfter": 0.15047762693068584
+    },
+    {
+     "key": "cost",
+     "label": "Operator cost",
+     "delta": -10610038.382718,
+     "marginAfter": 0.06340210612601403
+    },
+    {
+     "key": "fx",
+     "label": "Exchange rate",
+     "delta": 4453959.162482191,
+     "marginAfter": 0.09995530223391774
+    }
+   ]
+  },
+  "stepTotals": [
+   {
+    "key": "baseline",
+    "volume": 3337933796,
+    "revenue": 112248232.34308372,
+    "deliveryCost": 87420338.83224483,
+    "platformCost": 1766081.3829999964,
+    "grossProfit": 23061812.1278387,
+    "totalCost": 89186420.21524483,
+    "grossMarginPct": 0.2054536775006923,
+    "revenuePerMessage": 0.03362805831487609,
+    "costPerMessage": 0.02671905006687701,
+    "lossMaking": false
+   },
+   {
+    "key": "volume",
+    "volume": 3427413332.1999936,
+    "revenue": 115580003.89822535,
+    "deliveryCost": 90096076.53297651,
+    "platformCost": 1810821.1510999987,
+    "grossProfit": 23673106.214148957,
+    "totalCost": 91906897.6840765,
+    "grossMarginPct": 0.20482008492571474,
+    "revenuePerMessage": 0.03372222509971876,
+    "costPerMessage": 0.02681523609091033,
+    "lossMaking": false
+   },
+   {
+    "key": "migration",
+    "volume": 3721650426.8049994,
+    "revenue": 125307110.04468983,
+    "deliveryCost": 101555250.9428812,
+    "platformCost": 1957939.698402496,
+    "grossProfit": 21793919.403405614,
+    "totalCost": 103513190.64128369,
+    "grossMarginPct": 0.17392404465822392,
+    "revenuePerMessage": 0.033669768966524016,
+    "costPerMessage": 0.02781378656515807,
+    "lossMaking": false
+   },
+   {
+    "key": "price",
+    "volume": 3721650426.8049994,
+    "revenue": 121848692.77461444,
+    "deliveryCost": 101555250.9428812,
+    "platformCost": 1957939.698402496,
+    "grossProfit": 18335502.133330185,
+    "totalCost": 103513190.64128369,
+    "grossMarginPct": 0.15047762693068584,
+    "revenuePerMessage": 0.032740499187404966,
+    "costPerMessage": 0.02781378656515807,
+    "lossMaking": false
+   },
+   {
+    "key": "cost",
+    "volume": 3721650426.8049994,
+    "revenue": 121848692.77461444,
+    "deliveryCost": 112165289.32559933,
+    "platformCost": 1957939.698402496,
+    "grossProfit": 7725463.750612184,
+    "totalCost": 114123229.02400182,
+    "grossMarginPct": 0.06340210612601403,
+    "revenuePerMessage": 0.032740499187404966,
+    "costPerMessage": 0.030664682583306326,
+    "lossMaking": false
+   },
+   {
+    "key": "fx",
+    "volume": 3721650426.8049994,
+    "revenue": 121848692.77461444,
+    "deliveryCost": 107711330.1631174,
+    "platformCost": 1957939.698402496,
+    "grossProfit": 12179422.913094375,
+    "totalCost": 109669269.86151989,
+    "grossMarginPct": 0.09995530223391774,
+    "revenuePerMessage": 0.032740499187404966,
+    "costPerMessage": 0.02946791269583852,
+    "lossMaking": false
+   }
+  ],
+  "rowCount": 4656,
+  "eurUsd": 1.2204,
+  "mostAffectedRoutes": [
+   {
+    "key": "DE|SMS",
+    "baseline": 6994649.048772004,
+    "scenario": 687039.0886877324,
+    "delta": -6307609.960084273,
+    "baselineMargin": 0.23051094288353227,
+    "scenarioMargin": 0.0290303109376215
+   },
+   {
+    "key": "FR|SMS",
+    "baseline": 5460922.555169997,
+    "scenario": 3496200.590535417,
+    "delta": -1964721.9646345796,
+    "baselineMargin": 0.22719797170599498,
+    "scenarioMargin": 0.1867013623216042
+   },
+   {
+    "key": "US|SMS",
+    "baseline": 3384171.3872896237,
+    "scenario": 1500016.7981094273,
+    "delta": -1884154.5891801964,
+    "baselineMargin": 0.23666136141811336,
+    "scenarioMargin": 0.13276981137621752
+   },
+   {
+    "key": "DE|WhatsApp",
+    "baseline": 441338.4536641584,
+    "scenario": -1265408.6105597091,
+    "delta": -1706747.0642238676,
+    "baselineMargin": 0.04351115783130973,
+    "scenarioMargin": -0.06461055357888985
+   },
+   {
+    "key": "FR|WhatsApp",
+    "baseline": 387042.7698064597,
+    "scenario": 1646417.343792722,
+    "delta": 1259374.5739862623,
+    "baselineMargin": 0.0713359630841013,
+    "scenarioMargin": 0.1331123937945449
+   }
+  ],
+  "mostAffectedCustomers": [
+   {
+    "key": "C10",
+    "baseline": 2181770.438055223,
+    "scenario": 26231.835500732042,
+    "delta": -2155538.602554491,
+    "baselineMargin": 0.17333617003011528,
+    "scenarioMargin": 0.00206209716434838
+   },
+   {
+    "key": "C09",
+    "baseline": 1769178.9136620006,
+    "scenario": 4549.124002583213,
+    "delta": -1764629.7896594172,
+    "baselineMargin": 0.2176852200386649,
+    "scenarioMargin": 0.0005538451688417453
+   },
+   {
+    "key": "C12",
+    "baseline": 747809.0043276286,
+    "scenario": -147097.7762727415,
+    "delta": -894906.7806003701,
+    "baselineMargin": 0.15996821544372986,
+    "scenarioMargin": -0.028634976286584235
+   },
+   {
+    "key": "C01",
+    "baseline": 1683273.065915769,
+    "scenario": 846435.699138667,
+    "delta": -836837.366777102,
+    "baselineMargin": 0.14549163129881437,
+    "scenarioMargin": 0.06502849161378803
+   },
+   {
+    "key": "C32",
+    "baseline": 956773.8667446906,
+    "scenario": 128644.88657480381,
+    "delta": -828128.9801698867,
+    "baselineMargin": 0.2124394362214189,
+    "scenarioMargin": 0.02436493895504312
+   }
+  ]
+ },
+ "checks": [
+  {
+   "id": "sum-by-country",
+   "pass": true
+  },
+  {
+   "id": "sum-by-channel",
+   "pass": true
+  },
+  {
+   "id": "sum-by-customer",
+   "pass": true
+  },
+  {
+   "id": "no-negatives",
+   "pass": true
+  },
+  {
+   "id": "passthrough-within-price",
+   "pass": true
+  },
+  {
+   "id": "assumptions-resolve",
+   "pass": true
+  },
+  {
+   "id": "default-scenario",
+   "pass": true
+  },
+  {
+   "id": "sourcing",
+   "pass": true
+  },
+  {
+   "id": "target-margin",
+   "pass": true
+  }
+ ],
+ "format": [
+  {
+   "value": -15244,
+   "eur": "−⁠€15.2k",
+   "pct": "−⁠1524400.0%",
+   "perMessage": "−⁠15244.0000 €/msg",
+   "count": "−⁠15.2k",
+   "integer": "−⁠15,244"
+  },
+  {
+   "value": -0.5,
+   "eur": "−⁠€1",
+   "pct": "−⁠50.0%",
+   "perMessage": "−⁠0.5000 €/msg",
+   "count": "−⁠1",
+   "integer": "−⁠0"
+  },
+  {
+   "value": 0,
+   "eur": "€0",
+   "pct": "0.0%",
+   "perMessage": "0.0000 €/msg",
+   "count": "0",
+   "integer": "0"
+  },
+  {
+   "value": 0.0123456,
+   "eur": "€0",
+   "pct": "1.2%",
+   "perMessage": "0.0123 €/msg",
+   "count": "0",
+   "integer": "0"
+  },
+  {
+   "value": 0.2214,
+   "eur": "€0",
+   "pct": "22.1%",
+   "perMessage": "0.2214 €/msg",
+   "count": "0",
+   "integer": "0"
+  },
+  {
+   "value": 512,
+   "eur": "€512",
+   "pct": "51200.0%",
+   "perMessage": "512.0000 €/msg",
+   "count": "512",
+   "integer": "512"
+  },
+  {
+   "value": 45300,
+   "eur": "€45.3k",
+   "pct": "4530000.0%",
+   "perMessage": "45300.0000 €/msg",
+   "count": "45.3k",
+   "integer": "45,300"
+  },
+  {
+   "value": 1234567,
+   "eur": "€1.2M",
+   "pct": "123456700.0%",
+   "perMessage": "1234567.0000 €/msg",
+   "count": "1.2M",
+   "integer": "1,234,567"
+  },
+  {
+   "value": 821584062,
+   "eur": "€821.6M",
+   "pct": "82158406200.0%",
+   "perMessage": "821584062.0000 €/msg",
+   "count": "821.6M",
+   "integer": "821,584,062"
+  },
+  {
+   "value": 2500000000,
+   "eur": "€2.5B",
+   "pct": "250000000000.0%",
+   "perMessage": "2500000000.0000 €/msg",
+   "count": "2.5B",
+   "integer": "2,500,000,000"
+  },
+  {
+   "value": null,
+   "eur": "n/a",
+   "pct": "n/a",
+   "perMessage": "n/a",
+   "count": "n/a",
+   "integer": "n/a"
+  },
+  {
+   "value": "NaN",
+   "eur": "n/a",
+   "pct": "n/a",
+   "perMessage": "n/a",
+   "count": "n/a",
+   "integer": "n/a"
+  }
+ ]
+}
