@@ -179,6 +179,10 @@ Up to three peers next to the company on the form (`src/rating/compare.js`), tak
 - **Columns**: the first column holds the labels. A column of AOP or note numbers is left out (by its header, or, without one, because it holds only one- to three-digit numbers before the amounts). Up to five amount columns become years; their order comes from header years ("2025", "2024") or words ("Prethodna godina", "Tekuća godina"), otherwise the user chooses (default: the last column is the latest year, as in GFI-POD).
 - Every line can be reassigned in the preview, which shows what goes into the form for each year before anything is filled in.
 
+**Opening a file.** Both paste dialogs also open an Excel workbook (.xlsx) or a CSV/TSV/text file, chosen with "Open a file…" or dropped anywhere on the page; on the Company rating a dropped .json export is imported as before. The file is read in the browser (`src/shared/xlsx.js` and `zip.js`, no library: the browser's own DecompressionStream unpacks the workbook). An .xlsx is read as the cell values Excel saved, formulas included as their results; the first sheet with an amount in it is used (numbers that look like years do not count, so an untouched template opens its example). The cells then go through the same paste import and preview. Old binary .xls files cannot be read; the page asks for .xlsx or CSV.
+
+**Templates.** "Download template (.xlsx)" gives a workbook made in the browser: a sheet to fill in with the field names the import recognises (a column per year, newest first; or the segment table's header row), a filled-in fictional example and a sheet of instructions, in the interface language. A test checks that every template line is matched to its own field in both languages.
+
 <a id="segment-profitability"></a>
 
 ## 13. Segment profitability (any table)

@@ -6,6 +6,8 @@ All notable changes to Profitability Lens. The format follows [Keep a Changelog]
 
 ### Added
 
+- Other operating income (*ostali poslovni prihodi*) as an input: it counts in EBITDA and EBIT but not in revenue.
+- Open an Excel (.xlsx) or CSV file in both paste dialogs, or drop it anywhere on the page, and download an Excel template for the Company rating and for segments. No library: the workbook is read and written in the browser.
 - "How to reach grade X" on the Company rating: the smallest change of each What if… lever that reaches the next grade, with "Try it" to set it, and a table of the points each ratio earns and misses.
 
 ## [1.0.0] – 2026-11-25

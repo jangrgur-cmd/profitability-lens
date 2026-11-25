@@ -51,7 +51,7 @@ export const LABELS = {
     tiers: [["operating expenses", "operating expenses excl d and a", "opex", "other operating expenses",
       "selling general and administrative expenses", "selling general and administrative", "sg and a",
       "selling and distribution expenses", "administrative expenses", "staff costs", "personnel expenses",
-      "employee benefits expense", "materijalni troskovi", "troskovi osoblja", "ostali troskovi",
+      "employee benefits expense", "poslovni rashodi bez amortizacije", "materijalni troskovi", "troskovi osoblja", "ostali troskovi",
       "vrijednosna uskladenja", "rezerviranja", "ostali poslovni rashodi"]],
   },
   da: {
@@ -63,7 +63,7 @@ export const LABELS = {
   otherIncome: {
     sum: true,
     tiers: [["other financial income net", "net financial income", "financial income", "finance income",
-      "other financial income", "financijski prihodi"]],
+      "other financial income", "ostali financijski prihodi neto", "ostali financijski prihodi", "financijski prihodi"]],
   },
   interest: {
     sum: true,
@@ -89,7 +89,7 @@ export const LABELS = {
   },
   debt: {
     sum: true,
-    tiers: [["interest bearing debt", "borrowings", "bank loans", "loans", "financial debt", "debt", "total debt",
+    tiers: [["interest bearing debt", "kamatonosne obveze", "borrowings", "bank loans", "loans", "financial debt", "debt", "total debt",
       "obveze prema bankama i drugim financijskim institucijama", "obveze prema bankama", "krediti",
       "obveze po kreditima", "obveze za zajmove depozite i slicno"]],
   },

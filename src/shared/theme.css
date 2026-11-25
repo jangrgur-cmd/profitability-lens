@@ -379,3 +379,19 @@ a:hover { color: var(--accent-strong); text-decoration-thickness: 2px; }
   :root, :root[data-theme] { color-scheme: light; }
   .site-header, .skip-link { display: none !important; }
 }
+
+/* ---------- Opening a table from a file (both paste dialogs) ---------- */
+
+.file-import { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-3); margin: var(--space-2) 0; }
+.file-import__note { flex-basis: 100%; margin: 0; font-size: 0.8125rem; color: var(--ink-muted); }
+.paste__file { margin: 0 0 var(--space-2); font-size: var(--step--1); color: var(--ink-muted); }
+.paste__file--error { color: var(--loss); font-weight: 600; }
+:root.file-drag body::after {
+  content: attr(data-drop-hint);
+  position: fixed; inset: var(--space-3); z-index: 1000;
+  display: grid; place-items: center;
+  border: 3px dashed var(--accent); border-radius: 12px;
+  background: color-mix(in srgb, var(--surface) 85%, transparent);
+  color: var(--accent-strong); font-size: 1.25rem; font-weight: 700;
+  pointer-events: none;
+}

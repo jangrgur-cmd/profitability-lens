@@ -20,6 +20,7 @@ import { renderWhatIf } from "./view-whatif.js";
 import { renderPath } from "./view-path.js";
 import { renderPeers } from "./view-peers.js";
 import { createPasteDialog } from "./view-paste.js";
+import { listenForFileDrop } from "../shared/file-import.js";
 import { formatAmountInput } from "../shared/format.js";
 import { t } from "../shared/i18n.js";
 import { decodeHandoff, HANDOFF_SOURCES } from "../shared/handoff.js";
@@ -98,9 +99,15 @@ function buildForm() {
   $("clear-form").addEventListener("click", clearForm);
   $("export-json").addEventListener("click", exportForm);
   $("import-json").addEventListener("click", () => $("import-file").click());
-  $("import-file").addEventListener("change", importFile);
+  $("import-file").addEventListener("change", (event) => {
+    const file = event.target.files[0];
+    event.target.value = "";
+    if (file) importJsonFile(file);
+  });
   const paste = createPasteDialog({ latestYear: () => app.latestYear, onApply: applyPaste });
   $("paste-table").addEventListener("click", () => paste.open());
+  // A file dropped on the page: an exported JSON file is imported, a table opens in the paste dialog.
+  listenForFileDrop((file) => (/.json$/i.test(file.name) ? importJsonFile(file) : paste.open(file)));
 }
 
 function buildField(field) {
@@ -424,10 +431,7 @@ function loadYears(years, { latestYear, industryId, companyName }) {
   submit();
 }
 
-async function importFile(event) {
-  const file = event.target.files[0];
-  event.target.value = "";
-  if (!file) return;
+async function importJsonFile(file) {
   try {
     const imported = importJson(await file.text());
     loadYears(imported.years, { latestYear: imported.years[0].year ?? app.latestYear, industryId: imported.industryId, companyName: imported.companyName });

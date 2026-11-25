@@ -3,7 +3,8 @@
 // UI only: a dialog where the user pastes statement lines, checks which
 // field each line goes into (readStatementPaste guesses, the user can
 // change it), sees the totals per year (pasteToYears) and fills the form.
-// Nothing leaves the browser.
+// The lines can also come from an .xlsx or CSV file (src/shared/file-import.js),
+// and the dialog offers the Excel template. Nothing leaves the browser.
 
 import { readStatementPaste, pasteToYears } from "./paste.js";
 import { FIELD_BY_ID } from "./fields.js";
@@ -12,12 +13,14 @@ import { formatAmountInput, formatEurFull } from "../shared/format.js";
 import { t } from "../shared/i18n.js";
 import { h, replaceChildren } from "../shared/dom.js";
 import { pill } from "../shared/status.js";
+import { downloadWorkbook, fileControls, readTableFile } from "../shared/file-import.js";
+import { ratingTemplate } from "./template.js";
 
 /**
  * Creates the dialog (once) and returns a function that opens it.
  * @param {{latestYear: () => number, onApply: (years: {year: number, values: object}[]) => void}} options
  *   latestYear: the form's latest year, used when the headers name none
- * @returns {{open: () => void}}
+ * @returns {{open: (file?: File) => void}} open, optionally reading a file at once
  */
 export function createPasteDialog({ latestYear, onApply }) {
   /** @type {ReturnType<typeof readStatementPaste>|null} */
@@ -29,6 +32,7 @@ export function createPasteDialog({ latestYear, onApply }) {
     placeholder: t("rating.paste.placeholder"),
   });
   const preview = h("div", { class: "paste__preview", "aria-live": "polite" });
+  const fileNote = h("p", { class: "paste__file", "aria-live": "polite", hidden: true });
   const apply = h("button", { type: "button", class: "button button--primary", disabled: true }, t("rating.paste.apply"));
   const orderSelect = h("select", { id: "paste-order" },
     h("option", { value: "oldest" }, t("rating.paste.orderLast")),
@@ -44,6 +48,12 @@ export function createPasteDialog({ latestYear, onApply }) {
       h("div", { class: "field field--text" },
         h("label", { for: "paste-text" }, t("rating.paste.label")),
         textarea),
+      fileControls({
+        id: "paste",
+        onFile: (file) => loadFile(file),
+        onTemplate: () => downloadWorkbook(t("rating.template.filename"), ratingTemplate({ latestYear: latestYear() })),
+      }),
+      fileNote,
       h("div", { class: "paste__read" },
         h("button", { type: "button", class: "button", on: { click: readText } }, t("rating.paste.read")),
         h("p", { class: "paste__privacy" }, t("rating.paste.privacy"))),
@@ -64,6 +74,20 @@ export function createPasteDialog({ latestYear, onApply }) {
     rows = read.rows.map((r) => ({ ...r }));
     yearInput.value = String(read.latestYear ?? latestYear());
     renderPreview();
+  }
+
+  async function loadFile(file) {
+    fileNote.hidden = false;
+    fileNote.classList.remove("paste__file--error");
+    try {
+      const { text, note } = await readTableFile(file);
+      textarea.value = text;
+      fileNote.textContent = note;
+      readText();
+    } catch (error) {
+      fileNote.textContent = error.message;
+      fileNote.classList.add("paste__file--error");
+    }
   }
 
   function renderPreview() {
@@ -132,14 +156,16 @@ export function createPasteDialog({ latestYear, onApply }) {
   });
 
   return {
-    open() {
+    open(file) {
       read = null;
       rows = [];
       textarea.value = "";
+      fileNote.hidden = true;
       replaceChildren(preview);
       apply.disabled = true;
-      dialog.showModal();
+      if (!dialog.open) dialog.showModal();
       textarea.focus();
+      if (file) loadFile(file);
     },
   };
 }

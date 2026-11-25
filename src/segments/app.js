@@ -12,6 +12,8 @@ import { t } from "../shared/i18n.js";
 import { h, replaceChildren } from "../shared/dom.js";
 import { readJson, writeJson } from "../shared/prefs.js";
 import { downloadCsv } from "../shared/export.js";
+import { downloadWorkbook, fileControls, listenForFileDrop, readTableFile } from "../shared/file-import.js";
+import { segmentTemplate } from "./template.js";
 import { encodeHandoff } from "../shared/handoff.js";
 import { mountSiteHeader } from "../shared/site-header.js";
 
@@ -223,6 +225,7 @@ function createPasteDialog() {
   let read = null;
   const textarea = h("textarea", { id: "seg-paste-text", rows: 8, spellcheck: "false", placeholder: t("segments.paste.placeholder"), "aria-describedby": "seg-paste-help" });
   const preview = h("div", { class: "paste__preview", "aria-live": "polite" });
+  const fileNote = h("p", { class: "paste__file", "aria-live": "polite", hidden: true });
   const apply = h("button", { type: "button", class: "button button--primary", disabled: true }, t("segments.paste.apply"));
   const readText = () => {
     read = readSegmentPaste(textarea.value);
@@ -251,6 +254,12 @@ function createPasteDialog() {
         h("button", { type: "submit", class: "icon-button", value: "cancel", "aria-label": t("rating.paste.close") }, "✕")),
       h("p", { id: "seg-paste-help", class: "paste__intro" }, t("segments.paste.intro")),
       h("div", { class: "field field--text" }, h("label", { for: "seg-paste-text" }, t("segments.paste.label")), textarea),
+      fileControls({
+        id: "seg-paste",
+        onFile: (file) => loadFile(file),
+        onTemplate: () => downloadWorkbook(t("segments.template.filename"), segmentTemplate({ kind: currentKind().id })),
+      }),
+      fileNote,
       h("div", { class: "paste__read" },
         h("button", { type: "button", class: "button", on: { click: readText } }, t("rating.paste.read")),
         h("p", { class: "paste__privacy" }, t("rating.paste.privacy"))),
@@ -258,6 +267,19 @@ function createPasteDialog() {
       h("div", { class: "paste__foot" },
         h("button", { type: "submit", class: "button-quiet", value: "cancel" }, t("rating.paste.cancel")),
         apply)));
+  async function loadFile(file) {
+    fileNote.hidden = false;
+    fileNote.classList.remove("paste__file--error");
+    try {
+      const { text, note } = await readTableFile(file);
+      textarea.value = text;
+      fileNote.textContent = note;
+      readText();
+    } catch (error) {
+      fileNote.textContent = error.message;
+      fileNote.classList.add("paste__file--error");
+    }
+  }
   apply.addEventListener("click", () => {
     dialog.close("apply");
     fillRows(read.segments);
@@ -266,12 +288,14 @@ function createPasteDialog() {
   });
   document.body.append(dialog);
   return {
-    open() {
+    open(file) {
       textarea.value = "";
+      fileNote.hidden = true;
       replaceChildren(preview);
       apply.disabled = true;
-      dialog.showModal();
+      if (!dialog.open) dialog.showModal();
       textarea.focus();
+      if (file) loadFile(file);
     },
   };
 }
@@ -476,6 +500,7 @@ function start() {
   $("seg-clear").addEventListener("click", clearTable);
   const paste = createPasteDialog();
   $("seg-paste").addEventListener("click", () => paste.open());
+  listenForFileDrop((file) => paste.open(file));
   $("seg-form").addEventListener("submit", (e) => { e.preventDefault(); submit(); });
 
   const saved = readJson(STORAGE_KEY);

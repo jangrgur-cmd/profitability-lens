@@ -35,6 +35,18 @@ export default {
     notANumber: "Not a number. Use digits, e.g. 1.234.567,89 or 1,234,567.89.",
   },
 
+  fileImport: {
+    open: "Open a file…",
+    template: "Download template (.xlsx)",
+    note: "Excel (.xlsx) or CSV. You can also drop the file anywhere on this page.",
+    readSheet: "Read the sheet \"{sheet}\" from {file}.",
+    readFile: "Read {file}.",
+    notWorkbook: "{file} could not be read as an Excel workbook.",
+    oldXls: "Old Excel files (.xls) cannot be read here. Save the file as .xlsx or CSV and try again.",
+    unsupported: "{file} is not a table file. Use .xlsx, .csv, .tsv or .txt.",
+    dropHint: "Drop the file to open it",
+  },
+
   header: {
     brand: "Profitability Lens",
     navLabel: "Modules",
@@ -461,6 +473,20 @@ export default {
       colPerPp: "Per +1 pp",
       total: "Total",
       learn: "Each ratio earns its score (0–100) times its share of the weight, so the points add up to the overall score. \"Per +1 pp\" shows where the score is most sensitive: a heavily weighted ratio on a steep part of its scale gains most, and a ratio already above \"excellent\" gains nothing. In a real business ratios move together (a price rise lifts every margin and every return at once), which is why the levers are the better guide to what to change.",
+    },
+
+    template: {
+      filename: "profitability-lens-company-rating-template.xlsx",
+      sheetFigures: "Figures",
+      sheetExample: "Example (fictional)",
+      sheetHelp: "How to use",
+      corner: "EUR",
+      helpTitle: "How to use this template",
+      help1: "Fill in the sheet \"Figures\": one column per year, newest first. Revenue, Total assets and Total equity are required; leave any other line blank if your statement does not have it.",
+      help2: "Enter amounts in euros as plain numbers. Costs are positive numbers; other financial income may be negative.",
+      help3: "If your statement lists costs by nature (materials, staff, services…), leave cost of goods sold blank and put every operating cost except depreciation under operating expenses.",
+      help4: "Save the file, then on the Company rating page choose \"Paste from Excel\" and \"Open a file\", or drop the file anywhere on the page. You can check every line before the form is filled.",
+      help5: "The sheet \"Example (fictional)\" shows {name}, a made-up bakery, filled in. The file never leaves your browser.",
     },
 
     whatif: {
@@ -903,6 +929,17 @@ export default {
   },
 
   segments: {
+    template: {
+      filename: "profitability-lens-segments-template.xlsx",
+      sheetTable: "Table",
+      sheetExample: "Example (fictional)",
+      sheetHelp: "How to use",
+      helpTitle: "How to use this template",
+      help1: "Fill in the sheet \"Table\": one row per segment (customer, product, channel or region). Keep the header row.",
+      help2: "Revenue and variable costs are needed; direct fixed costs are optional. Enter amounts in euros as plain numbers.",
+      help3: "Variable costs rise with each sale (materials, delivery, commissions). Direct fixed costs belong to one segment only, such as its own staff or marketing. Do not share out company-wide overheads.",
+      help4: "Save the file, then on the Segment profitability page choose \"Paste from Excel\" and \"Open a file\", or drop the file anywhere on the page. The sheet \"Example (fictional)\" shows a made-up bakery's product lines.",
+    },
     kinds: {
       customer: "Customer",
       product: "Product",

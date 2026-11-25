@@ -26,7 +26,7 @@ This project does the whole loop in the browser. It works out the ratios, compar
 
 ### Company rating ([index.html](index.html))
 
-- **Inputs:** revenue, other operating income, cost of goods sold, operating expenses, depreciation, other financial income, interest and tax; total assets, equity, current liabilities, debt and cash; optionally the prior year. Type them in English or Croatian number format (`1,234.56` or `1.234,56`), or **paste them from Excel**. Statement lines are recognised in English and in Croatian GFI-POD wording, including costs by nature.
+- **Inputs:** revenue, other operating income, cost of goods sold, operating expenses, depreciation, other financial income, interest and tax; total assets, equity, current liabilities, debt and cash; optionally the prior year. Type them in English or Croatian number format (`1,234.56` or `1.234,56`), **paste them from Excel**, or **open an .xlsx or CSV file** (drop it on the page; a template is one click away). Statement lines are recognised in English and in Croatian GFI-POD wording, including costs by nature.
 - **Grade:** A–E with a 0–100 score, **eight ratios** (gross, EBITDA, operating and net margin, ROA, ROE, ROCE, ROIC), each with its value, a benchmark band and a track showing where it sits between the thresholds for seven industries.
 - **DuPont breakdown** of ROE into net margin × asset turnover × equity multiplier.
 - **Red flags:** net loss, negative equity, operating loss, low interest cover, ROE inflated by leverage, heavy depreciation, thin data.
@@ -36,7 +36,7 @@ This project does the whole loop in the browser. It works out the ratios, compar
 
 ### Segment profitability ([segments.html](segments.html))
 
-Type or paste a table of customers, products, channels or regions with their revenue and costs. You get each segment's contribution margin and profit, a ranked profit chart, the **whale curve** and the share of profit earned by the top 20 %. "Send to Company rating" carries the totals into the rating.
+Type, paste or open (.xlsx or CSV) a table of customers, products, channels or regions with their revenue and costs. You get each segment's contribution margin and profit, a ranked profit chart, the **whale curve** and the share of profit earned by the top 20 %. "Send to Company rating" carries the totals into the rating.
 
 ### Messaging case study ([modules/messaging/](modules/messaging/))
 

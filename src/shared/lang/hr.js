@@ -39,6 +39,18 @@ export default {
     notANumber: "Nije broj. Upišite znamenke, npr. 1.234.567,89 ili 1,234,567.89.",
   },
 
+  fileImport: {
+    open: "Otvori datoteku…",
+    template: "Preuzmi predložak (.xlsx)",
+    note: "Excel (.xlsx) ili CSV. Datoteku možete i ispustiti bilo gdje na ovu stranicu.",
+    readSheet: "Pročitan je list „{sheet}” iz datoteke {file}.",
+    readFile: "Pročitana je datoteka {file}.",
+    notWorkbook: "Datoteka {file} ne može se pročitati kao Excelova radna knjiga.",
+    oldXls: "Stare Excelove datoteke (.xls) ne mogu se ovdje pročitati. Spremite datoteku kao .xlsx ili CSV i pokušajte ponovno.",
+    unsupported: "{file} nije datoteka s tablicom. Koristite .xlsx, .csv, .tsv ili .txt.",
+    dropHint: "Ispustite datoteku da biste je otvorili",
+  },
+
   header: {
     brand: "Profitability Lens",
     navLabel: "Moduli",
@@ -467,6 +479,20 @@ export default {
       colPerPp: "Za +1 p. b.",
       total: "Ukupno",
       learn: "Svaki pokazatelj donosi svoju ocjenu (0–100) pomnoženu sa svojim udjelom u težini, pa se bodovi zbrajaju u ukupni broj bodova. Stupac „Za +1 p. b.” pokazuje gdje je broj bodova najosjetljiviji: najviše dobiva pokazatelj velike težine na strmom dijelu svoje ljestvice, a pokazatelj iznad praga „izvrsno” ne dobiva ništa. U stvarnom poslovanju pokazatelji se mijenjaju zajedno (povećanje cijena podiže sve marže i sve stope povrata odjednom), pa su klizači bolji vodič za to što promijeniti.",
+    },
+
+    template: {
+      filename: "profitability-lens-predlozak-ocjena-tvrtke.xlsx",
+      sheetFigures: "Podaci",
+      sheetExample: "Primjer (izmišljen)",
+      sheetHelp: "Upute",
+      corner: "EUR",
+      helpTitle: "Kako koristiti ovaj predložak",
+      help1: "Ispunite list „Podaci”: jedan stupac za svaku godinu, najnovija prva. Prihodi od prodaje, ukupna aktiva i kapital su obavezni; ostale stavke ostavite prazne ako ih vaš izvještaj nema.",
+      help2: "Iznose upišite u eurima kao obične brojeve. Troškovi su pozitivni brojevi; ostali financijski prihodi mogu biti negativni.",
+      help3: "Ako vaš izvještaj iskazuje troškove po prirodnim vrstama (materijal, osoblje, usluge…), trošak prodanih proizvoda i robe ostavite prazan, a sve poslovne troškove osim amortizacije upišite pod poslovne rashode.",
+      help4: "Spremite datoteku, zatim na stranici Ocjena tvrtke odaberite „Zalijepi iz Excela” i „Otvori datoteku” ili datoteku ispustite bilo gdje na stranicu. Svaku stavku možete provjeriti prije nego što se obrazac ispuni.",
+      help5: "List „Primjer (izmišljen)” prikazuje ispunjen primjer izmišljene pekare {name}. Datoteka nikad ne napušta vaš preglednik.",
     },
 
     whatif: {
@@ -915,6 +941,17 @@ export default {
   },
 
   segments: {
+    template: {
+      filename: "profitability-lens-predlozak-segmenti.xlsx",
+      sheetTable: "Tablica",
+      sheetExample: "Primjer (izmišljen)",
+      sheetHelp: "Upute",
+      helpTitle: "Kako koristiti ovaj predložak",
+      help1: "Ispunite list „Tablica”: jedan redak za svaki segment (kupca, proizvod, kanal ili regiju). Zadržite redak sa zaglavljem.",
+      help2: "Potrebni su prihodi i varijabilni troškovi; izravni fiksni troškovi nisu obavezni. Iznose upišite u eurima kao obične brojeve.",
+      help3: "Varijabilni troškovi rastu sa svakom prodajom (materijal, dostava, provizije). Izravni fiksni troškovi pripadaju samo jednom segmentu, npr. njegovo osoblje ili marketing. Zajedničke režijske troškove tvrtke ne raspoređujte.",
+      help4: "Spremite datoteku, zatim na stranici Profitabilnost segmenata odaberite „Zalijepi iz Excela” i „Otvori datoteku” ili datoteku ispustite bilo gdje na stranicu. List „Primjer (izmišljen)” prikazuje proizvodne linije izmišljene pekare.",
+    },
     kinds: {
       customer: "Kupac",
       product: "Proizvod",
