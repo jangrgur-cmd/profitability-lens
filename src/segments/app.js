@@ -16,6 +16,7 @@ import { downloadWorkbook, fileControls, listenForFileDrop, readTableFile } from
 import { segmentTemplate } from "./template.js";
 import { encodeHandoff } from "../shared/handoff.js";
 import { mountSiteHeader } from "../shared/site-header.js";
+import { captureMotion, playMotion, motionKey } from "../shared/motion.js";
 
 const $ = (id) => document.getElementById(id);
 const STORAGE_KEY = "segments/table";
@@ -313,13 +314,19 @@ function renderResults() {
       h("p", {}, t("segments.page.emptyBody"))));
     return;
   }
-  replaceChildren(body, renderSummary(a), renderRanked(a), renderCurve(a), renderTable(a), renderLearn(a), renderMethod());
+  // New blocks and segments rise into place; bars glide to their new length and changed totals light up.
+  const before = captureMotion(body);
+  const blocks = [renderSummary(a), renderRanked(a), renderCurve(a), renderTable(a), renderLearn(a), renderMethod()];
+  blocks.forEach((el, i) => motionKey(el, `seg-block-${i}`, { enter: true }));
+  replaceChildren(body, blocks);
+  playMotion(body, before);
 }
 
 function renderSummary(a) {
   const profitLabel = a.hasFixedCosts ? t("segments.results.profit") : t("segments.results.contribution");
+  let tiles = 0;
   const tile = (label, value, note, cls = "") => h("div", { class: "tile" },
-    h("dt", {}, label), h("dd", { class: `tile__value ${cls}` }, value), note ? h("dd", { class: "tile__note" }, note) : null);
+    h("dt", {}, label), motionKey(h("dd", { class: `tile__value ${cls}` }, value), `seg-tile-${tiles++}`), note ? h("dd", { class: "tile__note" }, note) : null);
   const handoff = `index.html${encodeHandoff("segments", { revenue: Math.max(a.totals.revenue, 0), cogs: a.totals.variableCosts })}`;
   return h("section", { class: "block", "aria-labelledby": "seg-summary-title" },
     h("div", { class: "card seg-summary" },
@@ -351,13 +358,13 @@ function renderRanked(a) {
     h("ol", { class: "card ranked" }, a.rows.map((r) => {
       const width = (Math.abs(r.profit) / span) * 100;
       const left = r.profit >= 0 ? zero : zero - width;
-      return h("li", { class: "ranked__row" },
+      return motionKey(h("li", { class: "ranked__row" },
         h("span", { class: "ranked__name" }, h("span", { class: "ranked__rank" }, `${r.rank}.`), r.name),
         h("span", { class: "ranked__track", "aria-hidden": "true" },
           h("span", { class: "ranked__zero", style: `left:${zero}%` }),
-          h("span", { class: `ranked__bar ${r.profit < 0 ? "ranked__bar--loss" : ""}`, style: `left:${left}%;width:${Math.max(width, 0.4)}%` })),
+          motionKey(h("span", { class: `ranked__bar ${r.profit < 0 ? "ranked__bar--loss" : ""}`, style: `left:${left}%;width:${Math.max(width, 0.4)}%` }), `seg-bar-${r.name}`)),
         h("span", { class: `ranked__value ${toneClass(r.profit)}` }, formatEur(r.profit),
-          h("span", { class: "ranked__margin" }, formatPct(r.profitMargin))));
+          h("span", { class: "ranked__margin" }, formatPct(r.profitMargin)))), `seg-row-${r.name}`, { enter: true });
     })));
 }
 

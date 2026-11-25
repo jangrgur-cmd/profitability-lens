@@ -482,6 +482,10 @@ h1 {
 .paste__field select { max-width: 15rem; padding: 0.25rem 0.4rem; border: 1px solid var(--rule-strong); border-radius: 6px; background: var(--surface); color: var(--ink); font: inherit; }
 .paste__row--off th, .paste__row--off td:not(.paste__field) { color: var(--ink-faint); }
 .paste__row--guess th { font-style: italic; }
+/* Messages that appear on the form rise into place (motion: src/shared/theme.css). */
+.error-summary:not([hidden]), .stale-note:not([hidden]), .chain-note:not([hidden]), .field__error, .paste__file:not([hidden]) {
+  animation: motion-rise 300ms var(--motion-ease) backwards;
+}
 .paste__grade { display: flex; align-items: center; gap: var(--space-3); margin: var(--space-3) 0; padding: var(--space-3); border: 1px solid var(--rule); border-left: 4px solid var(--tone); border-radius: 8px; background: var(--surface-2); }
 .paste__letter { flex: none; display: inline-grid; place-items: center; width: 2.75rem; height: 2.75rem; border-radius: 50%; background: var(--tone); color: var(--on-accent); font-size: 1.375rem; font-weight: 750; }
 .paste__grade-title { margin: 0; font-weight: 700; }

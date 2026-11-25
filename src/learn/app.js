@@ -19,6 +19,7 @@ import { gradeRing } from "../rating/view-results.js";
 import { formatEurFull } from "../shared/format.js";
 import { t } from "../shared/i18n.js";
 import { h, replaceChildren } from "../shared/dom.js";
+import { captureMotion, playMotion, motionKey } from "../shared/motion.js";
 import { readJson, writeJson } from "../shared/prefs.js";
 import { bandPill, severityPill, GRADE_TONES } from "../shared/status.js";
 import { mountSiteHeader } from "../shared/site-header.js";
@@ -186,12 +187,12 @@ function reveal(c, rating) {
   const nextIndex = next >= 0 ? next : CASES.findIndex((x) => !state.answers[x.id]);
   const done = nextIndex < 0;
   const score = quizScore(state.answers, CASES, gradeOf);
-  return h("section", { class: "case-reveal", "aria-labelledby": `answer-title-${c.id}` },
+  return motionKey(h("section", { class: "case-reveal", "aria-labelledby": `answer-title-${c.id}` },
     h("p", { class: `case-verdict case-verdict--${verdict.correct ? "right" : "wrong"}`, role: "status" },
       h("span", { class: "case-verdict__icon", "aria-hidden": "true" }, verdict.correct ? "✓" : "✕"), verdict.text),
     h("h3", { id: `answer-title-${c.id}`, class: "case-section-title" }, t("learn.quiz.answerTitle")),
     h("div", { class: "case-answer" },
-      gradeRing(rating),
+      gradeRing(rating, { key: `quiz-${c.id}` }),
       h("p", { class: "case-answer__summary" }, rating.summary)),
     h("h3", { class: "case-section-title" }, t("learn.quiz.ratiosTitle")),
     h("ul", { class: "case-ratios" }, rating.ratios.map((r) => h("li", {},
@@ -210,14 +211,18 @@ function reveal(c, rating) {
     done ? h("p", { class: "case-done" }, t("learn.quiz.allDone", { total: score.total, correct: score.correct })) : null,
     h("div", { class: "case-actions" },
       h("a", { class: "button", href: `index.html${caseHash(c.id)}` }, t("learn.quiz.openInRating")),
-      done ? null : h("button", { type: "button", class: "button button--primary", on: { click: () => showCase(nextIndex, { focus: true }) } }, t("learn.quiz.next"))));
+      done ? null : h("button", { type: "button", class: "button button--primary", on: { click: () => showCase(nextIndex, { focus: true }) } }, t("learn.quiz.next")))),
+  `reveal-${c.id}`, { enter: true });
 }
 
 function renderCase() {
   const c = CASES[state.active];
   const rating = RATED.get(c.id);
   const industry = INDUSTRY_BY_ID[c.industryId];
-  replaceChildren($("quiz-case"), h("article", { class: "card case", "aria-labelledby": `case-title-${c.id}` },
+  // A new case rises into place; after a guess the answer rises and its grade ring fills.
+  const box = $("quiz-case");
+  const before = captureMotion(box);
+  replaceChildren(box, motionKey(h("article", { class: "card case", "aria-labelledby": `case-title-${c.id}` },
     h("header", { class: "case__head" },
       h("p", { class: "case__eyebrow" }, t("learn.quiz.caseOf", { n: state.active + 1, total: CASES.length })),
       h("h2", { id: `case-title-${c.id}`, class: "case__title", tabindex: "-1" }, c.name, " ", h("span", { class: "chip__tag" }, t("common.fictional"))),
@@ -229,7 +234,8 @@ function renderCase() {
     h("h3", { id: `guess-title-${c.id}`, class: "case-section-title" }, t("learn.quiz.guessTitle")),
     state.answers[c.id] ? null : h("p", { class: "case-help" }, t("learn.quiz.guessHelp")),
     guessButtons(c),
-    state.answers[c.id] ? reveal(c, rating) : null));
+    state.answers[c.id] ? reveal(c, rating) : null), `case-${c.id}`, { enter: true }));
+  playMotion(box, before);
 }
 
 /** Shows a case; `focus` moves focus to its title (after a click). */

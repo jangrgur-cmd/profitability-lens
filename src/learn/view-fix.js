@@ -11,6 +11,7 @@ import { gradeRing } from "../rating/view-results.js";
 import { MINUS, formatNumber } from "../shared/format.js";
 import { t } from "../shared/i18n.js";
 import { h, replaceChildren } from "../shared/dom.js";
+import { captureMotion, playMotion, motionKey } from "../shared/motion.js";
 import { readJson, writeJson } from "../shared/prefs.js";
 
 const STORAGE_KEY = "learn/fix";
@@ -71,23 +72,25 @@ function renderResult(ch, output, announce) {
   }
   const nextIndex = CHALLENGES.findIndex((c, i) => i > state.active && !state.solved.includes(c.id));
   const next = nextIndex >= 0 ? nextIndex : CHALLENGES.findIndex((c) => !state.solved.includes(c.id));
+  const before = captureMotion(output);
   replaceChildren(output,
     h("div", { class: "whatif__grades" },
       h("div", { class: "whatif__grade" }, h("span", { class: "whatif__caption" }, t("learn.fix.start")), gradeRing(start.rating, { small: true })),
       h("span", { class: "whatif__arrow", "aria-hidden": "true" }, "→"),
-      h("div", { class: "whatif__grade" }, h("span", { class: "whatif__caption" }, t("learn.fix.now")), gradeRing(rating, { small: true }))),
+      h("div", { class: "whatif__grade" }, h("span", { class: "whatif__caption" }, t("learn.fix.now")), gradeRing(rating, { small: true, key: "fix-now" }))),
     now.reached
       ? h("p", { class: "case-verdict case-verdict--right" }, h("span", { class: "case-verdict__icon", "aria-hidden": "true" }, "✓"),
         t("learn.fix.reached", { letter: rating.grade.letter, score: rating.score }))
       : h("p", { class: "whatif__headline" }, t("learn.fix.status", {
         count: ch.goal.min - rating.score, letter: rating.grade.letter, score: rating.score, goal: ch.goal.letter,
       })),
-    now.reached ? h("div", { class: "case-lesson" },
+    now.reached ? motionKey(h("div", { class: "case-lesson" },
       h("h3", { class: "case-section-title" }, t("learn.fix.lessonTitle")),
       h("p", {}, ch.lesson),
       next >= 0
         ? h("div", { class: "case-actions" }, h("button", { type: "button", class: "button button--primary", on: { click: () => show(next, { focus: true }) } }, t("learn.fix.next")))
-        : h("p", { class: "case-done" }, t("learn.fix.allDone", { total: CHALLENGES.length }))) : null);
+        : h("p", { class: "case-done" }, t("learn.fix.allDone", { total: CHALLENGES.length }))), "fix-lesson", { enter: true }) : null);
+  playMotion(output, before);
 }
 
 function render(announce) {

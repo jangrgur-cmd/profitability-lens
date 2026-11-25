@@ -379,6 +379,44 @@ a:hover { color: var(--accent-strong); text-decoration-thickness: 2px; }
   .switch__label-long { display: none; }
 }
 
+/* ---------- Motion ----------
+   Short and quiet: things rise into place, values that change light up, tabs
+   and dialogs fade in. src/shared/motion.js adds the classes after a redraw.
+   All of it stops for prefers-reduced-motion (rule below). Fill mode
+   "backwards" leaves no transform behind, so sticky elements keep working. */
+
+@keyframes motion-rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes motion-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes motion-dialog { from { opacity: 0; transform: translateY(12px) scale(0.98); } to { opacity: 1; transform: none; } }
+@keyframes motion-changed {
+  from { background-color: color-mix(in srgb, var(--accent) 22%, transparent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent); }
+  to { background-color: transparent; box-shadow: 0 0 0 3px transparent; }
+}
+@keyframes motion-pop { 0% { transform: scale(1); } 40% { transform: scale(1.22); } 100% { transform: scale(1); } }
+
+:root { --motion-ease: cubic-bezier(0.2, 0.7, 0.2, 1); }
+
+.motion-rise { animation: motion-rise 460ms var(--motion-ease) backwards; }
+.motion-fade { animation: motion-fade 260ms ease-out backwards; }
+.motion-changed { animation: motion-changed 1300ms ease-out; }
+.motion-pop { display: inline-block; animation: motion-pop 420ms var(--motion-ease); }
+
+/* Page load: the heading, then the page's parts one after another. */
+main > *, .masthead > .wrap:first-child { animation: motion-rise 520ms var(--motion-ease) backwards; }
+main > :nth-child(2) { animation-delay: 70ms; }
+main > :nth-child(3) { animation-delay: 140ms; }
+main > :nth-child(n + 4) { animation-delay: 210ms; }
+
+/* Tabs, dialogs, notes that appear, sections that open. */
+[role="tabpanel"]:not([hidden]) { animation: motion-fade 280ms ease-out backwards; }
+dialog[open] { animation: motion-dialog 240ms var(--motion-ease); }
+dialog[open]::backdrop { animation: motion-fade 240ms ease-out; }
+details[open] > :not(summary) { animation: motion-rise 300ms var(--motion-ease) backwards; }
+
+/* Buttons answer a press. */
+.button, .button-quiet, .chip { transition: background-color 150ms ease, border-color 150ms ease, transform 120ms ease, box-shadow 150ms ease; }
+.button:active:not(:disabled), .button-quiet:active:not(:disabled), .chip:active { transform: scale(0.97); }
+
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }
 }

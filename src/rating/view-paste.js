@@ -15,6 +15,7 @@ import { INDUSTRIES, INDUSTRY_BY_ID } from "./benchmarks.js";
 import { formatAmountInput, formatEurFull } from "../shared/format.js";
 import { t } from "../shared/i18n.js";
 import { h, replaceChildren } from "../shared/dom.js";
+import { captureMotion, playMotion, motionKey } from "../shared/motion.js";
 import { pill, GRADE_TONES } from "../shared/status.js";
 import { downloadWorkbook, fileControls, readTableFile } from "../shared/file-import.js";
 import { ratingTemplate } from "./template.js";
@@ -142,15 +143,15 @@ export function createPasteDialog({ latestYear, industryId, onApply }) {
     if (checked.years.length === 0) return null;
     const trend = rateYears(checked.years, industrySelect.value);
     const { year, rating } = trend.years[0];
-    return h("div", { class: `paste__grade tone-${GRADE_TONES[rating.grade.letter]}` },
-      h("span", { class: "paste__letter", "aria-hidden": "true" }, rating.grade.letter),
+    return motionKey(h("div", { class: `paste__grade tone-${GRADE_TONES[rating.grade.letter]}` },
+      motionKey(h("span", { class: "paste__letter", "aria-hidden": "true" }, rating.grade.letter), "paste-letter", { pop: true }),
       h("div", {},
-        h("p", { class: "paste__grade-title" }, t("rating.paste.gradeTitle", {
+        motionKey(h("p", { class: "paste__grade-title" }, t("rating.paste.gradeTitle", {
           year, letter: rating.grade.letter, score: rating.score, label: rating.grade.label,
-        })),
+        })), "paste-grade-title"),
         h("p", { class: "paste__grade-meta" }, t("rating.paste.gradeMeta", {
           coverage: rating.coverage.label, industry: INDUSTRY_BY_ID[industrySelect.value].label, count: trend.years.length,
-        }))));
+        })))), "paste-grade", { enter: true });
   }
 
   function renderPreview() {
@@ -197,14 +198,15 @@ export function createPasteDialog({ latestYear, industryId, onApply }) {
     };
 
     const result = checked.years;
+    const before = captureMotion(preview);
     replaceChildren(preview,
       h("p", { class: "paste__summary" }, t("rating.paste.summary", { count: rows.length, matched, columns: read.columns.length })),
       read.extraColumns > 0 ? h("p", { class: "paste__warn" }, t("rating.paste.extraColumns", { count: read.extraColumns })) : null,
       gradeBlock(),
       h("section", { class: "paste__checks", "aria-labelledby": "paste-checks-title" },
         h("h3", { id: "paste-checks-title" }, t("rating.paste.checksTitle")),
-        h("ul", {}, checked.issues.map((issue) => h("li", { class: `paste__check paste__check--${issue.level}` },
-          CHECK_PILLS[issue.level](), h("span", {}, checkText(issue)))))),
+        h("ul", {}, checked.issues.map((issue) => motionKey(h("li", { class: `paste__check paste__check--${issue.level}` },
+          CHECK_PILLS[issue.level](), h("span", {}, checkText(issue))), `paste-check-${issue.key}-${issue.params.id ?? ""}`, { enter: true })))),
       h("div", { class: "paste__controls" }, controls),
       h("div", { class: "table-scroll" },
         h("table", { class: "paste__table" },
@@ -225,6 +227,7 @@ export function createPasteDialog({ latestYear, industryId, onApply }) {
             h("th", { scope: "row" }, FIELD_BY_ID[id].label),
             result.map((y) => h("td", {}, y.values[id] === null ? t("common.dash") : formatEurFull(y.values[id])))))))),
       h("p", { class: "paste__note" }, t("rating.paste.costsNote")));
+    playMotion(preview, before);
   }
 
   textarea.addEventListener("input", () => {

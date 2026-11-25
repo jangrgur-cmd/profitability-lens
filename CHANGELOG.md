@@ -6,6 +6,7 @@ All notable changes to Profitability Lens. The format follows [Keep a Changelog]
 
 ### Added
 
+- Smooth animations on every page: the page's parts rise in on load, tabs and dialogs fade in, and on the Company rating a re-rating moves the benchmark markers, fills the grade ring, counts the numbers to their new values and briefly lights up what changed. New blocks, red flags, years and what-if changes rise into place; figures filled in from an example or a file light up in the form. The segment page, the practice quiz and "Fix the company" do the same. Everything stops when the system asks for reduced motion.
 - Paste and file import show the grade at once: lines are read as soon as they are pasted or a file is opened, unrecognised lines get a suggested field, and automatic checks compare net profit, EBIT, total equity and liabilities and similar lines in the file with what the lines add up to. Where the totals show that a look-alike line is a cost of its own, it is added. Older years with a missing required field are left out instead of blocking the rating. One button fills the form and shows the full rating.
 - The author line (LinkedIn, GitHub) on every page, as on the messaging case study.
 - Other operating income (*ostali poslovni prihodi*) as an input: it counts in EBITDA and EBIT but not in revenue.

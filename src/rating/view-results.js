@@ -25,6 +25,7 @@ import { t } from "../shared/i18n.js";
 import { trackGeometry } from "../shared/track.js";
 import { sparklineGeometry } from "../shared/sparkline.js";
 import { h } from "../shared/dom.js";
+import { motionKey } from "../shared/motion.js";
 import { bandPill, pill, severityPill, GRADE_TONES } from "../shared/status.js";
 
 /** An element whose content is one of our own language texts with simple markup (<strong>). */
@@ -44,24 +45,29 @@ function svg(tag, attrs) {
 /**
  * The grade ring: a circle filled to the score.
  * @param {{score: number, grade: {letter: string}}} r
- * @param {{small?: boolean}} [options] small: the compact ring of the what-if panel
+ * @param {{small?: boolean, key?: string}} [options] small: the compact ring of the what-if panel;
+ *   key: animate it from its last draw (src/shared/motion.js): the ring fills, the score counts, a new letter pops
  */
-export function gradeRing(r, { small = false } = {}) {
+export function gradeRing(r, { small = false, key = "" } = {}) {
   const radius = 52;
   const circumference = 2 * Math.PI * radius;
   const ring = svg("svg", { viewBox: "0 0 120 120", class: "grade-ring__svg", "aria-hidden": "true" });
-  ring.append(
-    svg("circle", { cx: 60, cy: 60, r: radius, class: "grade-ring__track" }),
-    svg("circle", {
-      cx: 60, cy: 60, r: radius, class: "grade-ring__value",
-      "stroke-dasharray": `${(circumference * r.score) / 100} ${circumference}`,
-      transform: "rotate(-90 60 60)",
-    }));
+  const value = svg("circle", {
+    cx: 60, cy: 60, r: radius, class: "grade-ring__value",
+    "stroke-dasharray": `${(circumference * r.score) / 100} ${circumference}`,
+    transform: "rotate(-90 60 60)",
+  });
+  ring.append(svg("circle", { cx: 60, cy: 60, r: radius, class: "grade-ring__track" }), value);
+  const letter = h("span", { class: "grade-ring__letter" }, r.grade.letter);
+  const score = h("span", { class: "grade-ring__score" }, `${r.score}/100`);
+  if (key) {
+    motionKey(value, `${key}-ring`, { fill: true });
+    motionKey(letter, `${key}-letter`, { pop: true });
+    motionKey(score, `${key}-score`, { value: r.score, format: (n) => `${Math.round(n)}/100` });
+  }
   return h("div", { class: `grade-ring${small ? " grade-ring--small" : ""} tone-${GRADE_TONES[r.grade.letter]}` },
     ring,
-    h("div", { class: "grade-ring__label" },
-      h("span", { class: "grade-ring__letter" }, r.grade.letter),
-      h("span", { class: "grade-ring__score" }, `${r.score}/100`)));
+    h("div", { class: "grade-ring__label" }, letter, score));
 }
 
 /**
@@ -87,13 +93,13 @@ export function renderVerdict(ctx, { onCopy }) {
   const r = ctx.rating;
   const latestYear = ctx.trend.years[0].year;
   return h("section", { class: "card verdict", "aria-labelledby": "verdict-title" },
-    gradeRing(r),
+    gradeRing(r, { key: "grade" }),
     h("div", { class: "verdict__text" },
       h("p", { class: "verdict__eyebrow" }, t("rating.page.verdictEyebrow", { name: ctx.name || t("rating.page.yourCompany"), year: latestYear })),
       h("h3", { id: "verdict-title", class: "verdict__title" },
         h("span", { class: "sr-only" }, t("rating.page.gradeSr", { letter: r.grade.letter, score: r.score })),
         t("rating.page.verdictTitle", { grade: r.grade.label })),
-      h("p", { class: "verdict__summary" }, r.summary),
+      motionKey(h("p", { class: "verdict__summary" }, r.summary), "verdict-summary"),
       h("p", { class: "verdict__meta" },
         t("rating.page.verdictMeta", { coverage: r.coverage.label, industry: r.industry.label }),
         h("span", { class: "rule-of-thumb", title: BENCHMARK_SOURCE.note }, BENCHMARK_SOURCE.inlineLabel)),
@@ -119,9 +125,10 @@ export function renderKeyFigures(ctx) {
           year: yoy.previousYear,
         }));
       }
+      const format = k.id === "interestCover" ? (n) => formatMultiple(n, 1) : formatEurFull;
       return h("div", { class: "tile" },
         h("dt", {}, k.label),
-        h("dd", { class: `tile__value ${tone}` }, text),
+        motionKey(h("dd", { class: `tile__value ${tone}` }, text), `kf-${k.id}`, { value: raw, format }),
         change,
         note ? h("dd", { class: "tile__note" }, note) : null);
     })));
@@ -137,9 +144,9 @@ export function renderFlags(ctx) {
   return h("section", { class: "block", "aria-labelledby": "flags-title" },
     h("h3", { id: "flags-title", class: "block-title" }, t("rating.page.flagsTitle"), " ",
       h("span", { class: "count" }, t("rating.page.flagsCount", { count: r.flags.length }))),
-    h("ul", { class: "flags card" }, r.flags.map((f) => h("li", { class: `flag tone-${f.severity}` },
+    h("ul", { class: "flags card" }, r.flags.map((f) => motionKey(h("li", { class: `flag tone-${f.severity}` },
       severityPill(f.severity),
-      h("div", {}, h("p", { class: "flag__title" }, f.title), h("p", { class: "flag__detail" }, f.detail))))));
+      h("div", {}, h("p", { class: "flag__title" }, f.title), h("p", { class: "flag__detail" }, f.detail))), `flag-${f.id}`, { enter: true }))));
 }
 
 /** "Poor below 15%, Weak 15–25%, …" for the track's accessible name. */
@@ -160,10 +167,10 @@ function renderTrack(ratio) {
     h("div", { class: "track__bar" },
       g.segments.map((s) => h("span", { class: `track__seg tone-${s.id}`, style: `left:${s.from}%;width:${s.to - s.from}%` })),
       g.reference ? h("span", { class: "track__ref", style: `left:${g.reference.at}%` }) : null,
-      g.marker ? h("span", {
+      g.marker ? motionKey(h("span", {
         class: `track__marker${g.marker.outside ? ` track__marker--${g.marker.outside}` : ""}`,
         style: `left:${g.marker.at}%`,
-      }) : null),
+      }), `marker-${ratio.id}`) : null),
     h("div", { class: "track__ticks", "aria-hidden": "true" },
       g.ticks.map((tick) => h("span", { class: "track__tick", style: `left:${tick.at}%` }, formatPercentValue(tick.value)))));
 }
@@ -187,7 +194,8 @@ function renderRatio(ratio, ctx) {
     h("h5", { class: "ratio__name" }, ratio.label),
     h("span", { class: "ratio__weight" }, t("rating.page.weight", { weight: ratio.weight })),
     h("span", { class: "ratio__score" }, ratio.status === "ok"
-      ? [h("span", { class: "ratio__value" }, formatPct(ratio.value)), bandPill(ratio.band)]
+      ? [motionKey(h("span", { class: "ratio__value" }, formatPct(ratio.value)), `ratio-${ratio.id}`, { value: ratio.value, format: formatPct }),
+        motionKey(bandPill(ratio.band), `band-${ratio.id}`)]
       : [h("span", { class: "ratio__value ratio__value--none" }, t(ratio.status === "missing" ? "rating.page.notAvailable" : "rating.page.notMeaningful")),
         pill("none", t("common.dash"), t(ratio.status === "missing" ? "rating.page.missingPill" : "rating.page.notMeaningfulPill"))]));
   const source = ctx.source;
@@ -278,19 +286,22 @@ function ratioStatusShort(ratio) {
 
 export function renderDupont(ctx) {
   const d = ctx.rating.dupont;
-  const factor = (label, value, op) => [
+  const factor = (label, value, op, motion) => [
     op ? h("span", { class: "dupont__op", "aria-hidden": "true" }, op) : null,
-    h("div", { class: "dupont__factor" }, h("span", { class: "dupont__label" }, label), h("span", { class: "dupont__value" }, value)),
+    h("div", { class: "dupont__factor" }, h("span", { class: "dupont__label" }, label),
+      motionKey(h("span", { class: "dupont__value" }, value), `dupont-${motion.id}`, motion)),
   ];
+  const ok = d.status === "ok";
   return h("section", { class: "block", "aria-labelledby": "dupont-title" },
     h("h3", { id: "dupont-title", class: "block-title" }, t("rating.dupont.title")),
     h("p", { class: "block-note" }, t("rating.dupont.lede")),
     h("div", { class: "card dupont-card" },
       h("div", { class: "dupont" },
-        factor(t("rating.dupont.netMargin"), formatPct(d.netMargin)),
-        factor(t("rating.dupont.assetTurnover"), formatMultiple(d.assetTurnover), "×"),
-        factor(t("rating.dupont.equityMultiplier"), d.status === "ok" ? formatMultiple(d.equityMultiplier) : t("rating.dupont.notMeaningful"), "×"),
-        factor(t("rating.dupont.roe"), d.status === "ok" ? formatPct(d.roe) : t("rating.dupont.notMeaningful"), "=")),
+        factor(t("rating.dupont.netMargin"), formatPct(d.netMargin), null, { id: "margin", value: d.netMargin, format: formatPct }),
+        factor(t("rating.dupont.assetTurnover"), formatMultiple(d.assetTurnover), "×", { id: "turnover", value: d.assetTurnover, format: (n) => formatMultiple(n) }),
+        factor(t("rating.dupont.equityMultiplier"), ok ? formatMultiple(d.equityMultiplier) : t("rating.dupont.notMeaningful"), "×",
+          { id: "multiplier", value: ok ? d.equityMultiplier : null, format: (n) => formatMultiple(n) }),
+        factor(t("rating.dupont.roe"), ok ? formatPct(d.roe) : t("rating.dupont.notMeaningful"), "=", { id: "roe", value: ok ? d.roe : null, format: formatPct })),
       d.status === "ok" ? null : h("p", { class: "ratio__status" }, d.reason),
       h("div", { class: "learn-note learn-only" }, dupontSentences(d).map((s) => h("p", {}, s)))));
 }

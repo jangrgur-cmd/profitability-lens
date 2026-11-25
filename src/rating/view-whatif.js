@@ -7,6 +7,7 @@ import { LEVERS, NO_CHANGE, runWhatIf, hasChanges } from "./whatif.js";
 import { MINUS, formatPct, formatPp, formatNumber, toneClass } from "../shared/format.js";
 import { t } from "../shared/i18n.js";
 import { h, replaceChildren } from "../shared/dom.js";
+import { captureMotion, playMotion, motionKey } from "../shared/motion.js";
 import { gradeRing } from "./view-results.js";
 
 /** "+5%", "−10%", "0%". */
@@ -33,22 +34,24 @@ export function renderWhatIf(ctx, { industryId }) {
     const run = runWhatIf(ctx.values, levers, industryId);
     const changed = run.ratioChanges.filter((c) => c.change !== null && Math.abs(c.change) >= 0.00005);
     const after = run.rating;
+    const before = captureMotion(output);
     replaceChildren(output,
       h("div", { class: "whatif__grades" },
         h("div", { class: "whatif__grade" }, h("span", { class: "whatif__caption" }, t("rating.whatif.now")), gradeRing(run.base, { small: true })),
         h("span", { class: "whatif__arrow", "aria-hidden": "true" }, "→"),
-        h("div", { class: "whatif__grade" }, h("span", { class: "whatif__caption" }, t("rating.whatif.then")), gradeRing(after, { small: true }))),
+        h("div", { class: "whatif__grade" }, h("span", { class: "whatif__caption" }, t("rating.whatif.then")), gradeRing(after, { small: true, key: "whatif-then" }))),
       h("p", { class: "whatif__headline" }, hasChanges(levers)
         ? t("rating.whatif.headline", {
           letter: after.grade.letter, label: after.grade.label, score: after.score,
           change: `${run.scoreChange > 0 ? "+" : ""}${formatNumber(run.scoreChange, 0)}`,
         })
         : t("rating.whatif.headlineNone")),
-      changed.length > 0 ? h("ul", { class: "whatif__changes" }, changed.map((c) => h("li", {},
+      changed.length > 0 ? h("ul", { class: "whatif__changes" }, changed.map((c) => motionKey(h("li", {},
         h("span", {}, c.label),
         h("span", { class: "whatif__values" }, t("rating.whatif.change", { before: formatPct(c.before), after: formatPct(c.after) }), " ",
-          h("span", { class: toneClass(c.change) }, `(${formatPp(c.change)})`))))) : null,
+          h("span", { class: toneClass(c.change) }, `(${formatPp(c.change)})`))), `whatif-${c.id}`, { enter: true }))) : null,
       run.noTaxAssumed && after.statement.ebt > 0 ? h("p", { class: "whatif__note" }, t("rating.whatif.noTax")) : null);
+    playMotion(output, before);
   };
 
   const sliders = LEVERS.map((lever) => {

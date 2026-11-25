@@ -28,6 +28,7 @@ import { h, replaceChildren } from "../shared/dom.js";
 import { readJson, writeJson } from "../shared/prefs.js";
 import { downloadFile } from "../shared/export.js";
 import { mountSiteHeader } from "../shared/site-header.js";
+import { captureMotion, playMotion, motionKey, flash, replay, rise } from "../shared/motion.js";
 
 const $ = (id) => document.getElementById(id);
 const STORAGE_KEY = "rating/form";
@@ -186,8 +187,18 @@ function syncActive() {
   app.years[app.active] = readRaw();
 }
 
-function fillInputs(raw) {
-  for (const f of FIELDS) $(inputId(f.id)).value = raw[f.id] ?? "";
+/**
+ * Puts one year's raw text into the inputs.
+ * @param {Record<string, string>} raw
+ * @param {{flash?: boolean}} [options] flash: light up the inputs whose text changed
+ */
+function fillInputs(raw, { flash: show = false } = {}) {
+  for (const f of FIELDS) {
+    const input = $(inputId(f.id));
+    const value = raw[f.id] ?? "";
+    if (show && input.value !== value && value !== "") flash(input);
+    input.value = value;
+  }
 }
 
 /**
@@ -197,11 +208,13 @@ function fillInputs(raw) {
  */
 function showYear(index, { sync = true } = {}) {
   if (sync) syncActive();
+  const changed = index !== app.active;
   app.active = index;
   fillInputs(app.years[index]);
   renderYearBar();
   showYearLabels();
   showFieldErrors();
+  if (changed) replay($("field-groups"), "motion-fade");
 }
 
 /** Puts a whole form state in place: years of raw text, newest first. */
@@ -213,7 +226,7 @@ function fillForm({ years, latestYear, industryId, companyName }) {
   $("latest-year").value = String(app.latestYear);
   $("industry").value = INDUSTRY_BY_ID[industryId] ? industryId : DEFAULT_INDUSTRY_ID;
   $("company-name").value = companyName ?? "";
-  fillInputs(app.years[0]);
+  fillInputs(app.years[0], { flash: true });
   showIndustryNote();
   renderYearBar();
   showYearLabels();
@@ -251,6 +264,7 @@ function addYear() {
   for (const id of PRIOR_FIELD_IDS) oldest[id] = "";
   app.years.push(added);
   showYear(app.years.length - 1, { sync: false });
+  rise($(`year-tab-${app.years.length - 1}`));
   onFormEdited();
   announce(t("rating.years.added", { year: yearLabel(app.years.length - 1) }));
   $(inputId("revenue")).focus();
@@ -511,19 +525,25 @@ function renderResults() {
   const ctx = app.view;
   const industryId = ctx.rating.industry.id;
   const whatIf = renderWhatIf(ctx, { industryId });
-  replaceChildren(body,
-    renderVerdict(ctx, { onCopy: copySummary }),
-    renderKeyFigures(ctx),
-    renderFlags(ctx),
-    renderTrend(ctx),
-    renderRatioGroup(ctx, "margins"),
-    renderRatioGroup(ctx, "returns"),
-    renderDupont(ctx),
-    renderPath(ctx, { industryId, onTry: whatIf.show }),
-    whatIf.element,
-    peersBlock(),
-    renderMethod(ctx),
-    renderPrintInputs(ctx));
+  const blocks = {
+    verdict: renderVerdict(ctx, { onCopy: copySummary }),
+    figures: renderKeyFigures(ctx),
+    flags: renderFlags(ctx),
+    trend: renderTrend(ctx),
+    margins: renderRatioGroup(ctx, "margins"),
+    returns: renderRatioGroup(ctx, "returns"),
+    dupont: renderDupont(ctx),
+    path: renderPath(ctx, { industryId, onTry: whatIf.show }),
+    whatif: whatIf.element,
+    peers: peersBlock(),
+    method: renderMethod(ctx),
+    print: renderPrintInputs(ctx),
+  };
+  // A block that was not there before rises into place; values that changed glide, count and light up.
+  const before = captureMotion(body);
+  for (const [name, el] of Object.entries(blocks)) motionKey(el, `block-${name}`, { enter: true });
+  replaceChildren(body, Object.values(blocks));
+  playMotion(body, before);
 }
 
 // ---------------------------------------------------------------------------
