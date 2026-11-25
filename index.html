@@ -6,7 +6,7 @@
   <!-- The title and description stay in English here for link previews and search engines;
        the page sets the title in the interface language (rating.page.title). -->
   <title data-i18n="rating.page.title">Company rating · Profitability Lens</title>
-  <meta name="description" content="Free, open-source profitability rating that runs in your browser: enter a few lines from an income statement and balance sheet and get an A–E grade, eight ratios with benchmark bands, a DuPont breakdown and red flags. Your data never leaves the browser. English and Croatian.">
+  <meta name="description" content="Free, open-source profitability rating that runs in your browser: enter a few lines from an income statement and balance sheet (or paste them from Excel) and get an A–E grade, eight ratios with benchmark bands, a DuPont breakdown, red flags, a multi-year trend, what-if levers and a peer comparison. Your data never leaves the browser. English and Croatian.">
   <meta name="theme-color" content="#2f54eb">
   <link rel="icon" href="modules/messaging/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="src/shared/theme.css">
@@ -28,6 +28,7 @@
         <div class="form-head">
           <h2 id="form-title" class="form-title" data-i18n="rating.page.formTitle"></h2>
           <div class="form-tools">
+            <button type="button" class="button-quiet" id="paste-table" data-i18n="rating.paste.open"></button>
             <button type="button" class="button-quiet" id="import-json" data-i18n="rating.page.importJson"></button>
             <button type="button" class="button-quiet" id="export-json" data-i18n="rating.page.exportJson"></button>
             <button type="button" class="button-quiet" id="clear-form" data-i18n="rating.page.clear"></button>
@@ -53,9 +54,16 @@
           <p class="field__note" id="industry-note"></p>
         </div>
 
+        <div class="field field--text field--year">
+          <label for="latest-year" data-i18n="rating.years.latestLabel"></label>
+          <input id="latest-year" name="latestYear" type="number" inputmode="numeric" step="1" aria-describedby="latest-year-note">
+          <p class="field__note" id="latest-year-note" data-i18n="rating.years.latestNote"></p>
+        </div>
+
         <p class="form-hint" id="amount-hint" data-i18n-html="rating.page.amountHint"></p>
 
-        <div id="field-groups"></div>
+        <div class="years" id="years"></div>
+        <div id="field-groups" role="tabpanel"></div>
 
         <div class="form-submit">
           <button type="submit" class="button button--primary button--wide" data-i18n="rating.page.submit"></button>

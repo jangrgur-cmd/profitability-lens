@@ -130,6 +130,16 @@ export function formatPp(diff) {
   return diff > 0 ? `+${text}` : signed(text, diff);
 }
 
+/**
+ * A share of a total in percentage points, without a sign for gains:
+ * 0.12 → "12.0 pp", −0.03 → "−3.0 pp". Used for each segment's
+ * contribution to the company margin.
+ * @param {number|null} share
+ */
+export function formatPoints(share) {
+  return formatPp(share).replace(/^\+/, "");
+}
+
 /** Formats a per-message amount: 0.012345 → "0.0123 €/msg". */
 export function formatPerMessage(value) {
   if (isMissing(value)) return notAvailable();

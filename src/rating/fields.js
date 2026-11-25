@@ -62,8 +62,11 @@ export const GROUPS = ["income", "balance", "prior"].map((id) => ({
   get label() { return t(`rating.groups.${id}`); },
 }));
 
-/** Version of the exported JSON format. Bump it when the format changes. */
-export const EXPORT_VERSION = 1;
+/**
+ * Version of the exported JSON format. Bump it when the format changes.
+ * 1: one year as `inputs` (Phase 2). 2: up to five years as `years: [{year, inputs}]`, newest first.
+ */
+export const EXPORT_VERSION = 2;
 const EXPORT_KIND = "profitability-lens/company-rating";
 
 /**
@@ -105,23 +108,38 @@ export function parseForm(raw) {
   return { values, errors: { ...validateValues(values), ...parseErrors } };
 }
 
-/**
- * Builds the JSON text for "Export JSON".
- * @param {Record<string, number|null>} values
- * @param {{industryId: string, companyName?: string}} meta
- * @returns {string}
- */
-export function exportJson(values, { industryId, companyName = "" }) {
-  const inputs = {};
-  for (const field of FIELDS) inputs[field.id] = values[field.id] ?? null;
-  return `${JSON.stringify({ kind: EXPORT_KIND, version: EXPORT_VERSION, companyName, industryId, inputs }, null, 2)}\n`;
+/** Every field of one year, blank as null. */
+function inputsOf(values) {
+  return Object.fromEntries(FIELDS.map((field) => [field.id, values[field.id] ?? null]));
 }
 
 /**
- * Reads a file written by exportJson. Amounts may be numbers or typed text.
+ * Builds the JSON text for "Export JSON".
+ * @param {{year: number|null, values: Record<string, number|null>}[]} years newest first
+ * @param {{industryId: string, companyName?: string}} meta
+ * @returns {string}
+ */
+export function exportJson(years, { industryId, companyName = "" }) {
+  const data = {
+    kind: EXPORT_KIND,
+    version: EXPORT_VERSION,
+    companyName,
+    industryId,
+    years: years.map((y) => ({ year: y.year ?? null, inputs: inputsOf(y.values) })),
+  };
+  return `${JSON.stringify(data, null, 2)}\n`;
+}
+
+const isObject = (x) => typeof x === "object" && x !== null && !Array.isArray(x);
+
+/**
+ * Reads a file written by exportJson (format version 1 or 2). Amounts may be
+ * numbers or typed text.
  * @param {string} text
- * @returns {{values: Record<string, number|null>, errors: Record<string, string>,
+ * @returns {{years: {year: number|null, values: Record<string, number|null>, errors: Record<string, string>}[],
+ *            values: Record<string, number|null>, errors: Record<string, string>,
  *            industryId: string|null, companyName: string}}
+ *   `values` and `errors` are those of the latest year (the first in `years`)
  * @throws {Error} when the text is not a Profitability Lens rating file
  */
 export function importJson(text) {
@@ -131,14 +149,23 @@ export function importJson(text) {
   } catch {
     throw new Error(t("rating.importErrors.notJson"));
   }
-  if (data?.kind !== EXPORT_KIND || typeof data.inputs !== "object" || data.inputs === null) {
-    throw new Error(t("rating.importErrors.notExport"));
-  }
+  if (data?.kind !== EXPORT_KIND) throw new Error(t("rating.importErrors.notExport"));
   if (data.version > EXPORT_VERSION) {
     throw new Error(t("rating.importErrors.newer", { found: data.version, supported: EXPORT_VERSION }));
   }
+  let entries;
+  if (Array.isArray(data.years) && data.years.length > 0 && data.years.every((y) => isObject(y) && isObject(y.inputs))) {
+    entries = data.years.map((y) => ({ year: Number.isInteger(y.year) ? y.year : null, inputs: y.inputs }));
+  } else if (isObject(data.inputs)) {
+    entries = [{ year: null, inputs: data.inputs }];
+  } else {
+    throw new Error(t("rating.importErrors.notExport"));
+  }
+  const years = entries.map((e) => ({ year: e.year, ...parseForm(e.inputs) }));
   return {
-    ...parseForm(data.inputs),
+    years,
+    values: years[0].values,
+    errors: years[0].errors,
     industryId: typeof data.industryId === "string" ? data.industryId : null,
     companyName: typeof data.companyName === "string" ? data.companyName : "",
   };

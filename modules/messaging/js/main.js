@@ -313,7 +313,7 @@ function render() {
 }
 
 async function init() {
-  mountSiteHeader($("site-header"), { active: "segments", root: "../../" });
+  mountSiteHeader($("site-header"), { active: "messaging", root: "../../" });
   initTabs();
   try {
     app.model = await loadModel();

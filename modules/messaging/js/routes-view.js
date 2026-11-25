@@ -2,7 +2,7 @@
 
 import { routeProfitability } from "./calc.js";
 import { createSortableTable } from "./tables.js";
-import { toCsv, downloadCsv } from "./export.js";
+import { toCsv, downloadCsv } from "../../../src/shared/export.js";
 import { formatEur, formatPct, formatSignedPct, formatCount, toneClass } from "../../../src/shared/format.js";
 import { t } from "../../../src/shared/i18n.js";
 

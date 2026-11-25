@@ -1,7 +1,7 @@
-# Company rating: methodology
+# Methodology: Company rating and segment profitability
 
-How Profitability Lens turns a few lines of financial statements into an A–E profitability grade.
-The code is in [`src/rating/`](../src/rating/) and every rule below is covered by tests in [`tests/`](../tests/).
+How Profitability Lens turns a few lines of financial statements into an A–E profitability grade, a multi-year trend, what-if scenarios and a peer comparison, and how it analyses segment profitability.
+The code is in [`src/rating/`](../src/rating/), [`src/segments/`](../src/segments/) and [`src/shared/`](../src/shared/); every rule below is covered by tests in [`tests/`](../tests/).
 
 > **The benchmarks are rule-of-thumb values**, chosen as starting points for learning.
 > They are not official statistics and have not yet been calibrated against published sector data.
@@ -131,3 +131,66 @@ Where textbooks differ, the choice made here (also in [`DECISIONS.md`](../DECISI
 - **DuPont in plain language** (Learn mode): "each €1 of sales leaves €0.10 of net profit…", one sentence per factor and one for the product.
 - **Benchmark track**: runs from the score's floor (poor − (fair − poor), score 0) to as far above "excellent" as "excellent" is above "good", split into the five bands, with a tick at each threshold. A value off the scale is pinned to the end and drawn as a diamond (`src/shared/track.js`).
 - **Copy summary**: a plain-text version of the result for email or chat, including the rule-of-thumb caveat.
+
+## 9. Several years
+
+Up to five financial years, entered newest first on year tabs (`src/rating/years.js`).
+
+- **Each year is rated on its own**, against the same industry thresholds. The latest year is the one the grade, ratios and flags describe.
+- **The year before supplies the averages.** For every year except the oldest, the prior-year total assets and equity (used for average assets and equity in ROA, ROE and DuPont) are the year-end figures on the previous year's tab. Only the oldest year uses the prior-year fields. Adding an earlier year moves those fields into the new year's balance sheet; removing the oldest year moves them back.
+- **Year-on-year changes** compare the latest year with the one before: ratios in percentage points (net margin 8 % → 10 % is +2 pp, not +25 %), amounts in % and interest cover in turns. A % change from a zero or negative base (for example from a loss) has no meaning and is shown as n/m.
+- The trend sentence names the score change, the grade change, the ratio that improved most and the one that fell most (in pp) and revenue growth.
+- Exported JSON (format version 2) holds every year as `years: [{year, inputs}]`, newest first; files of version 1 (one year) still import.
+
+## 10. What if…
+
+Four levers re-rate the latest year live (`src/rating/whatif.js`):
+
+| Lever | Changes |
+|---|---|
+| Sales volume ±30 % | revenue and cost of goods sold, in proportion |
+| Selling prices ±20 % | revenue only |
+| Unit cost of goods ±20 % | cost of goods sold only (needs COGS) |
+| Operating expenses ±30 % | operating expenses |
+
+```
+Revenue' = Revenue × (1 + volume) × (1 + price)
+COGS'    = COGS × (1 + volume) × (1 + unit cost)
+Opex'    = Opex × (1 + opex change)
+Tax'     = Tax + effective tax rate × (EBT' − EBT), not below 0 when the year paid tax
+```
+
+Depreciation, other financial income, interest and the whole balance sheet stay as entered, so returns move only through profit. With every lever at zero the figures are exactly those entered. When the year has no taxable profit there is no effective rate to apply, so extra profit is not taxed; the page says so. Operating expenses are treated as fixed when volume moves, which shows operating leverage; with costs by nature (no COGS) the volume lever moves revenue only.
+
+## 11. Peer comparison
+
+Up to three peers next to the company on the form (`src/rating/compare.js`), taken from the fictional examples, from a JSON file saved with Export JSON (its latest year), or kept from the form ("Keep this company as a peer"). **Everyone is rated on the industry chosen in the form**, so bands and scores compare like for like; a peer from another industry therefore gets a different grade here than on its own benchmarks. A ★ marks the highest value in each row. Peers are kept in this browser's local storage only.
+
+## 12. Paste from Excel
+
+`src/rating/paste.js` reads statement lines pasted from a spreadsheet or CSV file (tab-, semicolon- or comma-separated; amounts in Croatian or English format):
+
+- **Labels** are matched after normalising them (lower case, no diacritics or numbering such as "IV." or "a)"), in English and in Croatian GFI-POD wording. Each field has tiers of labels; the most specific tier found wins, so *Prihodi od prodaje* beats the broader *Poslovni prihodi*, and an interest line beats *Financijski rashodi*. Totals that would double count their own lines (for example *Poslovni rashodi*) are not matched.
+- **Lines that go into the same field are added up** where statements split a field: operating expenses by nature (materials, staff, other costs, value adjustments, provisions, other operating expenses), revenue inside and outside the group, bank loans short and long term. Other fields take one line.
+- **Costs are taken as positive amounts**, whatever their sign in the paste.
+- **Columns**: the first column holds the labels. A column of AOP or note numbers is left out (by its header, or, without one, because it holds only one- to three-digit numbers before the amounts). Up to five amount columns become years; their order comes from header years ("2025", "2024") or words ("Prethodna godina", "Tekuća godina"), otherwise the user chooses (default: the last column is the latest year, as in GFI-POD).
+- Every line can be reassigned in the preview, which shows what goes into the form for each year before anything is filled in.
+
+<a id="segment-profitability"></a>
+
+## 13. Segment profitability (any table)
+
+The Segment profitability page (`segments.html`, engine in `src/segments/segments.js`) analyses any table of segments: customers, products, channels or regions.
+
+```
+Contribution margin (CM) = Revenue − Variable costs
+CM ratio                 = CM ÷ Revenue
+Segment profit           = CM − Direct fixed costs        (0 when blank)
+```
+
+- **Variable costs** move with the segment's sales (goods, materials, commissions). **Direct fixed costs** are fixed costs that would go away without the segment (a dedicated sales rep, a delivery route, a shop's rent). **Company-wide overheads are not shared out**: any allocation key would be arbitrary and could make a segment that covers its own costs look loss-making.
+- Segments are **ranked by segment profit**. The **top 20 %** are the round(n × 20 %) most profitable segments, at least one, and their share is their profit ÷ total profit (not meaningful when total profit is zero or negative).
+- The **whale curve** plots the cumulative share of segments (most profitable first) against the cumulative share of total profit. With loss-making segments it rises above 100 % and falls back to 100 % at the end; the peak is what the profitable segments earn on their own. It is the same function as the messaging case study's customer curve (`profitCurve` in `src/shared/concentration.js`).
+- In Learn mode, each segment's share of revenue × its margin gives its contribution in percentage points; the contributions add up to the company margin (`marginContributions` in `src/shared/margin.js`, shared with the messaging case study).
+- **Send to Company rating** passes total revenue as revenue and total variable costs as cost of goods sold, with the General industry. Variable costs are an approximation of cost of sales: fixed production costs, if any, are left in operating expenses.
+- A pasted table is read by column name (English or Croatian) when it has a header row, otherwise in the order name, revenue, variable costs, direct fixed costs.

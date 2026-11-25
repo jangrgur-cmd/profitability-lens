@@ -1,10 +1,15 @@
-// handoff.js: passes figures from the segment module to the Company rating.
+// handoff.js: passes figures from the segment modules to the Company rating.
 //
-// "Send to Company rating" in the messaging dashboard opens the rating page
-// with the full-year figures in the URL hash:
+// "Send to Company rating" in the messaging case study or the segment
+// profitability page opens the rating page with full-year figures in the URL
+// hash:
 //   index.html#from=messaging&revenue=112345678&cogs=86543210
-// The figures are totals of the fictional case study, never user data.
-// The rating page reads them once, fills the form and removes the hash.
+//   index.html#from=segments&revenue=2400000&cogs=1450000
+// Messaging figures are totals of the fictional case study. Segment figures
+// are totals of the user's own table: the hash goes only to this site's own
+// page in the same browser tab and is never sent to a server (the part of a
+// URL after "#" is not part of the request). The rating page reads them
+// once, fills the form and removes the hash.
 
 import { t } from "./i18n.js";
 
@@ -17,6 +22,18 @@ export const HANDOFF_SOURCES = {
     get label() { return t("rating.handoff.messagingSource"); },
     get companyName() { return t("rating.handoff.messagingCompany"); },
     get backLabel() { return t("rating.handoff.messagingBack"); },
+    get note() { return t("rating.page.sourceBody", { source: this.label }); },
+    get returnLabel() { return t("rating.page.sourceBack"); },
+  },
+  segments: {
+    id: "segments",
+    industryId: "general",
+    backLink: "segments.html",
+    get label() { return t("rating.handoff.segmentsSource"); },
+    get companyName() { return t("rating.handoff.segmentsCompany"); },
+    get backLabel() { return t("rating.handoff.segmentsBack"); },
+    get note() { return t("rating.handoff.segmentsNote"); },
+    get returnLabel() { return t("rating.handoff.segmentsReturn"); },
   },
 };
 
@@ -25,7 +42,7 @@ const HANDOFF_FIELDS = ["revenue", "cogs"];
 
 /**
  * Builds the hash for the rating page.
- * @param {"messaging"} source
+ * @param {"messaging"|"segments"} source
  * @param {{revenue: number, cogs: number}} figures in EUR; rounded to whole euros
  * @returns {string} e.g. "#from=messaging&revenue=1000&cogs=600"
  */

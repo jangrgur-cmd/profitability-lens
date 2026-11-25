@@ -48,9 +48,11 @@ test("parseForm parses typed text and reports which field is wrong", () => {
 
 test("exportJson and importJson round-trip values, industry and name", () => {
   const values = { ...blankValues(), revenue: 1000, cogs: 600, assets: 1200, equity: -50, otherIncome: -3.5 };
-  const text = exportJson(values, { industryId: "retail", companyName: "Fictional d.o.o." });
+  const text = exportJson([{ year: 2025, values }], { industryId: "retail", companyName: "Fictional d.o.o." });
   const back = importJson(text);
+  assert.equal(JSON.parse(text).version, 2);
   assert.deepEqual(back.values, values);
+  assert.deepEqual(back.years.map((y) => y.year), [2025]);
   assert.deepEqual(back.errors, {});
   assert.equal(back.industryId, "retail");
   assert.equal(back.companyName, "Fictional d.o.o.");
@@ -64,4 +66,15 @@ test("importJson accepts typed text and rejects files that are not rating export
   assert.throws(() => importJson("{not json"), /not valid JSON/);
   assert.throws(() => importJson(JSON.stringify({ revenue: 1 })), /not a Profitability Lens/);
   assert.throws(() => importJson(JSON.stringify({ kind: "profitability-lens/company-rating", version: 99, inputs: {} })), /newer version/);
+  assert.throws(() => importJson(JSON.stringify({ kind: "profitability-lens/company-rating", version: 2, years: [] })), /not a Profitability Lens/);
+});
+
+test("version 2 files carry several years, newest first; version 1 files still import", () => {
+  const latest = { ...blankValues(), revenue: 1100, assets: 1300, equity: 560 };
+  const earlier = { ...blankValues(), revenue: 1000, assets: 1200, equity: 500, priorAssets: 800 };
+  const back = importJson(exportJson([{ year: 2025, values: latest }, { year: 2024, values: earlier }], { industryId: "general" }));
+  assert.deepEqual(back.years.map((y) => [y.year, y.values.revenue, y.values.priorAssets]), [[2025, 1100, null], [2024, 1000, 800]]);
+  assert.equal(back.values.revenue, 1100);
+  const v1 = importJson(JSON.stringify({ kind: "profitability-lens/company-rating", version: 1, inputs: { revenue: 5, assets: 5, equity: 5 } }));
+  assert.deepEqual(v1.years.map((y) => [y.year, y.values.revenue]), [[null, 5]]);
 });

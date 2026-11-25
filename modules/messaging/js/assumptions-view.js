@@ -1,7 +1,7 @@
 // assumptions-view.js: the Assumptions & method tab.
 
 import { createSortableTable } from "./tables.js";
-import { toCsv, downloadCsv } from "./export.js";
+import { toCsv, downloadCsv } from "../../../src/shared/export.js";
 import { STEPS } from "./scenarios.js";
 import { formatCount, formatPct } from "../../../src/shared/format.js";
 import { t } from "../../../src/shared/i18n.js";

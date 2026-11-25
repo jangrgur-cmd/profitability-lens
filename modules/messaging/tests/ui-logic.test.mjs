@@ -6,7 +6,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { formatEur, formatPct, formatPerMessage, formatCount, formatInteger } from "../../../src/shared/format.js";
 import { parseHash, serializeHash, defaultState, filtersAreDefault } from "../js/state.js";
-import { toCsv } from "../js/export.js";
+import { toCsv } from "../../../src/shared/export.js";
 import { sortRows } from "../js/tables.js";
 import { heatColor } from "../js/routes-view.js";
 

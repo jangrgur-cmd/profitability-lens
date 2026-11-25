@@ -128,17 +128,21 @@ export function keyFigureText(id, rating) {
 /**
  * The plain-text summary for "Copy summary": readable in an email or a chat.
  * @param {object} rating from rate()
- * @param {{companyName?: string}} [meta]
+ * @param {{companyName?: string, year?: number, trendText?: string|null}} [meta]
+ *   year: the financial year rated; trendText: the multi-year sentence (trendSentence in years.js)
  * @returns {string}
  */
-export function textSummary(rating, { companyName = "" } = {}) {
+export function textSummary(rating, { companyName = "", year = null, trendText = null } = {}) {
   const lines = [t("rating.text.title")];
   if (companyName.trim()) lines.push(t("rating.text.company", { name: companyName.trim() }));
+  if (year !== null) lines.push(t("rating.text.year", { year }));
   lines.push(t("rating.text.benchmarks", { industry: rating.industry.label, source: rating.benchmarkSource.inlineLabel }));
   lines.push("", t("rating.text.grade", {
     letter: rating.grade.letter, score: rating.score, label: rating.grade.label, coverage: rating.coverage.label,
   }));
-  lines.push(rating.summary, "", t("rating.text.keyFigures"));
+  lines.push(rating.summary);
+  if (trendText) lines.push("", t("rating.text.trend", { text: trendText }));
+  lines.push("", t("rating.text.keyFigures"));
   for (const k of KEY_FIGURES) lines.push(`  ${k.label}: ${keyFigureText(k.id, rating).text}`);
   lines.push("", t("rating.text.ratios"));
   for (const r of rating.ratios) {

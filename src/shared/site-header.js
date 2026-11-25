@@ -12,7 +12,8 @@ import { LANGUAGES, getLang, setLanguage, t, applyTranslations } from "./i18n.js
 /** The modules, in navigation order. Paths are relative to the site root. */
 export const MODULES = [
   { id: "rating", labelKey: "header.navRating", path: "index.html" },
-  { id: "segments", labelKey: "header.navSegments", path: "modules/messaging/" },
+  { id: "segments", labelKey: "header.navSegments", path: "segments.html" },
+  { id: "messaging", labelKey: "header.navMessaging", path: "modules/messaging/" },
 ];
 
 const SVG = "http://www.w3.org/2000/svg";
@@ -57,7 +58,7 @@ function languageSwitch() {
  * Renders the shared header into `container` and fills the page's static
  * texts (data-i18n attributes) in the current language.
  * @param {HTMLElement} container
- * @param {{active: "rating"|"segments", root: string}} options
+ * @param {{active: "rating"|"segments"|"messaging", root: string}} options
  *   root: path from the page to the site root, e.g. "./" or "../../"
  */
 export function mountSiteHeader(container, { active, root }) {

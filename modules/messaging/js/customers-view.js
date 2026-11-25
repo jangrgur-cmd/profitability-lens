@@ -2,7 +2,7 @@
 
 import { customerProfitability, whaleCurve, routeProfitability } from "./calc.js";
 import { createSortableTable } from "./tables.js";
-import { toCsv, downloadCsv } from "./export.js";
+import { toCsv, downloadCsv } from "../../../src/shared/export.js";
 import { createWhaleChart, updateWhaleChart, chartOn } from "./charts.js";
 import { formatEur, formatPct, formatCount, toneClass } from "../../../src/shared/format.js";
 import { t } from "../../../src/shared/i18n.js";
@@ -98,8 +98,7 @@ export function createCustomersView(model) {
     }
     const losers = customers.filter((c) => c.lossMaking);
     const n = customers.length;
-    const topCount = Math.max(1, Math.round(n * 0.2));
-    const topShare = curve.points[topCount - 1]?.profitSharePct;
+    const { count: topCount, share: topShare } = curve.top20;
     let concentration = "";
     if (n === 1) concentration = t("seg.customers.onlyOne", { name: nameOf(customers[0].customer_id) });
     else if (topShare !== null && topShare !== undefined) {

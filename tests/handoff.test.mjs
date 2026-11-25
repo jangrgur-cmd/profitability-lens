@@ -30,3 +30,13 @@ test("decode ignores anything that is not a complete, sensible hand-off", () => 
   assert.equal(decodeHandoff(undefined), null);
   assert.deepEqual(decodeHandoff("from=messaging&revenue=10&cogs=0").values, { revenue: 10, cogs: 0 }, "works without the #");
 });
+
+test("the general segment page hands off its totals with the General industry and links back", () => {
+  const hash = encodeHandoff("segments", { revenue: 2_400_000, cogs: 1_450_000 });
+  assert.equal(hash, "#from=segments&revenue=2400000&cogs=1450000");
+  const { source, values } = decodeHandoff(hash);
+  assert.deepEqual(values, { revenue: 2_400_000, cogs: 1_450_000 });
+  assert.equal(source.industryId, "general");
+  assert.equal(source.backLink, "segments.html");
+  assert.ok(source.note && source.returnLabel && source.backLabel && source.companyName);
+});

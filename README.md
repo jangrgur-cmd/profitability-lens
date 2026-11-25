@@ -4,10 +4,10 @@
 
 Work in progress. Two connected modules:
 
-1. **Company rating** (the start page): enter a few lines from an income statement and balance sheet and get an A–E profitability grade, eight profitability ratios with benchmark bands and explanations, a DuPont breakdown of ROE and automatic red flags. Load one of three fictional examples, export or import your figures as JSON, copy a text summary or print the result to PDF.
-2. **Segment profitability**: where a business makes and loses money, by customer, product, channel or route. It starts from the [Messaging Profitability Dashboard](modules/messaging/), a case study of a business-messaging (CPaaS) provider.
+1. **Company rating** (the start page): enter a few lines from an income statement and balance sheet, or paste them from Excel (English or Croatian GFI-POD labels), and get an A–E profitability grade, eight profitability ratios with benchmark bands and explanations, a DuPont breakdown of ROE and automatic red flags. Add up to four earlier years for a trend with year-on-year changes and sparklines, move what-if levers (volume, prices, unit costs, overheads) to see the grade respond live, and compare with up to three peers. Load one of three fictional examples, export or import your figures as JSON, copy a text summary or print the result to PDF.
+2. **Segment profitability** ([segments.html](segments.html)): where a business makes and loses money, by customer, product, channel or region. Type or paste a table of revenue and costs to get each segment's contribution margin, a ranked profit chart, the whale curve and the share of profit earned by the top 20%. The [Messaging Profitability Dashboard](modules/messaging/) is a worked case study of a business-messaging (CPaaS) provider.
 
-The two modules are connected: "Send to Company rating" on the dashboard carries its full-year revenue and cost of sales into the rating, and the rating links back to the routes and customers behind the gross margin.
+The modules are connected: "Send to Company rating" on either segment page carries full-year revenue and cost of sales into the rating, and the rating links back to the segments behind the gross margin.
 
 **Learn mode** (switch in the header) turns both modules into a teaching tool: the math behind every ratio with your own numbers, what each ratio tells you and how to improve it, field help with the matching term in the other language, a plain-language DuPont breakdown, how segment margins add up to the company margin, and what each scenario step changes. Light and dark mode follow your system, or pick one in the header.
 

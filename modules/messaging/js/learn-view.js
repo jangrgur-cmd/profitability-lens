@@ -4,7 +4,7 @@
 import { summarize, channelTotals } from "./calc.js";
 import { marginContributions } from "../../../src/shared/margin.js";
 import { encodeHandoff } from "../../../src/shared/handoff.js";
-import { formatPct, formatPp } from "../../../src/shared/format.js";
+import { formatPct, formatPoints } from "../../../src/shared/format.js";
 import { t } from "../../../src/shared/i18n.js";
 
 const $ = (id) => document.getElementById(id);
@@ -16,8 +16,6 @@ function cell(tag, text, className = "") {
   return el;
 }
 
-/** Contribution in percentage points, without a "+" for positive values. */
-const points = (share) => formatPp(share).replace(/^\+/, "");
 
 /**
  * Renders the table: channel share of revenue × channel margin = contribution,
@@ -53,7 +51,7 @@ export function renderMarginContributions(rows, ctx, channelName) {
     const th = cell("th", line.label);
     th.scope = "row";
     tr.append(th, cell("td", formatPct(line.revenueShare)), cell("td", "×", "op"),
-      cell("td", formatPct(line.margin)), cell("td", "=", "op"), cell("td", points(line.contribution)));
+      cell("td", formatPct(line.margin)), cell("td", "=", "op"), cell("td", formatPoints(line.contribution)));
     body.append(tr);
   }
   const foot = document.createElement("tr");

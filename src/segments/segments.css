@@ -1,0 +1,112 @@
+/* segments.css: the Segment profitability page. Tokens and shared
+   components come from src/shared/theme.css; cards, tiles, form fields, the
+   paste dialog and the method box from src/rating/rating.css. */
+
+.page-intro__link { margin: var(--space-2) 0 0; font-size: var(--step--1); color: var(--ink-muted); }
+
+/* ---------- Table editor ---------- */
+
+.seg-form { padding: var(--space-5) var(--space-5) 0; }
+.seg-form__meta { display: flex; flex-wrap: wrap; align-items: end; gap: var(--space-2) var(--space-5); }
+.seg-form__meta .field { min-width: 14rem; }
+.seg-form__meta .form-hint { flex: 1 1 22rem; margin: 0 0 var(--space-3); }
+
+.seg-table { width: 100%; border-collapse: collapse; font-size: var(--step--1); }
+.seg-table th { padding: 0.4rem 0.35rem; border-bottom: 1px solid var(--rule-strong); font-size: 0.8125rem; font-weight: 650; color: var(--ink-muted); text-align: right; white-space: nowrap; }
+.seg-table th:nth-child(2) { text-align: left; }
+.seg-table .optional { font-weight: 400; color: var(--ink-faint); }
+.seg-table td { padding: 0.25rem 0.35rem; border-bottom: 1px solid var(--rule); }
+.seg-table__num { width: 2rem; color: var(--ink-faint); text-align: right; font-variant-numeric: tabular-nums; }
+.seg-table__name { min-width: 12rem; }
+.seg-table input {
+  width: 100%;
+  min-width: 7.5rem;
+  min-height: 2.25rem;
+  padding: 0.35rem 0.55rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+}
+.seg-table input.num { text-align: right; font-variant-numeric: tabular-nums; }
+.seg-table input:focus-visible { outline: 2px solid var(--accent); outline-offset: 0; border-color: var(--accent); }
+.seg-table input[aria-invalid] { border-color: var(--loss); }
+.seg-remove { width: 2rem; height: 2rem; font-size: 0.8125rem; color: var(--ink-faint); }
+.seg-add { margin: var(--space-2) 0 var(--space-4) calc(-1 * var(--space-3)); font-size: var(--step--1); }
+.seg-submit { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-3); }
+.seg-submit .button { min-height: 2.75rem; padding-inline: var(--space-6); }
+.seg-submit .stale-note { margin: 0; }
+
+/* ---------- Results ---------- */
+
+.seg-results { display: block; margin-top: var(--space-6); padding-bottom: var(--space-7); }
+.seg-results:focus { outline: none; }
+#seg-results-body { display: grid; gap: var(--space-6); }
+.seg-summary { padding: var(--space-5); }
+.seg-summary .tiles { grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); margin-bottom: var(--space-4); }
+.seg-summary__send { margin: var(--space-3) 0 0; }
+
+/* Ranked bars: losses to the left of the zero line, profits to the right. */
+.ranked { list-style: none; margin: 0; padding: var(--space-3) var(--space-5); }
+.ranked__row {
+  display: grid;
+  grid-template-columns: minmax(8rem, 14rem) minmax(0, 1fr) 8.5rem;
+  gap: var(--space-3);
+  align-items: center;
+  padding: 0.3rem 0;
+  font-size: var(--step--1);
+}
+.ranked__name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ranked__rank { display: inline-block; width: 2ch; margin-right: 0.4rem; color: var(--ink-faint); font-variant-numeric: tabular-nums; text-align: right; }
+.ranked__track { position: relative; height: 1rem; }
+.ranked__zero { position: absolute; top: -0.2rem; bottom: -0.2rem; width: 1px; background: var(--rule-strong); }
+.ranked__bar { position: absolute; top: 0; bottom: 0; border-radius: 3px; background: var(--profit); }
+.ranked__bar--loss { background: var(--loss); }
+.ranked__value { display: flex; justify-content: flex-end; gap: var(--space-2); font-weight: 650; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ranked__margin { min-width: 3.6rem; font-weight: 400; color: var(--ink-faint); text-align: right; }
+
+/* Whale curve */
+.seg-curve { padding: var(--space-4) var(--space-5); }
+.seg-curve__none { margin: 0; padding: var(--space-4) var(--space-5); color: var(--ink-muted); }
+.curve { display: block; width: 100%; max-width: 44rem; height: auto; overflow: visible; }
+.curve__grid { stroke: var(--rule); stroke-width: 1; }
+.curve__tick { fill: var(--ink-faint); font-size: 12px; font-variant-numeric: tabular-nums; }
+.curve__axis { fill: var(--ink-muted); font-size: 12px; font-weight: 600; }
+.curve__full { stroke: var(--ink-faint); stroke-width: 1.25; stroke-dasharray: 5 4; }
+.curve__top20 { stroke: var(--band-fair); stroke-width: 1.25; stroke-dasharray: 2 3; }
+.curve__line { fill: none; stroke: var(--accent); stroke-width: 2.5; stroke-linejoin: round; }
+.curve__peak { fill: var(--surface); stroke: var(--accent-strong); stroke-width: 2.5; }
+.curve__legend { display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-5); margin: var(--space-2) 0 0; padding: 0; list-style: none; font-size: 0.8125rem; color: var(--ink-muted); }
+.curve__key::before { content: ""; display: inline-block; width: 1.25rem; margin-right: 0.4rem; vertical-align: middle; border-top: 2.5px solid var(--accent); }
+.curve__key--full::before { border-top: 1.5px dashed var(--ink-faint); }
+.curve__key--top::before { border-top: 1.5px dotted var(--band-fair); }
+.curve__key--peak::before { width: 0.6rem; height: 0.6rem; border: 2px solid var(--accent-strong); border-radius: 50%; }
+
+/* Ranked table */
+.seg-ranked { width: 100%; border-collapse: collapse; font-size: var(--step--1); font-variant-numeric: tabular-nums; }
+.card > .seg-ranked { margin: var(--space-2) 0; }
+.seg-ranked th, .seg-ranked td { padding: 0.45rem 0.6rem; border-bottom: 1px solid var(--rule); text-align: right; white-space: nowrap; }
+.seg-ranked thead th { font-size: 0.8125rem; color: var(--ink-muted); }
+.seg-ranked th:nth-child(2), .seg-ranked tbody th, .seg-ranked tfoot th { text-align: left; }
+.seg-ranked tbody th { font-weight: 600; }
+.seg-ranked tfoot > tr > * { border-top: 2px solid var(--rule-strong); border-bottom: 0; font-weight: 700; }
+.seg-ranked__loss th { color: var(--loss); }
+.seg-learn th:first-child { text-align: left; }
+.card.table-scroll { padding: 0 var(--space-4); }
+
+@media (max-width: 40rem) {
+  .seg-form { padding: var(--space-4) var(--space-4) 0; }
+  .ranked { padding: var(--space-3) var(--space-4); }
+  .ranked__row { grid-template-columns: minmax(0, 1fr) auto; }
+  .ranked__track { grid-column: 1 / -1; grid-row: 2; }
+  .seg-curve { padding: var(--space-3); }
+  .curve__tick, .curve__axis { font-size: 22px; }
+  .curve__axis--y { display: none; }
+}
+
+@media print {
+  .seg-form, .site-footer, .verdict__actions { display: none !important; }
+  .seg-results { margin-top: 0; }
+  .ranked__bar, .curve__line { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+}

@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The title and description stay in English here for link previews and search engines;
+       the page sets the title in the interface language (segments.page.title). -->
+  <title data-i18n="segments.page.title">Segment profitability · Profitability Lens</title>
+  <meta name="description" content="Free, open-source segment profitability analysis that runs in your browser: paste a table of customers, products or channels with revenue and costs and see contribution margins, a ranked profit chart, the whale curve and how much profit the top 20% earn. Your data never leaves the browser. English and Croatian.">
+  <meta name="theme-color" content="#2f54eb">
+  <link rel="icon" href="modules/messaging/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="src/shared/theme.css">
+  <link rel="stylesheet" href="src/rating/rating.css">
+  <link rel="stylesheet" href="src/segments/segments.css">
+</head>
+<body>
+  <!-- Every visible text comes from src/shared/lang/en.js and hr.js (data-i18n keys). -->
+  <a class="skip-link" href="#main" data-i18n="common.skipLink"></a>
+  <header id="site-header"></header>
+
+  <main id="main" class="wrap">
+    <div class="page-intro">
+      <h1 data-i18n="segments.page.heading"></h1>
+      <p class="lede" data-i18n="segments.page.lede"></p>
+      <p class="page-intro__link" data-i18n-html="segments.page.caseStudy"></p>
+    </div>
+
+    <form class="card seg-form" id="seg-form" novalidate aria-labelledby="seg-form-title">
+      <div class="form-head">
+        <h2 id="seg-form-title" class="form-title" data-i18n="segments.page.formTitle"></h2>
+        <div class="form-tools">
+          <button type="button" class="button-quiet" id="seg-paste" data-i18n="segments.page.paste"></button>
+          <button type="button" class="button-quiet" id="seg-clear" data-i18n="segments.page.clear"></button>
+        </div>
+      </div>
+
+      <div class="examples" role="group" aria-labelledby="seg-examples-label">
+        <p id="seg-examples-label" class="examples__label" data-i18n="segments.page.examples"></p>
+        <div class="chips" id="seg-example-chips"></div>
+      </div>
+
+      <div class="error-summary" id="seg-errors" role="alert" tabindex="-1" hidden></div>
+
+      <div class="seg-form__meta">
+        <div class="field field--text">
+          <label for="seg-kind" data-i18n="segments.page.kind"></label>
+          <select id="seg-kind" name="kind"></select>
+        </div>
+        <p class="form-hint" id="seg-hint" data-i18n-html="segments.page.hint"></p>
+      </div>
+
+      <div class="table-scroll">
+        <table class="seg-table" aria-describedby="seg-hint">
+          <caption class="sr-only" data-i18n="segments.page.tableCaption"></caption>
+          <thead>
+            <tr>
+              <th scope="col" class="seg-table__num" data-i18n="segments.page.colRow"></th>
+              <th scope="col" id="seg-col-name"></th>
+              <th scope="col" data-i18n="segments.columns.revenue"></th>
+              <th scope="col" data-i18n="segments.columns.variableCosts"></th>
+              <th scope="col"><span data-i18n="segments.columns.fixedCosts"></span> <span class="optional" data-i18n="segments.page.optional"></span></th>
+              <th scope="col"><span class="sr-only" data-i18n="segments.page.colRemove"></span></th>
+            </tr>
+          </thead>
+          <tbody id="seg-rows"></tbody>
+        </table>
+      </div>
+      <button type="button" class="button-quiet seg-add" id="seg-add" data-i18n="segments.page.addRow"></button>
+
+      <div class="form-submit seg-submit">
+        <button type="submit" class="button button--primary" data-i18n="segments.page.submit"></button>
+        <p class="stale-note" id="seg-stale" hidden data-i18n="segments.page.stale"></p>
+      </div>
+    </form>
+
+    <section class="seg-results" id="seg-results" aria-labelledby="seg-results-title" tabindex="-1">
+      <h2 id="seg-results-title" class="sr-only" data-i18n="segments.page.resultsTitle"></h2>
+      <div id="seg-results-body"></div>
+    </section>
+
+    <p class="sr-only" id="announcer" aria-live="polite"></p>
+  </main>
+
+  <footer class="wrap site-footer">
+    <p data-i18n="segments.page.footer"></p>
+    <p data-i18n-html="segments.page.footerMethod"></p>
+  </footer>
+
+  <script type="module" src="src/segments/app.js"></script>
+</body>
+</html>

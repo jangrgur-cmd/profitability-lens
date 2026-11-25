@@ -13,6 +13,7 @@
 //   { eurUsd: 1.08, discountByCustomer: { C01: 0.2, C02: 0.2, ... } }
 
 import { margin, safeDivide } from "../../../src/shared/margin.js";
+import { profitCurve, topShare } from "../../../src/shared/concentration.js";
 
 // ---------------------------------------------------------------------------
 // Context
@@ -259,43 +260,38 @@ export function customerProfitability(rows, ctx) {
 }
 
 /**
- * Whale curve (cumulative profitability curve).
- *
- * Customers are sorted by gross profit, highest first. For each customer we
- * plot the cumulative share of customers (x) against the cumulative share of
- * total gross profit (y).
- *
- * When some customers lose money, the curve rises above 100% and then falls
- * back to 100% at the end: the profitable customers earn more than the total,
- * and the loss-makers give part of it back. The peak shows how much profit the
- * profitable customers generate on their own.
+ * Whale curve (cumulative profitability curve) of the customers, from the
+ * shared profitCurve in src/shared/concentration.js: customers sorted by
+ * gross profit, highest first; cumulative share of customers (x) against
+ * cumulative share of total gross profit (y). With loss-making customers the
+ * curve rises above 100% and falls back to 100% at the end; the peak shows
+ * what the profitable customers earn on their own.
  *
  * @param {object[]} customers output of customerProfitability (already ranked)
- * @returns {{points: object[], peak: object|null, totalGrossProfit: number}}
+ * @returns {{points: object[], peak: object|null, totalGrossProfit: number, top20: {count: number, share: number|null}}}
  *   points: [{ rank, customer_id, grossProfit, cumulativeProfit,
  *              customerSharePct, profitSharePct }]
  *   peak: the point with the highest cumulative profit
  *   profitSharePct is null when total gross profit is not positive (a share of
  *   a zero or negative total is not meaningful).
+ *   top20: how many customers are the top 20% and their share of gross profit
  */
 export function whaleCurve(customers) {
-  const sorted = [...customers].sort((a, b) => b.grossProfit - a.grossProfit);
-  const totalGrossProfit = sorted.reduce((s, c) => s + c.grossProfit, 0);
-  const n = sorted.length;
-  let cumulative = 0;
-  const points = sorted.map((c, i) => {
-    cumulative += c.grossProfit;
-    return {
-      rank: i + 1,
-      customer_id: c.customer_id,
-      grossProfit: c.grossProfit,
-      cumulativeProfit: cumulative,
-      customerSharePct: (i + 1) / n,
-      profitSharePct: totalGrossProfit > 0 ? cumulative / totalGrossProfit : null,
-    };
-  });
-  const peak = points.reduce((best, p) => (best === null || p.cumulativeProfit > best.cumulativeProfit ? p : best), null);
-  return { points, peak, totalGrossProfit };
+  const curve = profitCurve(customers, (c) => c.grossProfit);
+  const points = curve.points.map((p) => ({
+    rank: p.rank,
+    customer_id: p.item.customer_id,
+    grossProfit: p.profit,
+    cumulativeProfit: p.cumulativeProfit,
+    customerSharePct: p.itemShare,
+    profitSharePct: p.profitShare,
+  }));
+  return {
+    points,
+    peak: curve.peak ? points[curve.peak.rank - 1] : null,
+    totalGrossProfit: curve.totalProfit,
+    top20: topShare(curve, 0.2),
+  };
 }
 
 // ---------------------------------------------------------------------------

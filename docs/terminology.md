@@ -110,6 +110,43 @@ the vocabulary of Croatian textbooks on financial statement analysis (e.g. *rent
 | Contribution (to margin) | Doprinos | |
 | Termination cost (SMS) | Trošak terminacije | |
 
+## Company rating: several years, what if, peers, paste
+
+| English | Croatian | Note |
+|---|---|---|
+| Financial year | Financijska godina | |
+| Trend | Kretanje | |
+| Year-on-year change | Promjena u odnosu na prethodnu godinu | |
+| Score (points) | Bodovi | |
+| What if | Što ako | |
+| Sales volume | Količina prodaje | |
+| Selling prices | Prodajne cijene | |
+| Unit cost of goods | Jedinični trošak robe | |
+| Operating leverage | Operativna poluga | |
+| Effective tax rate | Efektivna porezna stopa | |
+| Peer comparison | Usporedba s konkurentima | ⚠ Also *usporedba s usporedivim tvrtkama* |
+| AOP code | AOP oznaka | Line code on GFI-POD forms |
+| Costs by nature | Troškovi po prirodnim vrstama | |
+| Materials costs | Materijalni troškovi | GFI-POD line, matched to operating expenses |
+| Staff costs | Troškovi osoblja | GFI-POD line, matched to operating expenses |
+| Financial expenses | Financijski rashodi | Matched to interest expense only when no interest line is pasted |
+
+## Segment profitability (any table)
+
+| English | Croatian | Note |
+|---|---|---|
+| Segment | Segment | |
+| Customer · Product · Channel · Region | Kupac · Proizvod · Kanal · Regija | |
+| Variable costs | Varijabilni troškovi | |
+| Direct fixed costs | Izravni fiksni troškovi | Fixed costs that would go away without the segment |
+| Contribution margin | Marža pokrića | ⚠ Also *kontribucijska marža* or *doprinos pokrića* |
+| Contribution margin ratio | Stopa marže pokrića | |
+| Segment profit | Rezultat segmenta | |
+| Cost to serve | Trošak usluživanja | |
+| Top 20 % share | Udio najboljih 20 % | |
+| Loss-making segment | Segment s gubitkom | |
+| Overheads | Opći režijski troškovi | Not allocated to segments |
+
 ## Number formats
 
 | | English | Croatian |

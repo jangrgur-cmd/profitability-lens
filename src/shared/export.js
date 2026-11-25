@@ -1,5 +1,6 @@
-// export.js: turns a table's rows into CSV and offers it as a download.
-// CSV cells hold raw numbers (not "€1.2M"), so the file opens cleanly in a spreadsheet.
+// export.js: turns a table's rows into CSV and offers files as downloads,
+// for both modules. CSV cells hold raw numbers (not "€1.2M"), so the file
+// opens cleanly in a spreadsheet. Files are made in the browser; nothing is uploaded.
 
 /** Quotes a CSV cell when it contains a comma, quote or line break. */
 function csvCell(value) {
@@ -21,10 +22,14 @@ export function toCsv(columns, rows) {
   return [header, ...lines].join("\r\n") + "\r\n";
 }
 
-/** Starts a browser download of `text` as a CSV file. */
-export function downloadCsv(filename, text) {
-  // A byte-order mark makes Excel read the file as UTF-8 (for "€" and accents).
-  const blob = new Blob(["﻿", text], { type: "text/csv;charset=utf-8" });
+/**
+ * Starts a browser download of a text file.
+ * @param {string} filename
+ * @param {string|BlobPart[]} content
+ * @param {string} type MIME type
+ */
+export function downloadFile(filename, content, type) {
+  const blob = new Blob(Array.isArray(content) ? content : [content], { type });
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
@@ -33,4 +38,10 @@ export function downloadCsv(filename, text) {
   link.click();
   link.remove();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+/** Starts a browser download of `text` as a CSV file. */
+export function downloadCsv(filename, text) {
+  // A byte-order mark makes Excel read the file as UTF-8 (for "€" and accents).
+  downloadFile(filename, ["﻿", text], "text/csv;charset=utf-8");
 }
