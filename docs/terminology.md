@@ -103,7 +103,7 @@ the vocabulary of Croatian textbooks on financial statement analysis (e.g. *rent
 | Pass-through fee | Prolazna naknada | Fee charged on at cost |
 | Cost headroom | Rezerva troška | ⚠ Our own term for gross profit ÷ delivery cost |
 | Route | Ruta | Country × channel |
-| Whale curve | Krivulja kita (whale curve) | ⚠ No established Croatian term; the English name is kept in brackets |
+| Whale curve | Krivulja kumulativne profitabilnosti (whale curve) | ⚠ No established Croatian term found; a literal translation of Kaplan and Cooper's "cumulative profitability curve" replaced the calque *krivulja kita*, and the English name stays in brackets where the term is defined |
 | Margin bridge | Most marže | ⚠ Also *premosnica marže* or "waterfall" |
 | Baseline | Polazno stanje | |
 | Scenario | Scenarij | |

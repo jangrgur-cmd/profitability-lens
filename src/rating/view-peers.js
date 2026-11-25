@@ -32,11 +32,13 @@ function savePeers(peers) {
 /**
  * Builds the peer block.
  * @param {object} ctx view context (see view-results.js)
- * @param {{industryId: string, industryLabel: string, onChange: () => void, announce: (text: string) => void}} options
- *   onChange: called after the list changes, so the page re-renders the block
+ * @param {{industryId: string, industryLabel: string, onChange: () => void, announce: (text: string) => void,
+ *          localName?: (name: string) => string}} options
+ *   onChange: called after the list changes, so the page re-renders the block;
+ *   localName: a saved name as shown now (a fictional example's name follows the language)
  */
-export function renderPeers(ctx, { industryId, industryLabel, onChange, announce }) {
-  let peers = loadPeers();
+export function renderPeers(ctx, { industryId, industryLabel, onChange, announce, localName = (name) => name }) {
+  let peers = loadPeers().map((peer) => ({ ...peer, name: localName(peer.name) }));
   const message = h("p", { class: "peers__message", role: "status" });
 
   const add = (peer) => {

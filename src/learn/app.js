@@ -290,9 +290,14 @@ function entryNode(e) {
 
 function renderGlossary() {
   const results = searchGlossary(state.query, { category: state.category });
-  $("glossary-count").textContent = results.length === 0
-    ? t("learn.glossary.none", { query: state.query.trim() })
-    : t("learn.glossary.count", { count: results.length });
+  // Nothing in the chosen section: say so if other sections have the term, and offer them.
+  const elsewhere = results.length === 0 && state.category && state.query.trim()
+    ? searchGlossary(state.query, { category: null }).length : 0;
+  $("glossary-count").textContent = results.length > 0
+    ? t("learn.glossary.count", { count: results.length })
+    : elsewhere > 0
+      ? t("learn.glossary.noneInSection", { query: state.query.trim(), count: elsewhere })
+      : t("learn.glossary.none", { query: state.query.trim() });
 
   let body;
   if (state.query.trim()) {
@@ -302,7 +307,11 @@ function renderGlossary() {
       h("h3", { class: "term-group__title", id: `cat-${cat.id}` }, cat.label),
       h("div", { class: "terms card" }, results.filter((e) => e.category === cat.id).map(entryNode))));
   }
-  replaceChildren($("glossary-list"), results.length > 0 ? body : null);
+  const searchAll = elsewhere > 0 ? h("p", {}, h("button", {
+    type: "button", class: "button",
+    on: { click: () => { state.category = null; renderGlossary(); $("glossary-search").focus(); } },
+  }, t("learn.glossary.searchAll"))) : null;
+  replaceChildren($("glossary-list"), results.length > 0 ? body : searchAll);
 
   for (const chip of $("glossary-categories").children) {
     chip.setAttribute("aria-pressed", String((chip.dataset.category || null) === state.category));

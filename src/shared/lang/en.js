@@ -675,6 +675,7 @@ export default {
       clear: "Clear",
       clearConfirm: "Clear all figures from the form? Export them as JSON first if you want to keep them.",
       caseReplace: "Replace the figures in the form with the practice case {name} (fictional)?",
+      handoffReplace: "Replace the figures in the form with the totals sent from the {source}? The figures in the form now will be cleared.",
       examples: "Load a fictional example",
       companyName: "Company name",
       optional: "(optional)",
@@ -741,7 +742,7 @@ export default {
       announceCopied: "Text summary copied to the clipboard.",
       announceCopyFailed: "The summary could not be copied.",
       footerLicence: "Profitability Lens is free and open source (MIT licence). Benchmarks are rule-of-thumb thresholds for learning, not official statistics. Example companies are fictional. This is not financial advice.",
-      footerMethod: "How the rating is calculated: <a href=\"docs/methodology.md\">methodology</a>.",
+      footerMethod: "How the rating is calculated: <a href=\"https://github.com/jangrgur-cmd/profitability-lens/blob/main/docs/methodology.md\">methodology</a>.",
     },
     handoff: {
       messagingSource: "Messaging profitability case study (fictional)",
@@ -769,7 +770,7 @@ export default {
       tabFix: "Fix the company",
       sheetLink: "Formula cheat sheet: <a href=\"cheatsheet.html\">open, print or download it</a>.",
       footer: "Free and open source (MIT licence). The practice companies are fictional; the benchmarks are rule-of-thumb values, not official statistics.",
-      footerMethod: "Every formula and definition in full: <a href=\"docs/methodology.md\">methodology</a>.",
+      footerMethod: "Every formula and definition in full: <a href=\"https://github.com/jangrgur-cmd/profitability-lens/blob/main/docs/methodology.md\">methodology</a>.",
     },
 
     quiz: {
@@ -879,6 +880,11 @@ export default {
       categoriesLabel: "Sections",
       count: { one: "{count} term", other: "{count} terms" },
       none: "No term matches “{query}”.",
+      noneInSection: {
+        one: "No term in this section matches “{query}”, but {count} term in other sections does.",
+        other: "No term in this section matches “{query}”, but {count} terms in other sections do.",
+      },
+      searchAll: "Search all sections",
       altLabel: "Croatian",
       formula: "Formula",
       related: "See also",
@@ -1162,7 +1168,7 @@ export default {
       emptyTitle: "No analysis yet",
       emptyBody: "Fill in at least one segment with a name and revenue, then press Analyse segments. Or load one of the fictional examples.",
       footer: "Profitability Lens is free and open source (MIT licence). Example tables are fictional. This is not financial advice.",
-      footerMethod: "How it is calculated: <a href=\"docs/methodology.md#segment-profitability\">methodology</a>.",
+      footerMethod: "How it is calculated: <a href=\"https://github.com/jangrgur-cmd/profitability-lens/blob/main/docs/methodology.md#13-segment-profitability-any-table\">methodology</a>.",
     },
     paste: {
       title: "Paste a segment table",
@@ -1211,9 +1217,10 @@ export default {
         one: "The most profitable of {total} segments earns {share} of total profit.",
         other: "The top {count} of {total} segments earn {share} of total profit.",
       },
-      curvePeak: " The curve peaks at {peak} after the {peakCount} most profitable segments; the rest lose money.",
+      curvePeak: " Why the curve rises above 100%: the {peakCount} segments that make money earn {peak} of total profit between them, and the other {lossCount} lose {giveBack} of total profit, so the curve falls back to 100% at the end.",
       legendCurve: "Cumulative profit",
       legendFull: "100% of profit",
+      legendAbove: "Profit lost to loss-making segments",
       legendTop20: "Top 20% of segments",
       legendPeak: "Peak",
       curveLearn: "Read the curve from the left: each step adds the next most profitable segment. A curve that rises above 100% means some segments lose money, and the drop at the end is what they give back. The higher the peak, the more profit is being destroyed by the loss-makers.",

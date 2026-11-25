@@ -15,7 +15,7 @@
  * @property {Record<string, number|null>} values in EUR
  */
 
-import { t } from "../shared/i18n.js";
+import { t, textIn, LANGUAGES } from "../shared/i18n.js";
 
 /** @type {Sample[]} */
 export const SAMPLES = [
@@ -89,3 +89,20 @@ export const SAMPLES = [
     },
   },
 ];
+
+/**
+ * The name the page gives a fictional example, in the current language, when
+ * `name` is that name in any language: a name saved in Croatian
+ * ("Pekara Lastavica d.o.o. (izmišljeno)") reads "… (fictional)" after a
+ * switch to English. Other names give null.
+ * @param {string} name a company name as saved
+ * @param {{name: string}[]} [more] other fictional companies (the practice cases)
+ * @returns {string|null}
+ */
+export function fictionalName(name, more = []) {
+  for (const company of [...SAMPLES, ...more]) {
+    const known = LANGUAGES.some(({ id }) => name === textIn(id, "rating.samples.nameFictional", { name: company.name }));
+    if (known) return t("rating.samples.nameFictional", { name: company.name });
+  }
+  return null;
+}

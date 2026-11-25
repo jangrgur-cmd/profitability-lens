@@ -331,7 +331,7 @@ export function renderMethod(ctx) {
               h("td", {}, sector.value === null ? t("common.dash") : formatPct(sector.value)));
           })))),
       h("p", { class: "method__source" }, t("rating.sector.source"), " · ", h("a", { href: SECTOR_SOURCE.url, rel: "noopener" }, SECTOR_SOURCE.url)),
-      h("p", {}, t("rating.page.methodLink"), h("a", { href: "docs/methodology.md" }, "docs/methodology.md"))));
+      h("p", {}, t("rating.page.methodLink"), h("a", { href: "https://github.com/jangrgur-cmd/profitability-lens/blob/main/docs/methodology.md" }, "docs/methodology.md"))));
 }
 
 /** The inputs of every year, printed with the results (hidden on screen). */

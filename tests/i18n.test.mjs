@@ -16,7 +16,7 @@ import { parseAmount } from "../src/shared/parse.js";
 import { rate } from "../src/rating/rating.js";
 import { explainRatio, dupontSentences, textSummary, ratioStatusText } from "../src/rating/report.js";
 import { parseForm, importJson, FIELDS } from "../src/rating/fields.js";
-import { SAMPLES } from "../src/rating/samples.js";
+import { SAMPLES, fictionalName } from "../src/rating/samples.js";
 import { HAND_CASE } from "./fixtures.mjs";
 
 const { en, hr } = DICTIONARIES_FOR_TESTS;
@@ -261,4 +261,15 @@ test("messaging sentences: whole phrases per category and English country names 
 test("plural texts choose their form from {count}, so other numbers come after a colon", () => {
   assert.equal(t("rating.paste.summary", { count: 5, matched: 5, columns: 1 }), "5 lines with amounts, 5 matched to fields; columns of years: 1.");
   assert.equal(t("segments.paste.summary", { count: 2, skipped: 1 }), "2 segments read; lines skipped: 1.");
+});
+
+test("a fictional example's name saved in one language reads in the other", () => {
+  const name = SAMPLES[0].name;
+  useLanguage("hr");
+  assert.equal(fictionalName(`${name} (fictional)`), `${name} (izmišljeno)`);
+  assert.equal(fictionalName(`${name} (izmišljeno)`), `${name} (izmišljeno)`);
+  useLanguage("en");
+  assert.equal(fictionalName(`${name} (izmišljeno)`), `${name} (fictional)`);
+  assert.equal(fictionalName("Moja tvrtka d.o.o."), null);
+  assert.equal(fictionalName("Lanterna Soft (fictional)", [{ name: "Lanterna Soft" }]), "Lanterna Soft (fictional)");
 });

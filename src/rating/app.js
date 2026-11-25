@@ -10,7 +10,7 @@
 import { FIELDS, GROUPS, parseForm, exportJson, importJson } from "./fields.js";
 import { MAX_YEARS, PRIOR_FIELD_IDS, rateYears, trendSentence } from "./years.js";
 import { INDUSTRIES, DEFAULT_INDUSTRY_ID, INDUSTRY_BY_ID, BENCHMARK_SOURCE } from "./benchmarks.js";
-import { SAMPLES } from "./samples.js";
+import { SAMPLES, fictionalName } from "./samples.js";
 import { CASES, caseFromHash } from "../learn/cases.js";
 import { textSummary } from "./report.js";
 import {
@@ -226,7 +226,7 @@ function fillForm({ years, latestYear, industryId, companyName }) {
   app.errors = {};
   $("latest-year").value = String(app.latestYear);
   $("industry").value = INDUSTRY_BY_ID[industryId] ? industryId : DEFAULT_INDUSTRY_ID;
-  $("company-name").value = companyName ?? "";
+  $("company-name").value = localName(companyName ?? "");
   fillInputs(app.years[0], { flash: true });
   showIndustryNote();
   renderYearBar();
@@ -462,9 +462,11 @@ async function importJsonFile(file) {
 
 /** True for the names the page itself gives fictional figures: examples, practice cases and hand-offs. */
 function isFictionalName(name) {
-  return [...SAMPLES, ...CASES].some((s) => name === t("rating.samples.nameFictional", { name: s.name }))
-    || Object.values(HANDOFF_SOURCES).some((source) => name === source.companyName);
+  return fictionalName(name, CASES) !== null || Object.values(HANDOFF_SOURCES).some((source) => name === source.companyName);
 }
+
+/** A saved company name as shown now: a fictional example's name follows the language. */
+const localName = (name) => fictionalName(name, CASES) ?? name;
 
 /** Fills the form from the paste dialog (years already checked) and rates it with the industry chosen there. */
 function applyPaste(years, industryId) {
@@ -503,6 +505,7 @@ async function copySummary(button) {
 function peersBlock() {
   const industry = INDUSTRY_BY_ID[app.view.rating.industry.id];
   const block = renderPeers(app.view, {
+    localName,
     industryId: industry.id,
     industryLabel: industry.label,
     announce,
@@ -560,6 +563,12 @@ function storedForm() {
   return null;
 }
 
+/** True when the saved form holds any figure the user could lose. */
+function savedHasFigures() {
+  const saved = storedForm();
+  return Boolean(saved?.years.some((raw) => Object.values(raw ?? {}).some((v) => String(v ?? "").trim() !== "")));
+}
+
 /**
  * Restores the saved form, or applies figures sent from the segment module,
  * or opens a practice case from the Glossary & practice page (#case=<id>).
@@ -569,9 +578,7 @@ function restore() {
   if (practiceCase) {
     history.replaceState(null, "", location.pathname + location.search);
     // Never overwrite the user's own saved figures without asking.
-    const saved = storedForm();
-    const hasFigures = saved?.years.some((raw) => Object.values(raw ?? {}).some((v) => String(v ?? "").trim() !== ""));
-    if (!hasFigures) {
+    if (!savedHasFigures()) {
       loadSample(practiceCase);
       return;
     }
@@ -580,16 +587,23 @@ function restore() {
   }
   const handoff = decodeHandoff(location.hash);
   if (handoff) {
-    app.source = handoff.source.id;
-    app.view = null;
-    fillForm({ years: [rawFromValues(handoff.values)], latestYear: app.latestYear, industryId: handoff.source.industryId, companyName: handoff.source.companyName });
     history.replaceState(null, "", location.pathname + location.search);
-    saveForm();
-    showSourceNote();
-    renderResults();
-    const firstEmpty = FIELDS.find((f) => f.required && !$(inputId(f.id)).value);
-    if (firstEmpty) $(inputId(firstEmpty.id)).focus();
-    return;
+    const apply = () => {
+      app.source = handoff.source.id;
+      app.view = null;
+      fillForm({ years: [rawFromValues(handoff.values)], latestYear: app.latestYear, industryId: handoff.source.industryId, companyName: handoff.source.companyName });
+      saveForm();
+      showSourceNote();
+      renderResults();
+      const firstEmpty = FIELDS.find((f) => f.required && !$(inputId(f.id)).value);
+      if (firstEmpty) $(inputId(firstEmpty.id)).focus();
+    };
+    if (!savedHasFigures()) {
+      apply();
+      return;
+    }
+    // As with a practice case: ask on the page, over the saved figures shown below.
+    confirmAction(t("rating.page.handoffReplace", { source: handoff.source.label })).then((yes) => { if (yes) apply(); });
   }
   const saved = storedForm();
   if (saved) {

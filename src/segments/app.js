@@ -386,12 +386,14 @@ function renderCurve(a) {
   }
   const W = 640; const H = 300; const L = 52; const R = 16; const T = 16; const B = 44;
   const peakShare = Math.max(...a.curve.points.map((p) => p.profitShare));
-  const yMax = Math.max(1, Math.ceil(peakShare * 10) / 10);
+  // The axis always ends on a labelled line above the peak, so a curve above 100 % stays inside the chart.
+  const step = peakShare > 1.5 ? 0.5 : 0.25;
+  const yMax = Math.max(1, Math.ceil(peakShare / step - 1e-9) * step);
   const x = (share) => L + share * (W - L - R);
   const y = (share) => T + (1 - share / yMax) * (H - T - B);
   const chart = svg("svg", { viewBox: `0 0 ${W} ${H}`, class: "curve", role: "img", "aria-labelledby": "seg-curve-desc" });
 
-  for (let v = 0; v <= yMax + 1e-9; v += yMax > 1.5 ? 0.5 : 0.25) {
+  for (let v = 0; v <= yMax + 1e-9; v += step) {
     chart.append(svg("line", { x1: L, x2: W - R, y1: y(v), y2: y(v), class: "curve__grid" }));
     chart.append(svg("text", { x: L - 8, y: y(v) + 4, class: "curve__tick", "text-anchor": "end" }, formatPct(v, 0)));
   }
@@ -401,20 +403,41 @@ function renderCurve(a) {
   chart.append(svg("line", { x1: L, x2: W - R, y1: y(1), y2: y(1), class: "curve__full" }));
   chart.append(svg("line", { x1: x(0.2), x2: x(0.2), y1: T, y2: H - B, class: "curve__top20" }));
   const points = [[0, 0], ...a.curve.points.map((p) => [p.itemShare, p.profitShare])];
-  chart.append(svg("path", { d: points.map(([px, py], i) => `${i ? "L" : "M"}${x(px).toFixed(1)} ${y(py).toFixed(1)}`).join(""), class: "curve__line" }));
+  const line = points.map(([px, py], i) => `${i ? "L" : "M"}${x(px).toFixed(1)} ${y(py).toFixed(1)}`).join("");
   const peak = a.curve.peak;
+  // Above 100 %: the profit the profitable segments earn that the loss-makers take back, shaded.
+  const overshoot = peak.profitShare > 1.0005;
+  if (overshoot) {
+    const clip = svg("clipPath", { id: "seg-curve-above" });
+    clip.append(svg("rect", { x: L, y: T, width: W - L - R, height: y(1) - T }));
+    const defs = svg("defs", {});
+    defs.append(clip);
+    chart.append(defs, svg("path", { d: `${line}L${x(1)} ${y(1)}L${x(0)} ${y(1)}Z`, class: "curve__above", "clip-path": "url(#seg-curve-above)" }));
+  }
+  chart.append(svg("path", { d: line, class: "curve__line" }));
   chart.append(svg("circle", { cx: x(peak.itemShare), cy: y(peak.profitShare), r: 5, class: "curve__peak" }));
+  if (overshoot) {
+    chart.append(svg("text", {
+      x: x(peak.itemShare), y: y(peak.profitShare) - 11, class: "curve__value",
+      "text-anchor": peak.itemShare > 0.85 ? "end" : peak.itemShare < 0.15 ? "start" : "middle",
+    }, formatPct(peak.profitShare)));
+  }
   chart.append(svg("text", { x: L + (W - L - R) / 2, y: H - 6, class: "curve__axis", "text-anchor": "middle" }, t("segments.results.curveX")));
   chart.append(svg("text", { x: 14, y: T + (H - T - B) / 2, class: "curve__axis curve__axis--y", "text-anchor": "middle", transform: `rotate(-90 14 ${T + (H - T - B) / 2})` }, t("segments.results.curveY")));
 
   let desc = t("segments.results.curveDesc", { count: a.top20.count, total: a.rows.length, share: formatPct(a.top20.share) });
-  if (peak.rank < a.rows.length) desc += t("segments.results.curvePeak", { peak: formatPct(peak.profitShare), peakCount: peak.rank });
+  if (overshoot) {
+    desc += t("segments.results.curvePeak", {
+      peak: formatPct(peak.profitShare), peakCount: peak.rank, lossCount: a.rows.length - peak.rank, giveBack: formatPct(peak.profitShare - 1),
+    });
+  }
   return h("section", { class: "block", "aria-labelledby": "seg-curve-title" }, title,
     h("p", { class: "block-note", id: "seg-curve-desc" }, desc),
     h("div", { class: "card seg-curve" }, chart,
       h("ul", { class: "curve__legend", "aria-hidden": "true" },
         h("li", { class: "curve__key curve__key--line" }, t("segments.results.legendCurve")),
         h("li", { class: "curve__key curve__key--full" }, t("segments.results.legendFull")),
+        overshoot ? h("li", { class: "curve__key curve__key--above" }, t("segments.results.legendAbove")) : null,
         h("li", { class: "curve__key curve__key--top" }, t("segments.results.legendTop20")),
         h("li", { class: "curve__key curve__key--peak" }, t("segments.results.legendPeak")))),
     h("p", { class: "learn-note learn-only" }, t("segments.results.curveLearn")));
@@ -490,7 +513,7 @@ function renderMethod() {
         h("li", {}, t("segments.method.step2")),
         h("li", {}, t("segments.method.step3")),
         h("li", {}, t("segments.method.step4"))),
-      h("p", {}, t("rating.page.methodLink"), h("a", { href: "docs/methodology.md#segment-profitability" }, "docs/methodology.md"))));
+      h("p", {}, t("rating.page.methodLink"), h("a", { href: "https://github.com/jangrgur-cmd/profitability-lens/blob/main/docs/methodology.md#13-segment-profitability-any-table" }, "docs/methodology.md"))));
 }
 
 // ---------------------------------------------------------------------------

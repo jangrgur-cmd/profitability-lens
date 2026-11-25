@@ -4,6 +4,10 @@ All notable changes to Profitability Lens. The format follows [Keep a Changelog]
 
 ## [Unreleased]
 
+## [1.1.0] – 2026-11-25
+
+Additions after Phase 5, and the first public release on GitHub Pages.
+
 ### Added
 
 - Smooth animations on every page: the page's parts rise in on load, tabs and dialogs fade in, and on the Company rating a re-rating moves the benchmark markers, fills the grade ring, counts the numbers to their new values and briefly lights up what changed. New blocks, red flags, years and what-if changes rise into place; figures filled in from an example or a file light up in the form. The segment page, the practice quiz and "Fix the company" do the same. Everything stops when the system asks for reduced motion.
@@ -15,8 +19,16 @@ All notable changes to Profitability Lens. The format follows [Keep a Changelog]
 - Published sector averages next to every ratio: the average of listed European companies in the industry (Damodaran, January 2026), marked on the benchmark track and listed in "How the rating works". For comparison only; grades are unchanged.
 - "How to reach grade X" on the Company rating: the smallest change of each What if… lever that reaches the next grade, with "Try it" to set it, and a table of the points each ratio earns and misses.
 
+### Changed
+
+- Links to the methodology open the formatted file on GitHub instead of the raw Markdown file on the site.
+
 ### Fixed
 
+- The whale curve on the segment page went above the last labelled line (100 %) without saying why. The axis now ends on a labelled line above the peak, the peak shows its value, the part above 100 % is shaded as the profit lost to loss-making segments, and the text explains the overshoot. In Croatian it is now *krivulja kumulativne profitabilnosti* instead of the calque *krivulja kita*.
+- Sending figures from the segment page or the case study to the Company rating asked nothing and replaced the figures already in the form. It now asks first, as opening a practice case does.
+- The name of a fictional example kept the language it was saved in ("Pekara Lastavica d.o.o. (fictional)" in the Croatian interface), in the form and in the peer comparison; peers could then hold the same example twice. Example and practice-case names now follow the language.
+- A glossary search inside one section said only that no term matched, even when other sections had it. It now says how many terms other sections have and offers to search them all.
 - "Clear", "Remove this year", "Start again" and opening a practice case over saved figures did nothing in browsers that silence `window.confirm` (an embedded browser, or a page whose dialogs were blocked). They now ask in a dialog drawn by the page (`src/shared/confirm.js`), with the action's own name on the button.
 
 ## [1.0.0] – 2026-11-25
