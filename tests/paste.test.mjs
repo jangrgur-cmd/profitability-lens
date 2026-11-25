@@ -122,3 +122,25 @@ test("without headers there is no order; a lone amount column is one year; extra
   const codes = readStatementPaste(rowsOf([["Revenue", "001", "1.000"], ["Total assets", "063", "2.000"], ["Total equity", "067", "900"]]));
   assert.deepEqual(codes.columns.map((c) => c.index), [2], "a column of three-digit codes before the amounts is left out");
 });
+
+test("other operating income is matched in English and Croatian, apart from sales", () => {
+  assert.deepEqual(matchLabel("Ostali poslovni prihodi"), { fieldId: "otherOpIncome", tier: 0 });
+  assert.deepEqual(matchLabel("Ostali poslovni prihodi izvan grupe"), { fieldId: "otherOpIncome", tier: 0 });
+  assert.deepEqual(matchLabel("Prihodi na temelju upotrebe vlastitih proizvoda, robe i usluga"), { fieldId: "otherOpIncome", tier: 0 });
+  assert.deepEqual(matchLabel("Other operating income"), { fieldId: "otherOpIncome", tier: 0 });
+  assert.deepEqual(matchLabel("Other income"), { fieldId: "otherOpIncome", tier: 1 });
+  assert.equal(matchLabel("Other financial income").fieldId, "otherIncome");
+
+  // A GFI-POD style statement: the total "Poslovni prihodi" is not counted on top of its parts.
+  const read = readStatementPaste(rowsOf([
+    ["", "2025"],
+    ["Poslovni prihodi", "1.050.000"],
+    ["Prihodi od prodaje", "1.000.000"],
+    ["Ostali poslovni prihodi", "50.000"],
+    ["Ukupna aktiva", "1.200.000"],
+    ["Kapital i rezerve", "500.000"],
+  ]));
+  const [year] = pasteToYears(read.rows, read.columns.length, { newestFirst: true, latestYear: 2025 });
+  assert.equal(year.values.revenue, 1_000_000);
+  assert.equal(year.values.otherOpIncome, 50_000);
+});

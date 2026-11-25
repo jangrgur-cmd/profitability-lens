@@ -34,7 +34,7 @@ const MAX_TAX_RATE = 0.5;
  * Builds the derived statement from validated input values.
  *
  *   GrossProfit = Revenue − COGS
- *   EBITDA      = Revenue − COGS − Opex   (COGS counts as 0 when blank)
+ *   EBITDA      = Revenue + OtherOpIncome − COGS − Opex   (COGS counts as 0 when blank)
  *   EBIT        = EBITDA − D&A
  *   EBT         = EBIT + OtherIncome − Interest
  *   NetIncome   = EBT − Tax
@@ -44,6 +44,9 @@ const MAX_TAX_RATE = 0.5;
  *   CapitalEmployed = TotalAssets − CurrentLiabilities
  *   InvestedCapital = Debt + Equity − Cash   (cash counts as 0 when blank)
  *
+ * Other operating income (rental income, grants, gains on selling equipment)
+ * counts in operating profit but not in revenue, so every margin stays a
+ * share of sales.
  * Blank optional amounts count as 0, except the three that a ratio needs:
  * COGS, current liabilities and debt, which stay null.
  * @param {Record<string, number|null>} values
@@ -54,7 +57,7 @@ export function deriveStatement(values) {
   const given = (id) => values[id] !== null && values[id] !== undefined;
 
   const revenue = values.revenue;
-  const ebitda = revenue - n("cogs") - n("opex");
+  const ebitda = revenue + n("otherOpIncome") - n("cogs") - n("opex");
   const ebit = ebitda - n("da");
   const ebt = ebit + n("otherIncome") - n("interest");
   const netIncome = ebt - n("tax");

@@ -65,6 +65,7 @@ export const GLOSSARY = [
   entry("incomeStatement", "statements", ["revenue", "netIncome", "balanceSheet"]),
   entry("balanceSheet", "statements", ["assets", "equity", "incomeStatement"]),
   entry("revenue", "statements", ["grossMargin", "cogs"], { term: field("revenue") }),
+  entry("otherOpIncome", "statements", ["ebitda", "revenue"], { term: field("otherOpIncome") }),
   entry("cogs", "statements", ["grossProfit", "costsByNature"], { term: field("cogs") }),
   entry("opex", "statements", ["ebitda", "costsByNature"], { term: field("opex") }),
   entry("costsByNature", "statements", ["cogs", "opex"]),

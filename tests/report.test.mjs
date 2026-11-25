@@ -89,3 +89,12 @@ test("text summary carries the grade, every ratio, DuPont, flags and the benchma
   assert.match(s, /\[Info\] No prior-year figures:/);
   assert.ok(s.endsWith("no data was sent anywhere.\n"));
 });
+
+test("Show the math names other operating income only when there is some", () => {
+  const plain = explainRatio(ratio(rating, "ebitdaMargin"), rating.statement, HAND_CASE).where.join(" ");
+  assert.ok(!/Other operating income/.test(plain), plain);
+  const values = { ...HAND_CASE, otherOpIncome: 50 };
+  const withOther = rate(values, "general");
+  const text = explainRatio(ratio(withOther, "ebitdaMargin"), withOther.statement, values).where.join(" ");
+  assert.match(text, /Revenue \+ Other operating income − Cost of goods sold − Operating expenses = €1,000 \+ €50 − €600 − €200 = €250/);
+});

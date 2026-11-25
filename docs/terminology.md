@@ -15,6 +15,7 @@ the vocabulary of Croatian textbooks on financial statement analysis (e.g. *rent
 | Income statement | Račun dobiti i gubitka | |
 | Balance sheet | Bilanca | |
 | Revenue | Prihodi od prodaje | GFI-POD also has *poslovni prihodi* (operating income, includes other operating income) |
+| Other operating income | Ostali poslovni prihodi | GFI-POD line; *prihodi na temelju upotrebe vlastitih proizvoda* (own work capitalised) is matched to it too |
 | Cost of goods sold (COGS) | Trošak prodanih proizvoda i robe | ⚠ GFI-POD splits it into *nabavna vrijednost prodane robe* and *troškovi prodanih proizvoda*; "trošak prodanoga" used as a short form in sentences |
 | Operating expenses (excl. D&A) | Poslovni rashodi (bez amortizacije) | |
 | Depreciation & amortisation (D&A) | Amortizacija | |

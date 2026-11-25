@@ -70,6 +70,11 @@ export default {
         alt: "revenue",
         help: "Prihodi od prodaje proizvoda, robe i usluga u godini, bez PDV-a.",
       },
+      otherOpIncome: {
+        label: "Ostali poslovni prihodi",
+        alt: "other operating income",
+        help: "Poslovni prihodi koji nisu prodaja: najamnine, potpore, dobici od prodaje opreme, prihodi od upotrebe vlastitih proizvoda. Ulaze u EBITDA i EBIT, ne u prihode od prodaje.",
+      },
       cogs: {
         label: "Trošak prodanih proizvoda i robe",
         alt: "cost of goods sold (COGS)",
@@ -347,6 +352,8 @@ export default {
       grossProfit: "Bruto dobit = Prihodi od prodaje − Trošak prodanih proizvoda i robe = {revenue} − {cogs} = {result}",
       ebitda: "EBITDA = Prihodi od prodaje − Trošak prodanih proizvoda i robe − Poslovni rashodi = {revenue} − {cogs} − {opex} = {result}",
       ebitdaNoCogs: "EBITDA = Prihodi od prodaje − Poslovni rashodi = {revenue} − {opex} = {result}",
+      ebitdaOther: "EBITDA = Prihodi od prodaje + Ostali poslovni prihodi − Trošak prodanih proizvoda i robe − Poslovni rashodi = {revenue} + {other} − {cogs} − {opex} = {result}",
+      ebitdaNoCogsOther: "EBITDA = Prihodi od prodaje + Ostali poslovni prihodi − Poslovni rashodi = {revenue} + {other} − {opex} = {result}",
       ebit: "EBIT = EBITDA − Amortizacija = {ebitda} − {da} = {result}",
       netIncome: "Neto dobit = EBIT + Ostali financijski prihodi − Kamate − Porez = {ebit} + {other} − {interest} − {tax} = {result}",
       nopat: "NOPAT = EBIT × (1 − porezna stopa) = {ebit} × (1 − {rate}) = {result}",
@@ -774,6 +781,7 @@ export default {
         incomeStatement: "Izvještaj o rezultatu godine: prihodi na vrhu, zatim svaka vrsta troška, sve do neto dobiti na dnu. Obuhvaća razdoblje (najčešće godinu), za razliku od bilance, koja je snimka stanja na jedan dan.",
         balanceSheet: "Što tvrtka posjeduje (imovina) i kako je to financirano (obveze i kapital) na jedan dan, najčešće zadnji dan poslovne godine. Imovina je uvijek jednaka zbroju obveza i kapitala.",
         revenue: "Prihodi od prodaje proizvoda i usluga u godini, nakon popusta, a prije bilo kakvih troškova. Polazište svake marže.",
+        otherOpIncome: "Prihodi iz poslovanja koji nisu prodaja proizvoda ili usluga: najamnine, potpore, dobici od prodaje opreme, prihodi od upotrebe vlastitih proizvoda. Ulaze u operativnu dobit (EBITDA i EBIT), ali ne u prihode od prodaje, pa marže ostaju udio u prodaji. U obrascu GFI-POD to su ostali poslovni prihodi.",
         cogs: "Izravni trošak prodanoga: nabavna vrijednost prodane robe, materijal i troškovi proizvodnje. Izvještaji s troškovima po prirodnim vrstama ne iskazuju ga kao jednu stavku.",
         opex: "Troškovi poslovanja koji nisu trošak prodanoga: osoblje, najam, marketing, usluge, uprava. Ovdje bez amortizacije, koja ima svoju stavku.",
         costsByNature: "Način iskazivanja računa dobiti i gubitka prema tome što je nabavljeno (materijal, osoblje, usluge, amortizacija), a ne prema funkciji (trošak prodanoga, prodaja, uprava). Hrvatski obrasci (GFI-POD) koriste ga, pa često nemaju trošak prodanih proizvoda i robe.",
@@ -830,7 +838,7 @@ export default {
 
     formulas: {
       grossProfit: "Bruto dobit = Prihodi od prodaje − Trošak prodanih proizvoda i robe",
-      ebitda: "EBITDA = Bruto dobit − Poslovni rashodi (bez amortizacije)",
+      ebitda: "EBITDA = Bruto dobit + Ostali poslovni prihodi − Poslovni rashodi (bez amortizacije)",
       ebit: "EBIT = EBITDA − Amortizacija",
       ebt: "Dobit prije oporezivanja = EBIT + Ostali financijski prihodi, neto − Rashodi od kamata",
       netIncome: "Neto dobit = Dobit prije oporezivanja − Porez na dobit",

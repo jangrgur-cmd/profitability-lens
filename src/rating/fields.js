@@ -38,6 +38,7 @@ function field(id, group, required, sign) {
 /** @type {FieldDef[]} */
 export const FIELDS = [
   field("revenue", "income", true, "positive"),
+  field("otherOpIncome", "income", false, "nonNegative"),
   field("cogs", "income", false, "nonNegative"),
   field("opex", "income", false, "nonNegative"),
   field("da", "income", false, "nonNegative"),

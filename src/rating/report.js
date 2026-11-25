@@ -16,9 +16,12 @@ const given = (x) => x !== null && x !== undefined;
 /** How each building block of a ratio is worked out, with the user's numbers. Keyed by rating.terms id. */
 const DERIVATIONS = {
   grossProfit: (s, v) => t("rating.math.grossProfit", { revenue: eur(v.revenue), cogs: eur(v.cogs), result: eur(s.grossProfit) }),
-  ebitda: (s, v) => (given(v.cogs)
-    ? t("rating.math.ebitda", { revenue: eur(v.revenue), cogs: eur(v.cogs), opex: eur(v.opex ?? 0), result: eur(s.ebitda) })
-    : t("rating.math.ebitdaNoCogs", { revenue: eur(v.revenue), opex: eur(v.opex ?? 0), result: eur(s.ebitda) })),
+  ebitda: (s, v) => {
+    const params = { revenue: eur(v.revenue), other: eur(v.otherOpIncome ?? 0), cogs: eur(v.cogs), opex: eur(v.opex ?? 0), result: eur(s.ebitda) };
+    const withOther = (v.otherOpIncome ?? 0) !== 0;
+    if (given(v.cogs)) return t(withOther ? "rating.math.ebitdaOther" : "rating.math.ebitda", params);
+    return t(withOther ? "rating.math.ebitdaNoCogsOther" : "rating.math.ebitdaNoCogs", params);
+  },
   ebit: (s, v) => t("rating.math.ebit", { ebitda: eur(s.ebitda), da: eur(v.da ?? 0), result: eur(s.ebit) }),
   netIncome: (s, v) => t("rating.math.netIncome", {
     ebit: eur(s.ebit), other: eur(v.otherIncome ?? 0), interest: eur(v.interest ?? 0), tax: eur(v.tax ?? 0), result: eur(s.netIncome),

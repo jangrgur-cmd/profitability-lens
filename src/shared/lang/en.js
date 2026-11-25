@@ -63,8 +63,13 @@ export default {
     fields: {
       revenue: {
         label: "Revenue",
-        alt: "poslovni prihodi / prihodi od prodaje",
+        alt: "prihodi od prodaje",
         help: "Sales of goods and services for the year, excluding VAT.",
+      },
+      otherOpIncome: {
+        label: "Other operating income",
+        alt: "ostali poslovni prihodi",
+        help: "Operating income that is not sales: rental income, grants, gains on selling equipment, own work capitalised. Counts in EBITDA and EBIT, not in revenue.",
       },
       cogs: {
         label: "Cost of goods sold",
@@ -345,6 +350,8 @@ export default {
       grossProfit: "Gross profit = Revenue − Cost of goods sold = {revenue} − {cogs} = {result}",
       ebitda: "EBITDA = Revenue − Cost of goods sold − Operating expenses = {revenue} − {cogs} − {opex} = {result}",
       ebitdaNoCogs: "EBITDA = Revenue − Operating expenses = {revenue} − {opex} = {result}",
+      ebitdaOther: "EBITDA = Revenue + Other operating income − Cost of goods sold − Operating expenses = {revenue} + {other} − {cogs} − {opex} = {result}",
+      ebitdaNoCogsOther: "EBITDA = Revenue + Other operating income − Operating expenses = {revenue} + {other} − {opex} = {result}",
       ebit: "EBIT = EBITDA − Depreciation & amortisation = {ebitda} − {da} = {result}",
       netIncome: "Net income = EBIT + Other financial income − Interest − Tax = {ebit} + {other} − {interest} − {tax} = {result}",
       nopat: "NOPAT = EBIT × (1 − tax rate) = {ebit} × (1 − {rate}) = {result}",
@@ -762,6 +769,7 @@ export default {
         incomeStatement: "The statement of a year's results: revenue at the top, then each kind of cost, down to net income at the bottom. It covers a period (usually a year), unlike the balance sheet, which is a snapshot on one day.",
         balanceSheet: "What a company owns (assets) and how that is financed (liabilities and equity) on one day, usually the last day of the financial year. Assets always equal liabilities plus equity.",
         revenue: "Income from selling goods and services in the year, after discounts and before any costs. The starting point of every margin.",
+        otherOpIncome: "Income from operations that is not sales of goods or services: renting out space, grants, gains on selling equipment, work the company did on its own assets. It counts in operating profit (EBITDA and EBIT) but not in revenue, so margins stay a share of sales. Croatian statements show it as ostali poslovni prihodi.",
         cogs: "The direct cost of what was sold: goods bought for resale, materials and production costs. Statements that list costs by nature do not show it as one line.",
         opex: "The costs of running the business that are not cost of goods sold: staff, rent, marketing, services, administration. Here without depreciation and amortisation, which have their own line.",
         costsByNature: "A way of presenting the income statement by what was bought (materials, staff, services, depreciation) instead of by function (cost of sales, selling, administration). Croatian statements (GFI-POD) use it, so they often have no cost of goods sold.",
@@ -818,7 +826,7 @@ export default {
 
     formulas: {
       grossProfit: "Gross profit = Revenue − Cost of goods sold",
-      ebitda: "EBITDA = Gross profit − Operating expenses (excl. D&A)",
+      ebitda: "EBITDA = Gross profit + Other operating income − Operating expenses (excl. D&A)",
       ebit: "EBIT = EBITDA − Depreciation & amortisation",
       ebt: "Profit before tax = EBIT + Other financial income, net − Interest expense",
       netIncome: "Net income = Profit before tax − Income tax",

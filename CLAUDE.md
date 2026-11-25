@@ -75,7 +75,7 @@ Accepts `"1.234.567,89"` (HR), `"1,234,567.89"` (EN), `"1 234 567"`, `"(12.500)"
 
 ### 4.1 Inputs (`*` = required)
 
-Income statement (current year): revenue\*, cost of goods sold, operating expenses excl. D&A, depreciation & amortisation, other financial income net (may be negative), interest expense, income tax.
+Income statement (current year): revenue\*, other operating income (added after Phase 5), cost of goods sold, operating expenses excl. D&A, depreciation & amortisation, other financial income net (may be negative), interest expense, income tax.
 Balance sheet (year end): total assets\*, total equity\* (may be negative), current liabilities, interest-bearing debt, cash.
 Prior year (optional): total assets, total equity → used for averages.
 
@@ -85,7 +85,7 @@ Each field has a short help text including the Croatian term (e.g. "kratkoročne
 
 ```
 GrossProfit = Revenue − COGS
-EBITDA      = GrossProfit − Opex
+EBITDA      = GrossProfit + OtherOperatingIncome − Opex
 EBIT        = EBITDA − D&A
 EBT         = EBIT + OtherIncome − Interest
 NetIncome   = EBT − Tax

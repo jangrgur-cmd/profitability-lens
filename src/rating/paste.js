@@ -34,6 +34,11 @@ export const LABELS = {
       ["total revenue", "total revenues", "operating revenue", "operating income revenue", "poslovni prihodi", "ukupni poslovni prihodi"],
     ],
   },
+  otherOpIncome: {
+    sum: true,
+    tiers: [["other operating income", "other operating revenue", "other operating revenues", "own work capitalised",
+      "ostali poslovni prihodi", "prihodi na temelju upotrebe vlastitih proizvoda"], ["other income"]],
+  },
   cogs: {
     sum: true,
     cost: true,

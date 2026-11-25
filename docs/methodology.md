@@ -10,7 +10,8 @@ The code is in [`src/rating/`](../src/rating/), [`src/segments/`](../src/segment
 
 | Field | Croatian term | Required | Allowed values |
 |---|---|---|---|
-| Revenue | poslovni prihodi / prihodi od prodaje | yes | > 0 |
+| Revenue | prihodi od prodaje | yes | > 0 |
+| Other operating income | ostali poslovni prihodi | no | ≥ 0 |
 | Cost of goods sold | nabavna vrijednost prodane robe / troškovi prodanih proizvoda | no | ≥ 0 |
 | Operating expenses (excl. D&A) | poslovni rashodi bez amortizacije | no | ≥ 0 |
 | Depreciation & amortisation | amortizacija | no | ≥ 0 |
@@ -33,7 +34,7 @@ Amounts can be typed in Croatian (`1.234.567,89`) or English (`1,234,567.89`) fo
 
 ```
 GrossProfit     = Revenue − COGS                                   (only when COGS is given)
-EBITDA          = Revenue − COGS − Operating expenses              (COGS counts as 0 when blank)
+EBITDA          = Revenue + Other operating income − COGS − Operating expenses   (COGS counts as 0 when blank)
 EBIT            = EBITDA − D&A
 EBT             = EBIT + Other financial income − Interest
 NetIncome       = EBT − Tax
@@ -45,6 +46,8 @@ CapitalEmployed = Total assets − Current liabilities               (year end)
 InvestedCapital = Debt + Equity − Cash                             (year end)
 InterestCover   = EBIT ÷ Interest                                  (only when there is interest)
 ```
+
+Other operating income (rental income, grants, gains on selling equipment, own work capitalised; *ostali poslovni prihodi* in GFI-POD) is part of operating profit but not of revenue, so every margin stays a share of sales. Croatian *poslovni prihodi* is revenue plus other operating income.
 
 When COGS is blank, all costs are treated as operating expenses. Croatian statements classify costs by nature (materials, staff, depreciation…), so many users will not have a cost-of-goods-sold line.
 
@@ -209,7 +212,7 @@ The Glossary & practice page (`learn.html`, code in `src/learn/`) and the formul
   | Metalworks | Manufacturing | C | Costs by nature (no COGS, 7 of 8 ratios) and an ROE lifted by an equity multiplier of about 4 |
   | Messaging reseller | Telecom & CPaaS / messaging | D | Thin wholesale margins and interest cover below 1.5× |
 
-- **Glossary**: 54 terms in five sections. A term the engines already name (ratios, form fields, derived figures, DuPont factors) uses the engine's own language key, so the glossary cannot name it differently; a ratio's formula is its definition's formula. The other-language name is the same key read in the other language. Search ignores case and accents and matches both languages.
+- **Glossary**: 55 terms in five sections. A term the engines already name (ratios, form fields, derived figures, DuPont factors) uses the engine's own language key, so the glossary cannot name it differently; a ratio's formula is its definition's formula. The other-language name is the same key read in the other language. Search ignores case and accents and matches both languages.
 - **Cheat sheet**: built by `cheatSheet()` from `RATIOS` (names, formulas, weights), `SCORE_ANCHORS` (the score at each threshold), `GRADES`, `FLAG_LIMITS` and the General industry's thresholds; only the wording of the statement lines is text in the language files (`learn.formulas`, shared with the glossary). It prints on one A4 page (print stylesheet in `src/learn/learn.css`), so "Save as PDF" in the print dialog gives the PDF, and "Download as text" saves the same content as a .txt file made in the browser.
 
 ## 15. Path to the next grade

@@ -114,3 +114,19 @@ test("other financial income enters EBT; no interest means no interest cover", (
   assert.equal(s.ebt, 130);
   assert.equal(s.interestCover, null);
 });
+
+test("other operating income counts in EBITDA and EBIT, not in revenue (by hand)", () => {
+  // Hand case plus 50 of other operating income: EBITDA 200 + 50 = 250, EBIT 200,
+  // EBT 170, net income 146. Margins still divide by revenue 1000.
+  const s = deriveStatement({ ...HAND_CASE, otherOpIncome: 50 });
+  near(s.revenue, 1000, "revenue");
+  near(s.grossProfit, 400, "gross profit");
+  near(s.ebitda, 250, "EBITDA");
+  near(s.ebit, 200, "EBIT");
+  near(s.netIncome, 146, "net income");
+  const r = computeRatios(s);
+  near(r.grossMargin.value, 0.4, "gross margin unchanged");
+  near(r.operatingMargin.value, 0.2, "operating margin");
+  near(r.netMargin.value, 0.146, "net margin");
+  near(deriveStatement({ ...HAND_CASE, otherOpIncome: null }).ebitda, 200, "blank counts as 0");
+});

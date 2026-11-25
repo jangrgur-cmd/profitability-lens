@@ -14,7 +14,7 @@ No account, no server, no API keys. Nothing you type leaves your browser. Exampl
 2. [**A 4 % net margin that earns an A:**](https://jangrgur-cmd.github.io/profitability-lens/index.html#case=supermarket) a fictional supermarket whose assets turn fast. A ratio means nothing without its industry.
 3. [**Find the loss-making products:**](https://jangrgur-cmd.github.io/profitability-lens/segments.html) the same bakery split into six product lines. Two of them lose money, and the best one earns more than half the profit.
 4. [**Which routes lose money:**](https://jangrgur-cmd.github.io/profitability-lens/modules/messaging/#tab=routes) a case study of a business-messaging provider across five countries and four channels.
-5. [**Guess the grade:**](https://jangrgur-cmd.github.io/profitability-lens/learn.html) five fictional companies to practise on, a glossary of 54 terms and a [one-page formula cheat sheet](https://jangrgur-cmd.github.io/profitability-lens/cheatsheet.html).
+5. [**Guess the grade:**](https://jangrgur-cmd.github.io/profitability-lens/learn.html) five fictional companies to practise on, a glossary of 55 terms and a [one-page formula cheat sheet](https://jangrgur-cmd.github.io/profitability-lens/cheatsheet.html).
 
 ## Why I built it
 
@@ -26,7 +26,7 @@ This project does the whole loop in the browser. It works out the ratios, compar
 
 ### Company rating ([index.html](index.html))
 
-- **Inputs:** revenue, cost of goods sold, operating expenses, depreciation, other financial income, interest and tax; total assets, equity, current liabilities, debt and cash; optionally the prior year. Type them in English or Croatian number format (`1,234.56` or `1.234,56`), or **paste them from Excel**. Statement lines are recognised in English and in Croatian GFI-POD wording, including costs by nature.
+- **Inputs:** revenue, other operating income, cost of goods sold, operating expenses, depreciation, other financial income, interest and tax; total assets, equity, current liabilities, debt and cash; optionally the prior year. Type them in English or Croatian number format (`1,234.56` or `1.234,56`), or **paste them from Excel**. Statement lines are recognised in English and in Croatian GFI-POD wording, including costs by nature.
 - **Grade:** A–E with a 0–100 score, **eight ratios** (gross, EBITDA, operating and net margin, ROA, ROE, ROCE, ROIC), each with its value, a benchmark band and a track showing where it sits between the thresholds for seven industries.
 - **DuPont breakdown** of ROE into net margin × asset turnover × equity multiplier.
 - **Red flags:** net loss, negative equity, operating loss, low interest cover, ROE inflated by leverage, heavy depreciation, thin data.
