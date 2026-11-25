@@ -27,6 +27,7 @@
 
     <div class="learn-tabs" role="tablist" data-i18n-attr="aria-label: learn.page.tabsLabel">
       <button type="button" role="tab" class="learn-tab" id="tab-practice" aria-controls="panel-practice" data-panel="practice" data-i18n="learn.page.tabPractice"></button>
+      <button type="button" role="tab" class="learn-tab" id="tab-fix" aria-controls="panel-fix" data-panel="fix" data-i18n="learn.page.tabFix"></button>
       <button type="button" role="tab" class="learn-tab" id="tab-glossary" aria-controls="panel-glossary" data-panel="glossary" data-i18n="learn.page.tabGlossary"></button>
     </div>
 
@@ -43,6 +44,21 @@
       </div>
       <nav class="quiz-cases" id="quiz-cases" data-i18n-attr="aria-label: learn.quiz.casesLabel"></nav>
       <div id="quiz-case"></div>
+    </section>
+
+    <section class="learn-panel" id="panel-fix" role="tabpanel" aria-labelledby="tab-fix" tabindex="-1" hidden>
+      <div class="quiz-head">
+        <div>
+          <h2 class="block-title" data-i18n="learn.fix.title"></h2>
+          <p class="quiz-intro" data-i18n="learn.fix.intro"></p>
+        </div>
+        <div class="quiz-score">
+          <p id="fix-progress" class="quiz-score__text"></p>
+          <button type="button" class="button-quiet" id="fix-reset" data-i18n="learn.fix.reset"></button>
+        </div>
+      </div>
+      <nav class="quiz-cases" id="fix-list" data-i18n-attr="aria-label: learn.fix.listLabel"></nav>
+      <div id="fix-challenge"></div>
     </section>
 
     <section class="learn-panel" id="panel-glossary" role="tabpanel" aria-labelledby="tab-glossary" tabindex="-1" hidden>

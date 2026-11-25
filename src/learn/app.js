@@ -3,9 +3,10 @@
 // quiz.js, glossary.js and the rating engine), every text from the language
 // files.
 //
-// Two tabs: "Guess the grade" and "Glossary". The URL hash picks the tab:
-// #glossary or #term-<id> (a glossary entry) open the glossary, anything else
-// the practice cases. Guesses are kept in localStorage only.
+// Three tabs: "Guess the grade", "Fix the company" (view-fix.js) and
+// "Glossary". The URL hash picks the tab: #fix opens the challenges,
+// #glossary or #term-<id> (a glossary entry) the glossary, anything else the
+// practice cases. Guesses and solved challenges are kept in localStorage only.
 
 import { CASES, caseHash } from "./cases.js";
 import { rateCase, judgeGuess, quizScore, cleanAnswers } from "./quiz.js";
@@ -21,6 +22,7 @@ import { h, replaceChildren } from "../shared/dom.js";
 import { readJson, writeJson } from "../shared/prefs.js";
 import { bandPill, severityPill, GRADE_TONES } from "../shared/status.js";
 import { mountSiteHeader } from "../shared/site-header.js";
+import { setupFix } from "./view-fix.js";
 
 const $ = (id) => document.getElementById(id);
 const STORAGE_KEY = "learn/quiz";
@@ -46,7 +48,7 @@ const announce = (text) => { $("announcer").textContent = text; };
 // Tabs
 // ---------------------------------------------------------------------------
 
-const TABS = ["practice", "glossary"];
+const TABS = ["practice", "fix", "glossary"];
 
 /** Shows one tab; `focusPanel` moves focus to it (after a click, not on load). */
 function showTab(id, { focusPanel = false } = {}) {
@@ -77,7 +79,7 @@ function setupTabs() {
   }
 }
 
-/** Follows the hash: #glossary, #term-<id> (scrolls to the entry) or the practice tab. */
+/** Follows the hash: #fix, #glossary, #term-<id> (scrolls to the entry) or the practice tab. */
 function followHash() {
   const hash = decodeURIComponent(location.hash.replace(/^#/, ""));
   if (hash.startsWith("term-") && GLOSSARY_BY_ID[hash.slice(5)]) {
@@ -95,7 +97,7 @@ function followHash() {
     target?.focus({ preventScroll: true });
     return;
   }
-  showTab(hash === "glossary" ? "glossary" : "practice");
+  showTab(hash === "glossary" || hash === "fix" ? hash : "practice");
 }
 
 // ---------------------------------------------------------------------------
@@ -327,6 +329,14 @@ function setupGlossary() {
 mountSiteHeader($("site-header"), { active: "learn", root: "./" });
 setupTabs();
 setupQuiz();
+setupFix({
+  announce,
+  onOpenCase: (caseId) => {
+    history.replaceState(null, "", "#practice");
+    showTab("practice");
+    showCase(CASES.findIndex((c) => c.id === caseId), { focus: true });
+  },
+});
 setupGlossary();
 followHash();
 window.addEventListener("hashchange", followHash);

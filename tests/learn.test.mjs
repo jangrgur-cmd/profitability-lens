@@ -13,6 +13,8 @@ import { INDUSTRY_BY_ID } from "../src/rating/benchmarks.js";
 import { validateValues } from "../src/rating/fields.js";
 import { SCORE_ANCHORS, scoreAgainstThresholds } from "../src/shared/margin.js";
 import { t, textIn, useLanguage } from "../src/shared/i18n.js";
+import { applyWhatIf as applyWhatIfForTest, NO_CHANGE as NO_LEVERS } from "../src/rating/whatif.js";
+import { CHALLENGES, CHALLENGE_BY_ID, tryChallenge, challengeSolution, challengeLevers, cleanSolved } from "../src/learn/challenges.js";
 
 afterEach(() => useLanguage("en"));
 
@@ -247,3 +249,51 @@ test("glossary search keeps '&' and '%' inside a word: 'D&A' and '20%' are preci
   useLanguage("hr");
   assert.ok(searchGlossary("20%").some((e) => e.id === "topShare"), "Croatian '20 %' is found by '20%'");
 });
+
+// ---------------------------------------------------------------------------
+// Fix the company
+// ---------------------------------------------------------------------------
+
+test("every challenge starts below its goal and can be solved with its own levers", () => {
+  assert.equal(CHALLENGES.length, 5);
+  for (const ch of CHALLENGES) {
+    const start = tryChallenge(ch);
+    assert.equal(start.reached, false, `${ch.id} already reaches ${ch.goal.letter}`);
+    const solution = challengeSolution(ch);
+    assert.ok(solution, `${ch.id}: one allowed lever should be enough`);
+    assert.ok(ch.levers.includes(solution.id), `${ch.id}: solution uses an allowed lever`);
+    assert.equal(tryChallenge(ch, { [solution.id]: solution.change }).reached, true, `${ch.id}: the solution reaches the goal`);
+    assert.equal(tryChallenge(ch, { [solution.id]: solution.change }).rating.score, solution.rating.score, `${ch.id}: same rating`);
+    for (const lever of challengeLevers(ch)) {
+      assert.ok(!(lever.id in ch.fixed), `${ch.id}: a fixed lever cannot also be moved`);
+      if (lever.needs) assert.notEqual(ch.practiceCase.values[lever.needs], null, `${ch.id}: ${lever.id} needs ${lever.needs}`);
+    }
+    assert.ok(ch.title.length > 5 && ch.task.length > 40 && ch.lesson.length > 80, `${ch.id}: texts`);
+  }
+});
+
+test("a challenge ignores levers it does not allow and always applies its fixed ones", () => {
+  const war = CHALLENGE_BY_ID.priceWar;
+  assert.deepEqual(war.fixed, { price: -3 });
+  const supermarket = rateCase(CASE_BY_ID.supermarket);
+  assert.equal(supermarket.grade.letter, "A");
+  assert.equal(tryChallenge(war).rating.grade.letter, "D", "prices −3 % alone drop the A to D");
+  assert.equal(tryChallenge(war, { price: 10 }).rating.score, tryChallenge(war).rating.score, "the price lever is not the student's");
+  assert.equal(tryChallenge(CHALLENGE_BY_ID.growth, { price: 20 }).reached, false, "growth allows volume only");
+  assert.deepEqual(cleanSolved(["growth", "nope", 3, "priceWar"]), ["growth", "priceWar"]);
+  assert.deepEqual(cleanSolved(null), []);
+});
+
+test("the stories' numbers hold: thin margins, cost shares and the bistro needs a combination or a big move", () => {
+  const reseller = CHALLENGE_BY_ID.noPriceRise.practiceCase.values;
+  assert.equal((reseller.revenue - reseller.cogs) / reseller.revenue, 0.15, "reseller gross margin 15 %");
+  assert.equal(rate(applyWhatIfWithDefaults(reseller, { price: 2 }), "telecom").grade.letter, "B", "a 2 % price rise would give B");
+  const metal = CHALLENGE_BY_ID.overheads.practiceCase.values;
+  assert.equal(metal.opex / metal.revenue, 0.9, "metalworks: opex is 90 % of revenue");
+  assert.equal(challengeSolution(CHALLENGE_BY_ID.overheads).change, -3);
+  assert.equal(challengeSolution(CHALLENGE_BY_ID.turnaround).change, 10, "bistro: prices +10 % alone");
+  assert.equal(tryChallenge(CHALLENGE_BY_ID.turnaround, { volume: 5, price: 5, opex: -5 }).reached, true, "or smaller moves together");
+});
+
+/** applyWhatIf with every other lever at zero. */
+function applyWhatIfWithDefaults(values, levers) { return applyWhatIfForTest(values, { ...NO_LEVERS, ...levers }); }

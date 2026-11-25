@@ -14,7 +14,7 @@ No account, no server, no API keys. Nothing you type leaves your browser. Exampl
 2. [**A 4 % net margin that earns an A:**](https://jangrgur-cmd.github.io/profitability-lens/index.html#case=supermarket) a fictional supermarket whose assets turn fast. A ratio means nothing without its industry.
 3. [**Find the loss-making products:**](https://jangrgur-cmd.github.io/profitability-lens/segments.html) the same bakery split into six product lines. Two of them lose money, and the best one earns more than half the profit.
 4. [**Which routes lose money:**](https://jangrgur-cmd.github.io/profitability-lens/modules/messaging/#tab=routes) a case study of a business-messaging provider across five countries and four channels.
-5. [**Guess the grade:**](https://jangrgur-cmd.github.io/profitability-lens/learn.html) five fictional companies to practise on, a glossary of 55 terms and a [one-page formula cheat sheet](https://jangrgur-cmd.github.io/profitability-lens/cheatsheet.html).
+5. [**Guess the grade**](https://jangrgur-cmd.github.io/profitability-lens/learn.html) **and [fix the company](https://jangrgur-cmd.github.io/profitability-lens/learn.html#fix):** five fictional companies to practise on, five challenges to lift their grade with the What if… levers, a glossary of 55 terms and a [one-page formula cheat sheet](https://jangrgur-cmd.github.io/profitability-lens/cheatsheet.html).
 
 ## Why I built it
 
@@ -46,7 +46,7 @@ A worked segment analysis of a fictional business-messaging (CPaaS) provider: re
 
 ### Learn mode, glossary and practice
 
-Learn mode (switch in the header) adds "Show the math" to every ratio (formula → your numbers → result), what each ratio tells you and how to improve it, field help, a plain-language DuPont sentence, and how segment margins add up to the company margin. The [Glossary & practice](learn.html) page has "Guess the grade" with five fictional companies and a searchable glossary in both languages. The [cheat sheet](cheatsheet.html) prints on one A4 page.
+Learn mode (switch in the header) adds "Show the math" to every ratio (formula → your numbers → result), what each ratio tells you and how to improve it, field help, a plain-language DuPont sentence, and how segment margins add up to the company margin. The [Glossary & practice](learn.html) page has "Guess the grade" with five fictional companies, "Fix the company" (reach a goal grade with a limited set of levers, then read what it shows) and a searchable glossary in both languages. The [cheat sheet](cheatsheet.html) prints on one A4 page.
 
 <p>
   <img src="docs/screenshots/learn-mode-dark.png" alt="Learn mode in dark theme: gross margin with its benchmark track and Show the math" width="560">

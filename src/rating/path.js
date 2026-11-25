@@ -63,12 +63,15 @@ export function pointsByRatio(rating) {
  * @param {Record<string, number|null>} values validated input values
  * @param {string} industryId
  * @param {{min: number}} target the grade to reach
+ * @param {{base?: Record<string, number>, only?: string[]|null}} [options]
+ *   base: lever positions that stay as they are (a "Fix the company" challenge
+ *   can fix one, e.g. prices −3 %); only: the levers to try (default: all)
  * @returns {{id: string, label: string, status: "ok"|"out_of_range"|"needs_input",
  *            change: number|null, rating: object|null, min: number, max: number}[]}
  *   change in percent (−4 for −4 %), with the full rating it gives
  */
-export function leverPaths(values, industryId, target) {
-  return LEVERS.map((lever) => {
+export function leverPaths(values, industryId, target, { base: start = NO_CHANGE, only = null } = {}) {
+  return LEVERS.filter((lever) => !only || only.includes(lever.id)).map((lever) => {
     const base = { id: lever.id, label: lever.label, min: lever.min, max: lever.max, change: null, rating: null };
     if (lever.needs !== null && (values[lever.needs] === null || values[lever.needs] === undefined)) {
       return { ...base, status: "needs_input" };
@@ -77,7 +80,7 @@ export function leverPaths(values, industryId, target) {
     for (let step = lever.step; step <= limit; step += lever.step) {
       for (const change of [step, -step]) {
         if (change > lever.max || change < lever.min) continue;
-        const rating = rate(applyWhatIf(values, { ...NO_CHANGE, [lever.id]: change }), industryId);
+        const rating = rate(applyWhatIf(values, { ...NO_CHANGE, ...start, [lever.id]: change }), industryId);
         if (rating.score >= target.min) return { ...base, status: "ok", change, rating };
       }
     }
