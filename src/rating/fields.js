@@ -2,104 +2,65 @@
 //
 // One list drives the form, validation and JSON import/export, so a field is
 // defined in exactly one place. Values are plain numbers in the user's
-// currency; a blank optional field is null.
+// currency; a blank optional field is null. Labels, help texts and messages
+// live in the language files (src/shared/lang/, under rating.fields).
 
 import { parseAmount } from "../shared/parse.js";
+import { t } from "../shared/i18n.js";
 
 /**
  * @typedef {object} FieldDef
  * @property {string} id key in the values object and in exported JSON
- * @property {string} label form label
  * @property {"income"|"balance"|"prior"} group form section
  * @property {boolean} required
  * @property {"positive"|"nonNegative"|"any"} sign which values are allowed
- * @property {string} hr the Croatian term on financial statements
+ * @property {string} label form label, in the interface language
  * @property {string} help one or two sentences for the form
+ * @property {string} altTerm the same item in the other language: the Croatian
+ *   term on financial statements in the English interface, the English term in
+ *   the Croatian one (its language is t("rating.altLang"))
  */
+
+/**
+ * Builds a field definition. Texts are getters, so they are read in the
+ * current interface language each time (see src/shared/i18n.js).
+ * @returns {FieldDef}
+ */
+function field(id, group, required, sign) {
+  return {
+    id, group, required, sign,
+    get label() { return t(`rating.fields.${id}.label`); },
+    get help() { return t(`rating.fields.${id}.help`); },
+    get altTerm() { return t(`rating.fields.${id}.alt`); },
+  };
+}
 
 /** @type {FieldDef[]} */
 export const FIELDS = [
-  {
-    id: "revenue", label: "Revenue", group: "income", required: true, sign: "positive",
-    hr: "poslovni prihodi / prihodi od prodaje",
-    help: "Sales of goods and services for the year, excluding VAT.",
-  },
-  {
-    id: "cogs", label: "Cost of goods sold", group: "income", required: false, sign: "nonNegative",
-    hr: "nabavna vrijednost prodane robe / troškovi prodanih proizvoda",
-    help: "Direct cost of what was sold. Leave blank if your statement lists costs by nature (materials, staff…): gross margin is then skipped and all costs go under operating expenses.",
-  },
-  {
-    id: "opex", label: "Operating expenses (excl. D&A)", group: "income", required: false, sign: "nonNegative",
-    hr: "poslovni rashodi bez amortizacije",
-    help: "All other operating costs: staff, materials, services, rent, marketing. Do not include depreciation and amortisation.",
-  },
-  {
-    id: "da", label: "Depreciation & amortisation", group: "income", required: false, sign: "nonNegative",
-    hr: "amortizacija",
-    help: "The year's write-down of fixed and intangible assets.",
-  },
-  {
-    id: "otherIncome", label: "Other financial income, net", group: "income", required: false, sign: "any",
-    hr: "ostali financijski prihodi umanjeni za financijske rashode (bez kamata)",
-    help: "Financial income minus financial costs other than interest, e.g. exchange-rate gains and losses. May be negative.",
-  },
-  {
-    id: "interest", label: "Interest expense", group: "income", required: false, sign: "nonNegative",
-    hr: "rashodi s osnove kamata",
-    help: "Interest paid or accrued on loans, bonds and leases.",
-  },
-  {
-    id: "tax", label: "Income tax", group: "income", required: false, sign: "any",
-    hr: "porez na dobit",
-    help: "Corporate income tax for the year. Negative if it is a tax credit.",
-  },
-  {
-    id: "assets", label: "Total assets", group: "balance", required: true, sign: "positive",
-    hr: "ukupna aktiva",
-    help: "Everything the company owns at year end; equals total liabilities plus equity.",
-  },
-  {
-    id: "equity", label: "Total equity", group: "balance", required: true, sign: "any",
-    hr: "kapital i rezerve",
-    help: "Owners' capital at year end: share capital, reserves and retained earnings. Negative if accumulated losses exceed capital.",
-  },
-  {
-    id: "currentLiabilities", label: "Current liabilities", group: "balance", required: false, sign: "nonNegative",
-    hr: "kratkoročne obveze",
-    help: "Obligations due within one year: suppliers, short-term loans, taxes, wages. Needed for ROCE.",
-  },
-  {
-    id: "debt", label: "Interest-bearing debt", group: "balance", required: false, sign: "nonNegative",
-    hr: "obveze po kreditima i zajmovima (kamatonosne obveze)",
-    help: "Bank loans, bonds and leases, short and long term. Enter 0 if there are none. Needed for ROIC.",
-  },
-  {
-    id: "cash", label: "Cash", group: "balance", required: false, sign: "nonNegative",
-    hr: "novac u banci i blagajni",
-    help: "Cash and cash equivalents at year end. Used for ROIC; treated as 0 if blank.",
-  },
-  {
-    id: "priorAssets", label: "Total assets, prior year", group: "prior", required: false, sign: "positive",
-    hr: "ukupna aktiva, prethodna godina",
-    help: "Optional. Used to average assets over the year for ROA.",
-  },
-  {
-    id: "priorEquity", label: "Total equity, prior year", group: "prior", required: false, sign: "any",
-    hr: "kapital i rezerve, prethodna godina",
-    help: "Optional. Used to average equity over the year for ROE.",
-  },
+  field("revenue", "income", true, "positive"),
+  field("cogs", "income", false, "nonNegative"),
+  field("opex", "income", false, "nonNegative"),
+  field("da", "income", false, "nonNegative"),
+  field("otherIncome", "income", false, "any"),
+  field("interest", "income", false, "nonNegative"),
+  field("tax", "income", false, "any"),
+  field("assets", "balance", true, "positive"),
+  field("equity", "balance", true, "any"),
+  field("currentLiabilities", "balance", false, "nonNegative"),
+  field("debt", "balance", false, "nonNegative"),
+  field("cash", "balance", false, "nonNegative"),
+  field("priorAssets", "prior", false, "positive"),
+  field("priorEquity", "prior", false, "any"),
 ];
 
 /** Field definitions by id. */
 export const FIELD_BY_ID = Object.fromEntries(FIELDS.map((f) => [f.id, f]));
 
 /** Form sections in display order. */
-export const GROUPS = [
-  { id: "income", label: "Income statement (current year)" },
-  { id: "balance", label: "Balance sheet (year end)" },
-  { id: "prior", label: "Prior year (optional)" },
-];
+export const GROUPS = ["income", "balance", "prior"].map((id) => ({
+  id,
+  get label() { return t(`rating.groups.${id}`); },
+}));
 
 /** Version of the exported JSON format. Bump it when the format changes. */
 export const EXPORT_VERSION = 1;
@@ -115,13 +76,13 @@ export function validateValues(values) {
   for (const field of FIELDS) {
     const value = values[field.id] ?? null;
     if (value === null) {
-      if (field.required) errors[field.id] = `${field.label} is required.`;
+      if (field.required) errors[field.id] = t("rating.validation.required", { label: field.label });
     } else if (!Number.isFinite(value)) {
-      errors[field.id] = `${field.label} must be a number.`;
+      errors[field.id] = t("rating.validation.notNumber", { label: field.label });
     } else if (field.sign === "positive" && value <= 0) {
-      errors[field.id] = `${field.label} must be greater than zero.`;
+      errors[field.id] = t("rating.validation.positive", { label: field.label });
     } else if (field.sign === "nonNegative" && value < 0) {
-      errors[field.id] = `${field.label} cannot be negative.`;
+      errors[field.id] = t("rating.validation.nonNegative", { label: field.label });
     }
   }
   return errors;
@@ -139,7 +100,7 @@ export function parseForm(raw) {
   for (const field of FIELDS) {
     const { value, error } = parseAmount(raw[field.id]);
     values[field.id] = value;
-    if (error) parseErrors[field.id] = `${field.label}: ${error}`;
+    if (error) parseErrors[field.id] = t("rating.validation.parse", { label: field.label, error });
   }
   return { values, errors: { ...validateValues(values), ...parseErrors } };
 }
@@ -168,13 +129,13 @@ export function importJson(text) {
   try {
     data = JSON.parse(text);
   } catch {
-    throw new Error("This file is not valid JSON.");
+    throw new Error(t("rating.importErrors.notJson"));
   }
   if (data?.kind !== EXPORT_KIND || typeof data.inputs !== "object" || data.inputs === null) {
-    throw new Error("This file is not a Profitability Lens company rating export.");
+    throw new Error(t("rating.importErrors.notExport"));
   }
   if (data.version > EXPORT_VERSION) {
-    throw new Error(`This file was made by a newer version (format ${data.version}); this page reads format ${EXPORT_VERSION}.`);
+    throw new Error(t("rating.importErrors.newer", { found: data.version, supported: EXPORT_VERSION }));
   }
   return {
     ...parseForm(data.inputs),

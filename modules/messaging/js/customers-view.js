@@ -3,8 +3,9 @@
 import { customerProfitability, whaleCurve, routeProfitability } from "./calc.js";
 import { createSortableTable } from "./tables.js";
 import { toCsv, downloadCsv } from "./export.js";
-import { createWhaleChart, updateWhaleChart } from "./charts.js";
+import { createWhaleChart, updateWhaleChart, chartOn } from "./charts.js";
 import { formatEur, formatPct, formatCount, toneClass } from "../../../src/shared/format.js";
+import { t } from "../../../src/shared/i18n.js";
 
 const $ = (id) => document.getElementById(id);
 
@@ -17,12 +18,11 @@ function el(tag, className, text) {
 }
 
 export function createCustomersView(model) {
-  const { customersById, countryNames } = model;
-  const nameOf = (id) => customersById[id]?.name ?? id;
+  const { customersById, countryNames, customerNames } = model;
+  const nameOf = (id) => customerNames[id] ?? id;
   let selectedId = null;
   let currentRows = [];
   let fileTag = "all";
-  let chart = null;
 
   /** Shows a customer in the detail panel above the table and brings the panel into view. */
   const selectCustomer = (id) => {
@@ -36,7 +36,7 @@ export function createCustomersView(model) {
 
   const columns = [
     {
-      key: "name", label: "Customer", type: "text",
+      key: "name", label: t("seg.customers.colCustomer"), type: "text",
       value: (c) => nameOf(c.customer_id),
       cell: (c) => {
         const button = el("button", "row-button", nameOf(c.customer_id));
@@ -46,16 +46,16 @@ export function createCustomersView(model) {
         return button;
       },
     },
-    { key: "industry", label: "Industry", type: "text", value: (c) => customersById[c.customer_id].industry },
-    { key: "tier", label: "Size", type: "text", value: (c) => customersById[c.customer_id].size_tier },
-    { key: "discount", label: "Discount", type: "number", format: (v) => formatPct(v) },
-    { key: "revenue", label: "Revenue", type: "number", format: formatEur },
-    { key: "grossProfit", label: "Gross profit", type: "number", format: formatEur },
+    { key: "industry", label: t("seg.customers.colIndustry"), type: "text", value: (c) => model.industryName(customersById[c.customer_id].industry) },
+    { key: "tier", label: t("seg.customers.colSize"), type: "text", value: (c) => model.sizeName(customersById[c.customer_id].size_tier) },
+    { key: "discount", label: t("seg.customers.colDiscount"), type: "number", format: (v) => formatPct(v) },
+    { key: "revenue", label: t("seg.customers.colRevenue"), type: "number", format: formatEur },
+    { key: "grossProfit", label: t("seg.customers.colGrossProfit"), type: "number", format: formatEur },
     {
-      key: "grossMarginPct", label: "Margin", type: "number",
+      key: "grossMarginPct", label: t("seg.customers.colMargin"), type: "number",
       cell: (c) => {
         const span = el("span", toneClass(c.grossMarginPct), formatPct(c.grossMarginPct));
-        if (c.lossMaking) span.append(el("span", "loss-badge", "▼ Loss"));
+        if (c.lossMaking) span.append(el("span", "loss-badge", t("seg.customers.lossBadge")));
         return span;
       },
     },
@@ -78,7 +78,7 @@ export function createCustomersView(model) {
 
   const table = createSortableTable($("customers-table"), {
     columns,
-    caption: "Customers ranked by gross profit",
+    caption: t("seg.customers.tableCaption"),
     sort: { key: "grossProfit", direction: "desc" },
     rowClass: (c) => (c.lossMaking ? "is-loss" : ""),
     isSelected: (c) => c.customer_id === selectedId,
@@ -93,7 +93,7 @@ export function createCustomersView(model) {
   function renderSummary(customers, curve) {
     const box = $("customers-summary");
     if (customers.length === 0) {
-      box.textContent = "No customers have traffic with these filters.";
+      box.textContent = t("seg.customers.none");
       return;
     }
     const losers = customers.filter((c) => c.lossMaking);
@@ -101,15 +101,15 @@ export function createCustomersView(model) {
     const topCount = Math.max(1, Math.round(n * 0.2));
     const topShare = curve.points[topCount - 1]?.profitSharePct;
     let concentration = "";
-    if (n === 1) concentration = `Only one customer has traffic in this selection: ${nameOf(customers[0].customer_id)}. `;
+    if (n === 1) concentration = t("seg.customers.onlyOne", { name: nameOf(customers[0].customer_id) });
     else if (topShare !== null && topShare !== undefined) {
       concentration = topCount === 1
-        ? `The most profitable of ${n} customers earns ${formatPct(topShare)} of gross profit. `
-        : `The top ${topCount} of ${n} customers earn ${formatPct(topShare)} of gross profit. `;
+        ? t("seg.customers.topOne", { count: n, share: formatPct(topShare) })
+        : t("seg.customers.top", { top: topCount, count: n, share: formatPct(topShare) });
     }
     const loss = losers.length === 0
-      ? "No customer loses money in this selection."
-      : `${losers.length} ${losers.length === 1 ? "customer loses" : "customers lose"} money: ${losers.map((c) => nameOf(c.customer_id)).join(", ")}.`;
+      ? t("seg.customers.noLosers")
+      : t("seg.customers.losers", { count: losers.length, names: losers.map((c) => nameOf(c.customer_id)).join(t("common.listSeparator")) });
     box.textContent = concentration + loss;
   }
 
@@ -117,18 +117,21 @@ export function createCustomersView(model) {
   function renderDetail(customers) {
     const panel = $("customer-detail");
     if (!selectedId) {
-      panel.replaceChildren(el("p", "detail-empty", "Select a customer in the table to see where its revenue and profit come from."));
+      panel.replaceChildren(el("p", "detail-empty", t("seg.customers.selectPrompt")));
       return;
     }
     const customer = customersById[selectedId];
     const totals = customers.find((c) => c.customer_id === selectedId);
-    const heading = el("h3", "", customer.name);
+    const heading = el("h3", "", nameOf(selectedId));
     const discount = model.ctx.discountByCustomer[selectedId];
-    const discountText = discount > 0 ? `${formatPct(discount)} volume discount` : "no volume discount";
-    const meta = el("p", "detail-meta", `${customer.industry} · ${countryNames[customer.home_country]} · ${customer.size_tier} · ${discountText}`);
+    const discountText = discount > 0 ? t("seg.customers.discount", { share: formatPct(discount) }) : t("seg.customers.noDiscount");
+    const meta = el("p", "detail-meta",
+      [model.industryName(customer.industry), countryNames[customer.home_country], model.sizeName(customer.size_tier), discountText].join(" · "));
+    // The volume note is data (English in every language, like the assumption notes).
     const note = el("p", "detail-note", customer.volume_note);
+    note.lang = "en";
     if (!totals) {
-      panel.replaceChildren(heading, meta, el("p", "detail-empty", "This customer has no traffic with the current filters."));
+      panel.replaceChildren(heading, meta, el("p", "detail-empty", t("seg.customers.noTraffic")));
       return;
     }
 
@@ -138,17 +141,17 @@ export function createCustomersView(model) {
       wrap.append(el("dt", "", label), el("dd", tone, value));
       kpis.append(wrap);
     };
-    add("Revenue", formatEur(totals.revenue));
-    add("Gross profit", formatEur(totals.grossProfit), toneClass(totals.grossProfit));
-    add("Margin", `${formatPct(totals.grossMarginPct)}${totals.lossMaking ? " ▼ loss" : ""}`, toneClass(totals.grossMarginPct));
-    add("Messages", formatCount(totals.volume));
+    add(t("seg.customers.revenue"), formatEur(totals.revenue));
+    add(t("seg.customers.grossProfit"), formatEur(totals.grossProfit), toneClass(totals.grossProfit));
+    add(t("seg.customers.margin"), `${formatPct(totals.grossMarginPct)}${totals.lossMaking ? t("seg.customers.lossSuffix") : ""}`, toneClass(totals.grossMarginPct));
+    add(t("seg.customers.messages"), formatCount(totals.volume));
 
     const routes = routeProfitability(currentRows.filter((r) => r.customer_id === selectedId), model.ctx)
       .sort((a, b) => b.revenue - a.revenue);
     const breakdown = el("table");
-    breakdown.append(el("caption", "", "By route"));
+    breakdown.append(el("caption", "", t("seg.customers.byRoute")));
     const head = el("tr");
-    for (const [label, num] of [["Route", false], ["Revenue", true], ["Margin", true]]) {
+    for (const [label, num] of [[t("seg.customers.route"), false], [t("seg.customers.revenue"), true], [t("seg.customers.margin"), true]]) {
       const th = el("th", num ? "num" : "", label);
       th.scope = "col";
       head.append(th);
@@ -156,7 +159,7 @@ export function createCustomersView(model) {
     breakdown.append(head);
     for (const r of routes) {
       const tr = el("tr");
-      const th = el("th", "", `${countryNames[r.country]} ${r.channel}`);
+      const th = el("th", "", t("seg.routes.routeName", { country: countryNames[r.country], channel: model.channelName(r.channel) }));
       th.scope = "row";
       tr.append(th, el("td", "num", formatEur(r.revenue)), el("td", `num ${toneClass(r.grossMarginPct)}`.trim(), `${r.lossMaking ? "▼ " : ""}${formatPct(r.grossMarginPct)}`));
       breakdown.append(tr);
@@ -173,7 +176,7 @@ export function createCustomersView(model) {
     fileTag = tag;
     const customers = customerProfitability(rows, model.ctx);
     const curve = whaleCurve(customers);
-    if (!chart) chart = createWhaleChart($("whale-chart"));
+    const chart = chartOn($("whale-chart")) ?? createWhaleChart($("whale-chart"));
     $("whale-note").textContent = updateWhaleChart(chart, curve, nameOf);
     renderSummary(customers, curve);
     table.render(customers);

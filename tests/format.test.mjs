@@ -5,7 +5,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   MINUS, formatEur, formatSignedEur, formatPct, formatSignedPct, formatPp,
-  formatMultiple, formatCount, formatInteger, toneClass,
+  formatMultiple, formatCount, formatInteger, formatEurFull, toneClass,
 } from "../src/shared/format.js";
 
 test("formatPct takes an optional number of decimals", () => {
@@ -51,4 +51,12 @@ test("toneClass colours by sign, reversed when higher is worse", () => {
   assert.equal(toneClass(0.1, false), "neg");
   assert.equal(toneClass(0), "");
   assert.equal(toneClass(null), "");
+});
+
+test("formatEurFull shows whole euros with thousands separators", () => {
+  assert.equal(formatEurFull(1234567.4), "€1,234,567");
+  assert.equal(formatEurFull(-1500), `${MINUS}€1,500`);
+  assert.equal(formatEurFull(0), "€0");
+  assert.equal(formatEurFull(-0.4), "€0", "no minus sign on an amount that rounds to zero");
+  assert.equal(formatEurFull(null), "n/a");
 });

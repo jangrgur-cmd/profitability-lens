@@ -1,0 +1,381 @@
+/* theme.css: the one design shared by both modules.
+   Design tokens (light and dark), base typography, the site header with module
+   navigation and the Learn mode and theme switches, buttons, status pills and
+   the Learn mode visibility rule. Each module adds its own stylesheet after this.
+
+   Cool, crisp look. One accent colour (cobalt) for interface state only.
+   Profit, loss and benchmark bands have their own colours and are always paired
+   with a word or symbol, never colour alone.
+
+   Light and dark: every colour token is light-dark(light, dark). The page
+   follows the system setting; the theme switch sets data-theme on <html>,
+   which fixes color-scheme and so picks one side of every token. */
+
+:root {
+  color-scheme: light dark;
+
+  --page: light-dark(#f3f5f9, #0e131b);
+  --surface: light-dark(#ffffff, #161d28);
+  --surface-2: light-dark(#f8fafc, #1b2330);
+  --ink: light-dark(#121a2b, #e7ecf3);
+  --ink-muted: light-dark(#4a5568, #aab5c5);
+  --ink-faint: light-dark(#6b7686, #8a95a6);
+  --rule: light-dark(#e3e8ef, #283244);
+  --rule-strong: light-dark(#c9d1dd, #3a4659);
+  --accent: light-dark(#2f54eb, #7d9bff);
+  --accent-strong: light-dark(#2340c4, #a9bcff);
+  --accent-soft: light-dark(#e9eefe, #1e2a4d);
+  --on-accent: light-dark(#ffffff, #0e131b);
+  --profit: light-dark(#0b8457, #3cc994);
+  --loss: light-dark(#d9363e, #ff7378);
+  --revenue: light-dark(#b4c0d4, #4b5b78);
+
+  /* Messaging channels (charts). */
+  --ch-sms: light-dark(#24418f, #6f90ec);
+  --ch-whatsapp: light-dark(#f0a01a, #f0a01a);
+  --ch-viber: light-dark(#8b5cf6, #a78bfa);
+  --ch-voice: light-dark(#94a3b8, #8592a6);
+
+  /* Benchmark bands, worst to best, and flag severities. */
+  --band-poor: light-dark(#c92a2a, #ff6b6b);
+  --band-weak: light-dark(#d9480f, #ff922b);
+  --band-fair: light-dark(#b07d05, #f5c542);
+  --band-good: light-dark(#2b8a3e, #69db7c);
+  --band-excellent: light-dark(#087f5b, #38d9a9);
+  --sev-critical: var(--band-poor);
+  --sev-serious: var(--band-weak);
+  --sev-warning: var(--band-fair);
+  --sev-info: var(--accent);
+
+  --font-sans: "Segoe UI Variable Text", -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", system-ui, "Helvetica Neue", Arial, sans-serif;
+  --font-display: "Segoe UI Variable Display", -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", system-ui, "Helvetica Neue", Arial, sans-serif;
+
+  --step--1: 0.875rem;
+  --step-0: 1rem;
+  --step-1: 1.25rem;
+  --step-2: 1.75rem;
+  --step-3: 2.25rem;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 1px 3px rgba(16, 24, 40, 0.04);
+
+  --wrap: 75rem;
+}
+
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --shadow: 0 1px 2px rgba(0, 0, 0, 0.3); }
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+body {
+  margin: 0;
+  background: var(--page);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: var(--step-0);
+  line-height: 1.55;
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--accent); text-underline-offset: 0.18em; }
+a:hover { color: var(--accent-strong); text-decoration-thickness: 2px; }
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.wrap {
+  max-width: var(--wrap);
+  margin-inline: auto;
+  padding-inline: var(--space-5);
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: var(--space-4);
+  top: -3rem;
+  padding: var(--space-2) var(--space-3);
+  background: var(--surface);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-sm);
+  z-index: 20;
+}
+.skip-link:focus { top: var(--space-4); }
+
+/* ---------- Learn mode ---------- */
+
+/* Content only shown while Learn mode is on (data-learn="on" on <html>). */
+:root:not([data-learn="on"]) .learn-only { display: none !important; }
+
+.learn-note {
+  margin: var(--space-3) 0 0;
+  padding: var(--space-3) var(--space-4);
+  border-left: 3px solid var(--accent);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  background: var(--accent-soft);
+  font-size: var(--step--1);
+  color: var(--ink);
+}
+.learn-note > :first-child { margin-top: 0; }
+.learn-note > :last-child { margin-bottom: 0; }
+
+/* ---------- Site header ---------- */
+
+.site-header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--rule);
+}
+
+.site-header__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-5);
+  min-height: 3.5rem;
+  padding-block: var(--space-2);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.0625rem;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  text-decoration: none;
+}
+.brand:hover { color: var(--ink); }
+.brand svg { width: 1.5rem; height: 1.5rem; flex: none; }
+
+.module-nav ul {
+  display: flex;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.module-nav a {
+  display: block;
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--ink-muted);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.module-nav a:hover { color: var(--ink); background: var(--surface-2); }
+.module-nav a[aria-current="page"] { color: var(--accent-strong); background: var(--accent-soft); font-weight: 600; }
+
+.site-tools {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-left: auto;
+}
+
+/* Language switch: two small segmented buttons, the current one pressed. */
+.lang-switch {
+  display: inline-flex;
+  padding: 2px;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  background: var(--surface);
+}
+.lang-switch button {
+  min-width: 2.25rem;
+  padding: 0.25rem 0.55rem;
+  border: 0;
+  border-radius: 999px;
+  background: none;
+  color: var(--ink-muted);
+  font: inherit;
+  font-size: 0.8125rem;
+  font-weight: 650;
+  cursor: pointer;
+}
+.lang-switch button:hover { color: var(--ink); }
+.lang-switch button[aria-pressed="true"] { background: var(--accent-soft); color: var(--accent-strong); cursor: default; }
+
+/* A switch: a button with aria-pressed, drawn as a track and knob. */
+.switch {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 0.35rem 0.6rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-size: var(--step--1);
+  font-weight: 600;
+  cursor: pointer;
+}
+.switch:hover { border-color: var(--accent); }
+.switch__track {
+  position: relative;
+  width: 2rem;
+  height: 1.125rem;
+  border-radius: 999px;
+  background: var(--rule-strong);
+  transition: background-color 150ms ease;
+}
+.switch__track::after {
+  content: "";
+  position: absolute;
+  top: 0.125rem;
+  left: 0.125rem;
+  width: 0.875rem;
+  height: 0.875rem;
+  border-radius: 50%;
+  background: var(--surface);
+  transition: transform 150ms ease;
+}
+.switch[aria-pressed="true"] .switch__track { background: var(--accent); }
+.switch[aria-pressed="true"] .switch__track::after { transform: translateX(0.875rem); }
+
+.icon-button {
+  display: inline-grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+}
+.icon-button:hover { border-color: var(--accent); color: var(--accent-strong); }
+.icon-button svg { width: 1.125rem; height: 1.125rem; }
+
+/* ---------- Buttons ---------- */
+
+.button,
+.button-quiet {
+  font: inherit;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  border-radius: var(--radius-sm);
+  padding: 0.4rem 0.75rem;
+  min-height: 2.375rem;
+  cursor: pointer;
+  transition: background-color 150ms ease, border-color 150ms ease;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  color: var(--ink);
+  background: var(--surface);
+  border: 1px solid var(--rule-strong);
+}
+.button:hover:not(:disabled) { border-color: var(--accent); color: var(--accent-strong); }
+
+.button--primary {
+  color: var(--on-accent);
+  background: var(--accent);
+  border-color: var(--accent);
+  font-weight: 650;
+}
+.button--primary:hover:not(:disabled) { color: var(--on-accent); background: var(--accent-strong); border-color: var(--accent-strong); }
+
+.button-quiet {
+  color: var(--accent);
+  background: none;
+  border: 1px solid transparent;
+}
+.button-quiet:hover:not(:disabled) { background: var(--accent-soft); color: var(--accent-strong); }
+.button:disabled, .button-quiet:disabled { color: var(--ink-faint); cursor: default; opacity: 0.6; }
+
+/* ---------- Status pills: benchmark bands and flag severities ---------- */
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  padding: 0.1em 0.6em 0.1em 0.45em;
+  border: 1px solid color-mix(in srgb, var(--tone) 45%, transparent);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--tone) 12%, var(--surface));
+  color: var(--ink);
+  font-size: 0.8125rem;
+  font-weight: 650;
+  line-height: 1.5;
+  white-space: nowrap;
+}
+.pill__icon { color: var(--tone); font-size: 0.75em; }
+
+.tone-poor { --tone: var(--band-poor); }
+.tone-weak { --tone: var(--band-weak); }
+.tone-fair { --tone: var(--band-fair); }
+.tone-good { --tone: var(--band-good); }
+.tone-excellent { --tone: var(--band-excellent); }
+.tone-none { --tone: var(--ink-faint); }
+.tone-critical { --tone: var(--sev-critical); }
+.tone-serious { --tone: var(--sev-serious); }
+.tone-warning { --tone: var(--sev-warning); }
+.tone-info { --tone: var(--sev-info); }
+
+/* ---------- Footer ---------- */
+
+.site-footer {
+  padding-block: var(--space-5) var(--space-6);
+  border-top: 1px solid var(--rule);
+  font-size: var(--step--1);
+  color: var(--ink-faint);
+}
+.site-footer p { margin: 0 0 var(--space-2); }
+
+@media (max-width: 40rem) {
+  .wrap { padding-inline: var(--space-4); }
+  .site-header__inner { gap: var(--space-2) var(--space-3); }
+  .module-nav { order: 3; flex-basis: 100%; overflow-x: auto; }
+  .switch__label-long { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+
+@media print {
+  :root, :root[data-theme] { color-scheme: light; }
+  .site-header, .skip-link { display: none !important; }
+}

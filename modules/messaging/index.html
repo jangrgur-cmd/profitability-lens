@@ -3,8 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Messaging profitability model</title>
-  <meta name="description" content="Interactive model of a business-messaging provider's gross margin by country, channel and customer, priced from public rate cards, with what-if scenarios. Customers are illustrative.">
+  <!-- The title, description and link-preview tags stay in English for search engines and link
+       previews; the page sets the title in the interface language (seg.title). -->
+  <title data-i18n="seg.title">Messaging profitability model</title>
+  <meta name="description" content="Interactive model of a business-messaging provider's gross margin by country, channel and customer, priced from public rate cards, with what-if scenarios. Customers are illustrative. English and Croatian.">
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <meta name="theme-color" content="#2f54eb">
@@ -22,66 +24,61 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="author" content="Jan Grgur Glivar">
 
+  <link rel="stylesheet" href="../../src/shared/theme.css">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <a class="skip-link" href="#main">Skip to content</a>
+  <!-- Every visible text comes from src/shared/lang/en.js and hr.js (data-i18n keys under "seg"). -->
+  <a class="skip-link" href="#main" data-i18n="common.skipLink"></a>
+  <header id="site-header"></header>
 
-  <header class="masthead">
+  <div class="masthead">
     <div class="wrap">
-      <p class="byline">
-        Illustrative model, sourced market prices · Built by Jan Grgur Glivar ·
-        <a href="https://linkedin.com/in/jangrgurglivar" rel="noopener">LinkedIn</a> ·
-        <a href="https://github.com/jangrgur-cmd/messaging-profitability" rel="noopener">GitHub repo</a>
-      </p>
-      <h1>Messaging profitability model</h1>
-      <p class="lede">
-        Where a European business-messaging provider makes and loses money across five markets,
-        four channels and 36 customer types, and what happens when prices, costs or exchange rates
-        move. Market prices come from public rate cards.
-      </p>
+      <p class="byline" data-i18n-html="seg.byline"></p>
+      <h1 data-i18n="seg.title"></h1>
+      <p class="lede" data-i18n="seg.lede"></p>
     </div>
 
-    <nav class="wrap tabs" aria-label="Views">
+    <nav class="wrap tabs" data-i18n-attr="aria-label: seg.tabs.label">
       <div role="tablist" id="tablist">
-        <button role="tab" id="tab-overview" aria-controls="panel-overview" data-tab="overview">Overview</button>
-        <button role="tab" id="tab-routes" aria-controls="panel-routes" data-tab="routes">Routes</button>
-        <button role="tab" id="tab-customers" aria-controls="panel-customers" data-tab="customers">Customers</button>
-        <button role="tab" id="tab-scenarios" aria-controls="panel-scenarios" data-tab="scenarios">Scenarios</button>
-        <button role="tab" id="tab-assumptions" aria-controls="panel-assumptions" data-tab="assumptions">Assumptions &amp; method</button>
-        <button role="tab" id="tab-checks" aria-controls="panel-checks" data-tab="checks">Data checks</button>
+        <button role="tab" id="tab-overview" aria-controls="panel-overview" data-tab="overview" data-i18n="seg.tabs.overview"></button>
+        <button role="tab" id="tab-routes" aria-controls="panel-routes" data-tab="routes" data-i18n="seg.tabs.routes"></button>
+        <button role="tab" id="tab-customers" aria-controls="panel-customers" data-tab="customers" data-i18n="seg.tabs.customers"></button>
+        <button role="tab" id="tab-scenarios" aria-controls="panel-scenarios" data-tab="scenarios" data-i18n="seg.tabs.scenarios"></button>
+        <button role="tab" id="tab-assumptions" aria-controls="panel-assumptions" data-tab="assumptions" data-i18n="seg.tabs.assumptions"></button>
+        <button role="tab" id="tab-checks" aria-controls="panel-checks" data-tab="checks" data-i18n="seg.tabs.checks"></button>
       </div>
     </nav>
-  </header>
+  </div>
 
-  <section class="filterbar" aria-label="Filters">
+  <section class="filterbar" data-i18n-attr="aria-label: seg.filters.label">
     <form class="wrap filters" id="filters">
       <fieldset class="filter filter--months">
-        <legend>Months</legend>
-        <label class="sr-only" for="f-from">From month</label>
+        <legend data-i18n="seg.filters.months"></legend>
+        <label class="sr-only" for="f-from" data-i18n="seg.filters.fromMonth"></label>
         <select id="f-from" name="monthFrom"></select>
-        <span aria-hidden="true">to</span>
-        <label class="sr-only" for="f-to">To month</label>
+        <span aria-hidden="true" data-i18n="seg.filters.to"></span>
+        <label class="sr-only" for="f-to" data-i18n="seg.filters.toMonth"></label>
         <select id="f-to" name="monthTo"></select>
       </fieldset>
       <div class="filter">
-        <label for="f-country">Country</label>
+        <label for="f-country" data-i18n="seg.filters.country"></label>
         <select id="f-country" name="country"></select>
       </div>
       <div class="filter">
-        <label for="f-channel">Channel</label>
+        <label for="f-channel" data-i18n="seg.filters.channel"></label>
         <select id="f-channel" name="channel"></select>
       </div>
       <div class="filter">
-        <label for="f-category">Category</label>
+        <label for="f-category" data-i18n="seg.filters.category"></label>
         <select id="f-category" name="category"></select>
       </div>
       <div class="filter">
-        <label for="f-industry">Customer industry</label>
+        <label for="f-industry" data-i18n="seg.filters.industry"></label>
         <select id="f-industry" name="industry"></select>
       </div>
       <div class="filter filter--actions">
-        <button type="button" id="f-reset" class="button-quiet">Reset filters</button>
+        <button type="button" id="f-reset" class="button-quiet" data-i18n="seg.filters.reset"></button>
         <p class="filter-count" id="filter-count" aria-live="polite"></p>
       </div>
     </form>
@@ -91,7 +88,7 @@
     <p class="load-error" id="load-error" hidden></p>
 
     <section role="tabpanel" id="panel-overview" aria-labelledby="tab-overview" tabindex="0">
-      <h2 class="sr-only">Overview</h2>
+      <h2 class="sr-only" data-i18n="seg.overview.title"></h2>
       <p class="statement" id="statement" aria-live="polite"></p>
 
       <dl class="ledger" id="kpis"></dl>
@@ -99,8 +96,8 @@
       <div class="charts">
         <figure class="chart chart--wide">
           <figcaption>
-            <h3>Revenue and gross profit by month</h3>
-            <p>Bars in EUR on the left axis; gross margin on the right axis.</p>
+            <h3 data-i18n="seg.overview.trendTitle"></h3>
+            <p data-i18n="seg.overview.trendCaption"></p>
           </figcaption>
           <div class="chart-box">
             <canvas id="trend-chart" role="img"></canvas>
@@ -108,8 +105,8 @@
         </figure>
         <figure class="chart">
           <figcaption>
-            <h3>Channel mix</h3>
-            <p>Each channel's share of messages, revenue and gross profit.</p>
+            <h3 data-i18n="seg.overview.mixTitle"></h3>
+            <p data-i18n="seg.overview.mixCaption"></p>
           </figcaption>
           <div class="chart-box chart-box--short">
             <canvas id="mix-chart" role="img"></canvas>
@@ -117,38 +114,48 @@
           <p class="chart-note" id="mix-note" hidden></p>
         </figure>
       </div>
+
+      <section class="block learn-only learn-block" aria-labelledby="contrib-title">
+        <h3 class="block-title" id="contrib-title" data-i18n="seg.overview.contribTitle"></h3>
+        <p class="block-note" data-i18n-html="seg.overview.contribNote"></p>
+        <div id="contrib-table"></div>
+      </section>
+
+      <section class="block handoff" aria-labelledby="handoff-title">
+        <h3 class="block-title" id="handoff-title" data-i18n="seg.overview.handoffTitle"></h3>
+        <p class="block-note" data-i18n="seg.overview.handoffNote"></p>
+        <a class="button" id="send-to-rating" href="../../index.html" data-i18n="seg.overview.handoffButton"></a>
+      </section>
     </section>
 
     <section role="tabpanel" id="panel-routes" aria-labelledby="tab-routes" tabindex="0" hidden>
-      <h2 class="section-title">Routes</h2>
+      <h2 class="section-title" data-i18n="seg.routes.title"></h2>
       <p class="section-lede" id="routes-summary" aria-live="polite"></p>
 
       <div class="block heatmap-card">
-        <h3 class="block-title">Gross margin by country and channel</h3>
-        <p class="block-note">Each cell is one route. Deeper green means a higher margin; red cells lose money. A dash means no traffic.</p>
+        <h3 class="block-title" data-i18n="seg.routes.heatmapTitle"></h3>
+        <p class="block-note" data-i18n="seg.routes.heatmapNote"></p>
         <div id="heatmap" class="heatmap"></div>
       </div>
 
       <div class="block">
         <div class="block-head">
-          <h3 class="block-title">All routes</h3>
-          <button type="button" class="button-quiet" id="routes-csv">Download CSV</button>
+          <h3 class="block-title" data-i18n="seg.routes.allTitle"></h3>
+          <button type="button" class="button-quiet" id="routes-csv" data-i18n="common.downloadCsv"></button>
         </div>
-        <p class="block-note">Cost headroom: how much the route's delivery cost (operator, Meta or Viber fees) could rise,
-          with customer prices unchanged, before it stops making money. A negative value means the route already loses money.</p>
+        <p class="block-note" data-i18n="seg.routes.headroomNote"></p>
         <div id="routes-table"></div>
       </div>
     </section>
 
     <section role="tabpanel" id="panel-customers" aria-labelledby="tab-customers" tabindex="0" hidden>
-      <h2 class="section-title">Customers</h2>
+      <h2 class="section-title" data-i18n="seg.customers.title"></h2>
       <p class="section-lede" id="customers-summary" aria-live="polite"></p>
 
       <figure class="chart block">
         <figcaption>
-          <h3>Whale curve</h3>
-          <p>Customers sorted from most to least profitable, against their cumulative share of gross profit.
-            The curve rises above 100% when some customers lose money.</p>
+          <h3 data-i18n="seg.customers.whaleTitle"></h3>
+          <p data-i18n="seg.customers.whaleCaption"></p>
         </figcaption>
         <div class="chart-box chart-box--short">
           <canvas id="whale-chart" role="img"></canvas>
@@ -159,100 +166,103 @@
       <div class="customers-grid">
         <div class="block">
           <div class="block-head">
-            <h3 class="block-title">All customers</h3>
-            <button type="button" class="button-quiet" id="customers-csv">Download CSV</button>
+            <h3 class="block-title" data-i18n="seg.customers.allTitle"></h3>
+            <button type="button" class="button-quiet" id="customers-csv" data-i18n="common.downloadCsv"></button>
           </div>
           <div id="customers-table"></div>
         </div>
-        <aside class="customer-panel" id="customer-detail" aria-live="polite" aria-label="Customer detail"></aside>
+        <aside class="customer-panel" id="customer-detail" aria-live="polite" data-i18n-attr="aria-label: seg.customers.detailLabel"></aside>
       </div>
     </section>
+
     <section role="tabpanel" id="panel-scenarios" aria-labelledby="tab-scenarios" tabindex="0" hidden>
-      <h2 class="section-title">Scenarios</h2>
+      <h2 class="section-title" data-i18n="seg.scenarios.title"></h2>
       <p class="section-lede" id="scenario-summary" aria-live="polite"></p>
 
-      <div class="presets block" id="presets" role="group" aria-label="Preset scenarios"></div>
+      <div class="presets block" id="presets" role="group" data-i18n-attr="aria-label: seg.scenarios.presetsLabel"></div>
 
       <div class="scenario-layout">
-        <form class="scenario-controls" id="scenario-form" aria-label="Scenario settings">
-          <p class="block-note">
-            Steps are applied in this order. Each bar in the bridge is the change in gross profit caused by
-            that step, given the steps before it. Filters above apply to both baseline and scenario.
-          </p>
+        <form class="scenario-controls" id="scenario-form" data-i18n-attr="aria-label: seg.scenarios.formLabel">
+          <p class="block-note" data-i18n="seg.scenarios.orderNote"></p>
 
           <fieldset class="step">
-            <legend><span class="step-no">1</span> Volume</legend>
+            <legend><span class="step-no">1</span> <span data-i18n="seg.scenarios.volumeLegend"></span></legend>
             <label class="slider">
-              <span>Change in messages <output id="o-volume"></output></span>
+              <span><span data-i18n="seg.scenarios.volumeSlider"></span> <output id="o-volume"></output></span>
               <input type="range" name="volumeChange" min="-30" max="30" step="1" value="0">
             </label>
-            <label class="inline-select">Applies to
+            <label class="inline-select"><span data-i18n="seg.scenarios.appliesTo"></span>
               <select name="volumeCategory"></select>
             </label>
+            <p class="learn-note learn-only" data-i18n="seg.scenarios.learnVolume"></p>
           </fieldset>
 
           <fieldset class="step">
-            <legend><span class="step-no">2</span> SMS → WhatsApp migration</legend>
+            <legend><span class="step-no">2</span> <span data-i18n="seg.scenarios.migrationLegend"></span></legend>
             <label class="slider">
-              <span>Authentication SMS moved <output id="o-ma"></output></span>
+              <span><span data-i18n="seg.scenarios.migrationAuth"></span> <output id="o-ma"></output></span>
               <input type="range" name="migration.authentication" min="0" max="50" step="1" value="0">
             </label>
             <label class="slider">
-              <span>Utility SMS moved <output id="o-mu"></output></span>
+              <span><span data-i18n="seg.scenarios.migrationUtility"></span> <output id="o-mu"></output></span>
               <input type="range" name="migration.utility" min="0" max="50" step="1" value="0">
             </label>
             <label class="slider">
-              <span>Marketing SMS moved <output id="o-mm"></output></span>
+              <span><span data-i18n="seg.scenarios.migrationMarketing"></span> <output id="o-mm"></output></span>
               <input type="range" name="migration.marketing" min="0" max="50" step="1" value="0">
             </label>
-            <label class="inline-select">WhatsApp messages per SMS replaced
+            <label class="inline-select"><span data-i18n="seg.scenarios.conversion"></span>
               <input type="number" name="conversionRatio" min="0.5" max="2" step="0.05" value="1">
             </label>
+            <p class="learn-note learn-only" data-i18n="seg.scenarios.learnMigration"></p>
           </fieldset>
 
           <fieldset class="step">
-            <legend><span class="step-no">3</span> Customer price</legend>
+            <legend><span class="step-no">3</span> <span data-i18n="seg.scenarios.priceLegend"></span></legend>
             <label class="slider">
-              <span>Change in our own fee <output id="o-price"></output></span>
+              <span><span data-i18n="seg.scenarios.priceSlider"></span> <output id="o-price"></output></span>
               <input type="range" name="priceChange" min="-20" max="20" step="1" value="0">
             </label>
-            <label class="inline-select">Applies to
+            <label class="inline-select"><span data-i18n="seg.scenarios.appliesTo"></span>
               <select name="priceChannel"></select>
             </label>
+            <p class="learn-note learn-only" data-i18n="seg.scenarios.learnPrice"></p>
           </fieldset>
 
           <fieldset class="step">
-            <legend><span class="step-no">4</span> Operator cost</legend>
+            <legend><span class="step-no">4</span> <span data-i18n="seg.scenarios.costLegend"></span></legend>
             <label class="slider">
-              <span>Change in delivery cost <output id="o-cost"></output></span>
+              <span><span data-i18n="seg.scenarios.costSlider"></span> <output id="o-cost"></output></span>
               <input type="range" name="costChange" min="-30" max="50" step="1" value="0">
             </label>
-            <label class="inline-select">Applies to
+            <label class="inline-select"><span data-i18n="seg.scenarios.appliesTo"></span>
               <select name="costChannel"></select>
             </label>
-            <div class="country-checks" id="cost-countries" role="group" aria-label="Countries the cost change applies to"></div>
-            <p class="hint">With no country ticked, the change applies to all countries.</p>
+            <div class="country-checks" id="cost-countries" role="group" data-i18n-attr="aria-label: seg.scenarios.costCountries"></div>
+            <p class="hint" data-i18n="seg.scenarios.costHint"></p>
+            <p class="learn-note learn-only" data-i18n="seg.scenarios.learnCost"></p>
           </fieldset>
 
           <fieldset class="step">
-            <legend><span class="step-no">5</span> Exchange rate</legend>
+            <legend><span class="step-no">5</span> <span data-i18n="seg.scenarios.fxLegend"></span></legend>
             <label class="slider">
-              <span>Change in EUR/USD <output id="o-fx"></output></span>
+              <span><span data-i18n="seg.scenarios.fxSlider"></span> <output id="o-fx"></output></span>
               <input type="range" name="fxChange" min="-20" max="20" step="1" value="0">
             </label>
+            <p class="learn-note learn-only" data-i18n="seg.scenarios.learnFx"></p>
           </fieldset>
         </form>
 
         <div class="scenario-results">
           <div class="block">
-            <h3 class="block-title">Baseline and scenario</h3>
+            <h3 class="block-title" data-i18n="seg.scenarios.compareTitle"></h3>
             <div id="scenario-compare"></div>
           </div>
 
           <figure class="chart block">
             <figcaption>
-              <h3>Margin bridge</h3>
-              <p>Gross profit from baseline to scenario, step by step. The axis does not start at zero, so small effects stay visible.</p>
+              <h3 data-i18n="seg.scenarios.bridgeTitle"></h3>
+              <p data-i18n="seg.scenarios.bridgeCaption"></p>
             </figcaption>
             <div class="chart-box">
               <canvas id="bridge-chart" role="img"></canvas>
@@ -261,128 +271,71 @@
 
           <div class="affected">
             <div class="block">
-              <h3 class="block-title">Routes most affected</h3>
+              <h3 class="block-title" data-i18n="seg.scenarios.affectedRoutes"></h3>
               <div id="affected-routes"></div>
             </div>
             <div class="block">
-              <h3 class="block-title">Customers most affected</h3>
+              <h3 class="block-title" data-i18n="seg.scenarios.affectedCustomers"></h3>
               <div id="affected-customers"></div>
             </div>
           </div>
         </div>
       </div>
     </section>
+
     <section role="tabpanel" id="panel-assumptions" aria-labelledby="tab-assumptions" tabindex="0" hidden>
-      <h2 class="section-title">Assumptions &amp; method</h2>
+      <h2 class="section-title" data-i18n="seg.assumptions.title"></h2>
       <p class="section-lede" id="assumptions-summary" aria-live="polite"></p>
-      <p class="disclaimer">
-        For demonstration. Market prices and fees are from public rate cards; customers are illustrative
-        archetypes with estimated volumes. Not affiliated with any company. Not based on any company's real figures.
-      </p>
+      <p class="disclaimer" data-i18n="seg.assumptions.disclaimer"></p>
 
       <div class="block">
         <div class="block-head">
-          <h3 class="block-title">Every assumption</h3>
-          <button type="button" class="button-quiet" id="assumptions-csv">Download CSV</button>
+          <h3 class="block-title" data-i18n="seg.assumptions.everyTitle"></h3>
+          <button type="button" class="button-quiet" id="assumptions-csv" data-i18n="common.downloadCsv"></button>
         </div>
         <div class="table-filters">
-          <label class="inline-select">Group <select id="a-group"></select></label>
-          <label class="inline-select">Status <select id="a-status"></select></label>
+          <label class="inline-select"><span data-i18n="seg.assumptions.group"></span> <select id="a-group"></select></label>
+          <label class="inline-select"><span data-i18n="seg.assumptions.status"></span> <select id="a-status"></select></label>
         </div>
         <div id="assumptions-table"></div>
       </div>
 
       <div class="block">
         <div class="block-head">
-          <h3 class="block-title">Customer archetypes and their estimated volumes</h3>
-          <button type="button" class="button-quiet" id="archetypes-csv">Download CSV</button>
+          <h3 class="block-title" data-i18n="seg.assumptions.archetypesTitle"></h3>
+          <button type="button" class="button-quiet" id="archetypes-csv" data-i18n="common.downloadCsv"></button>
         </div>
         <div id="archetypes-table"></div>
       </div>
 
       <div class="method">
         <div class="block">
-          <h3 class="block-title">How the numbers are calculated</h3>
-          <dl class="formulas">
-            <div>
-              <dt>Revenue</dt>
-              <dd><code>volume × (pass-through + (list price − pass-through) × (1 − customer discount))</code>
-                The discount applies only to our own fee. Third-party fees passed on at cost (Meta's WhatsApp fee,
-                US carrier fees) are charged in full.</dd>
-            </div>
-            <div>
-              <dt>Delivery cost</dt>
-              <dd><code>volume × cost per message × exchange rate to EUR</code>
-                What we pay operators (SMS, voice), Meta (WhatsApp) or Viber. USD costs are converted at the EUR/USD rate.</dd>
-            </div>
-            <div>
-              <dt>Platform cost</dt>
-              <dd><code>volume × platform cost per message</code>
-                Our own infrastructure and support cost, so gross margin is not overstated.</dd>
-            </div>
-            <div>
-              <dt>Gross profit</dt>
-              <dd><code>revenue − delivery cost − platform cost</code></dd>
-            </div>
-            <div>
-              <dt>Gross margin</dt>
-              <dd><code>gross profit ÷ revenue</code> Shown as "n/a" when revenue is zero.</dd>
-            </div>
-            <div>
-              <dt>Cost headroom</dt>
-              <dd><code>gross profit ÷ delivery cost</code>
-                How far delivery cost can rise, with prices unchanged, before a route breaks even: the margin of safety
-                to bring into an operator negotiation. Raising that route's operator cost by this amount on the Scenarios
-                tab brings its gross profit to zero.</dd>
-            </div>
-            <div>
-              <dt>Route</dt>
-              <dd>One country × channel combination, e.g. "Germany SMS". A route is loss-making when its gross profit
-                over the selected period is below zero.</dd>
-            </div>
-            <div>
-              <dt>Whale curve</dt>
-              <dd>Customers sorted by gross profit, highest first, against their cumulative share of total gross
-                profit. It rises above 100% when some customers lose money.</dd>
-            </div>
-            <div>
-              <dt>Revenue and cost per message</dt>
-              <dd><code>revenue ÷ messages</code> and <code>(delivery cost + platform cost) ÷ messages</code>.
-                Voice is counted per call.</dd>
-            </div>
-          </dl>
+          <h3 class="block-title" data-i18n="seg.assumptions.formulasTitle"></h3>
+          <dl class="formulas" data-i18n-html="seg.assumptions.formulas"></dl>
         </div>
 
         <div class="block">
-          <h3 class="block-title">Scenario order of operations</h3>
+          <h3 class="block-title" data-i18n="seg.assumptions.orderTitle"></h3>
           <ol class="steps-list" id="method-steps"></ol>
-          <p class="block-note">Each bar in the margin bridge is the change in gross profit caused by one step, given the
-            steps before it, so the bars add up exactly to the total change.</p>
+          <p class="block-note" data-i18n="seg.assumptions.orderNote"></p>
         </div>
 
         <div class="block">
-          <h3 class="block-title">How the traffic data is made</h3>
-          <p class="prose">
-            A small Node script (<code>scripts/generate-data.mjs</code>) turns the assumptions into one row per month,
-            customer, country, channel and category. Monthly volume = the customer's estimated base volume × its share
-            of traffic in that country × the channel's share × the category's share × a seasonality index × a little
-            random noise. The noise comes from a seeded random number generator, so the same assumptions always
-            produce exactly the same data. Revenue, cost and profit are not stored; they are calculated in the
-            browser, so scenarios can recalculate them.
-          </p>
+          <h3 class="block-title" data-i18n="seg.assumptions.dataTitle"></h3>
+          <p class="prose" data-i18n-html="seg.assumptions.dataProse"></p>
         </div>
       </div>
     </section>
 
     <section role="tabpanel" id="panel-checks" aria-labelledby="tab-checks" tabindex="0" hidden>
-      <h2 class="section-title">Data checks</h2>
+      <h2 class="section-title" data-i18n="seg.checks.title"></h2>
       <p class="section-lede" id="checks-summary" aria-live="polite"></p>
       <ul class="checks" id="checks-list"></ul>
     </section>
   </main>
 
   <footer class="wrap footer">
-    <p>For demonstration. Market prices and fees are from public rate cards; customers are illustrative archetypes with estimated volumes. Not affiliated with any company. Not based on any company's real figures.</p>
+    <p data-i18n="seg.footer"></p>
   </footer>
 
   <script src="lib/chart.umd.min.js"></script>

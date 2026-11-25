@@ -4,6 +4,7 @@ import { routeProfitability } from "./calc.js";
 import { createSortableTable } from "./tables.js";
 import { toCsv, downloadCsv } from "./export.js";
 import { formatEur, formatPct, formatSignedPct, formatCount, toneClass } from "../../../src/shared/format.js";
+import { t } from "../../../src/shared/i18n.js";
 
 const $ = (id) => document.getElementById(id);
 
@@ -25,7 +26,7 @@ export function heatColor(margin) {
 function lossBadge() {
   const badge = document.createElement("span");
   badge.className = "loss-badge";
-  badge.textContent = "▼ Loss";
+  badge.textContent = t("seg.routes.lossBadge");
   return badge;
 }
 
@@ -71,17 +72,17 @@ const eur = (v) => ({ text: formatEur(v), cls: toneClass(v) });
 
 export function createRoutesView(model) {
   const { countryNames, dimensions } = model;
-  const routeName = (r) => `${countryNames[r.country]} ${r.channel}`;
+  const routeName = (r) => t("seg.routes.routeName", { country: countryNames[r.country], channel: model.channelName(r.channel) });
 
   const columns = [
-    { key: "route", label: "Route", type: "text", value: routeName },
-    { key: "volume", label: "Messages", type: "number", format: formatCount },
-    { key: "revenue", label: "Revenue", type: "number", format: formatEur },
-    { key: "deliveryCost", label: "Delivery cost", type: "number", format: formatEur },
-    { key: "platformCost", label: "Platform cost", type: "number", format: formatEur },
-    { key: "grossProfit", label: "Gross profit", type: "number", format: formatEur },
-    { key: "grossMarginPct", label: "Margin", type: "number", cell: marginCell },
-    { key: "costHeadroom", label: "Cost headroom", type: "number", cell: headroomCell },
+    { key: "route", label: t("seg.routes.colRoute"), type: "text", value: routeName },
+    { key: "volume", label: t("seg.routes.colMessages"), type: "number", format: formatCount },
+    { key: "revenue", label: t("seg.routes.colRevenue"), type: "number", format: formatEur },
+    { key: "deliveryCost", label: t("seg.routes.colDelivery"), type: "number", format: formatEur },
+    { key: "platformCost", label: t("seg.routes.colPlatform"), type: "number", format: formatEur },
+    { key: "grossProfit", label: t("seg.routes.colGrossProfit"), type: "number", format: formatEur },
+    { key: "grossMarginPct", label: t("seg.routes.colMargin"), type: "number", cell: marginCell },
+    { key: "costHeadroom", label: t("seg.routes.colHeadroom"), type: "number", cell: headroomCell },
   ];
   const csvColumns = [
     { label: "country_code", key: "country" },
@@ -99,7 +100,7 @@ export function createRoutesView(model) {
 
   const table = createSortableTable($("routes-table"), {
     columns,
-    caption: "Routes by country and channel",
+    caption: t("seg.routes.tableCaption"),
     sort: { key: "grossProfit", direction: "asc" },
     rowClass: (r) => (r.lossMaking ? "is-loss" : ""),
   });
@@ -111,26 +112,25 @@ export function createRoutesView(model) {
   function renderSummary(routes) {
     const box = $("routes-summary");
     if (routes.length === 0) {
-      box.textContent = "No routes have traffic with these filters.";
+      box.textContent = t("seg.routes.noRoutes");
       return;
     }
     const losers = routes.filter((r) => r.lossMaking);
     const best = routes.reduce((a, b) => (b.grossProfit > a.grossProfit ? b : a));
-    const bestPart = [` ${routeName(best)} earns the most gross profit (`, eur(best.grossProfit), ")."];
+    const bestPart = [t("seg.routes.best", { route: routeName(best) }), eur(best.grossProfit), t("seg.routes.bestEnd")];
     if (routes.length === 1) {
       const only = routes[0];
-      const verb = only.lossMaking ? "loses money" : "is profitable";
-      setSentence(box, [`The only route in this selection, ${routeName(only)}, ${verb}: a `, pct(only.grossMarginPct), " margin on ", formatEur(only.revenue), " revenue."]);
+      const lead = t(only.lossMaking ? "seg.routes.onlyLoses" : "seg.routes.onlyProfitable", { route: routeName(only) });
+      setSentence(box, [lead, pct(only.grossMarginPct), t("seg.routes.onlyMarginOn"), formatEur(only.revenue), t("seg.routes.onlyRevenue")]);
       return;
     }
     if (losers.length === 0) {
       const thinnest = routes.reduce((a, b) => (b.grossMarginPct < a.grossMarginPct ? b : a));
-      setSentence(box, [`All ${routes.length} routes are profitable in this selection; the thinnest is ${routeName(thinnest)} at `, pct(thinnest.grossMarginPct), ".", ...bestPart]);
+      setSentence(box, [t("seg.routes.allProfitable", { count: routes.length, route: routeName(thinnest) }), pct(thinnest.grossMarginPct), ".", ...bestPart]);
       return;
     }
-    const verb = losers.length === 1 ? "loses" : "lose";
     const list = losers.flatMap((r, i) => [i === 0 ? "" : ", ", `${routeName(r)} (`, pct(r.grossMarginPct), ", ", eur(r.grossProfit), ")"]);
-    setSentence(box, [`${losers.length} of ${routes.length} routes ${verb} money in this selection: `, ...list, ".", ...bestPart]);
+    setSentence(box, [t("seg.routes.losers", { count: losers.length, total: routes.length }), ...list, ".", ...bestPart]);
   }
 
   // The heatmap grid is built once; each render only updates the cells, so
@@ -141,7 +141,7 @@ export function createRoutesView(model) {
     const tableEl = document.createElement("table");
     const caption = document.createElement("caption");
     caption.className = "sr-only";
-    caption.textContent = "Gross margin by country (rows) and channel (columns)";
+    caption.textContent = t("seg.routes.heatmapCaption");
     const head = document.createElement("tr");
     const corner = document.createElement("td");
     corner.className = "corner";
@@ -149,7 +149,7 @@ export function createRoutesView(model) {
     for (const channel of dimensions.channels) {
       const th = document.createElement("th");
       th.scope = "col";
-      th.textContent = channel;
+      th.textContent = model.channelName(channel);
       head.append(th);
     }
     const thead = document.createElement("thead");
@@ -190,13 +190,15 @@ export function createRoutesView(model) {
       td.style.backgroundColor = "";
       margin.textContent = "—";
       revenue.textContent = "";
-      td.title = "No traffic";
+      td.title = t("seg.routes.noTrafficCell");
       return;
     }
     td.style.backgroundColor = heatColor(route.grossMarginPct);
     margin.textContent = `${route.lossMaking ? "▼ " : ""}${formatPct(route.grossMarginPct)}`;
     revenue.textContent = formatEur(route.revenue);
-    td.title = `${countryNames[route.country]} ${route.channel}: margin ${formatPct(route.grossMarginPct)}, revenue ${formatEur(route.revenue)}, gross profit ${formatEur(route.grossProfit)}${route.lossMaking ? " (loss-making)" : ""}`;
+    td.title = t("seg.routes.cellTitle", {
+      route: routeName(route), margin: formatPct(route.grossMarginPct), revenue: formatEur(route.revenue), profit: formatEur(route.grossProfit),
+    }) + (route.lossMaking ? t("seg.routes.cellLoss") : "");
   }
 
   buildHeatmap();

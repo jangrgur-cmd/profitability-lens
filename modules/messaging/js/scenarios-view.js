@@ -2,8 +2,9 @@
 
 import { filterRows } from "./calc.js";
 import { runScenario, marginBridge, mostAffected, makeScenario, isDefaultScenario, PRESETS, LIMITS } from "./scenarios.js";
-import { createBridgeChart, updateBridgeChart } from "./charts.js";
-import { formatEur, formatPct, formatCount, formatSignedPct, formatSignedEur, formatPp, toneClass } from "../../../src/shared/format.js";
+import { createBridgeChart, updateBridgeChart, chartOn } from "./charts.js";
+import { formatEur, formatPct, formatCount, formatNumber, formatSignedPct, formatSignedEur, formatPp, toneClass } from "../../../src/shared/format.js";
+import { t } from "../../../src/shared/i18n.js";
 
 const $ = (id) => document.getElementById(id);
 
@@ -36,9 +37,8 @@ function sameScenario(a, b) {
  * @param {(scenario: object) => void} onChange called with a new scenario when the user changes a control
  */
 export function createScenariosView(model, onChange) {
-  const { dimensions, countryNames, customersById } = model;
+  const { dimensions, countryNames, customersById, customerNames } = model;
   const form = $("scenario-form");
-  let chart = null;
   let current = makeScenario();
 
   // --- Build controls -----------------------------------------------------------
@@ -51,9 +51,9 @@ export function createScenariosView(model, onChange) {
     }));
     select.options[0].value = "all";
   };
-  fill(form.elements.volumeCategory, "All categories", dimensions.categories.map((c) => [c.id, c.label]));
-  fill(form.elements.priceChannel, "All channels", dimensions.channels.map((c) => [c, c]));
-  fill(form.elements.costChannel, "All channels", dimensions.channels.map((c) => [c, c]));
+  fill(form.elements.volumeCategory, t("seg.filters.allCategories"), dimensions.categories.map((c) => [c.id, model.categoryLabels[c.id]]));
+  fill(form.elements.priceChannel, t("seg.filters.allChannels"), dimensions.channels.map((c) => [c, model.channelName(c)]));
+  fill(form.elements.costChannel, t("seg.filters.allChannels"), dimensions.channels.map((c) => [c, model.channelName(c)]));
   $("cost-countries").replaceChildren(
     ...dimensions.countries.map(({ code }) => {
       const label = el("label");
@@ -75,7 +75,7 @@ export function createScenariosView(model, onChange) {
   });
   const reset = el("button", "preset preset--reset");
   reset.type = "button";
-  reset.append(el("strong", "", "Reset scenario"), el("span", "", "Back to the baseline."));
+  reset.append(el("strong", "", t("seg.scenarios.reset")), el("span", "", t("seg.scenarios.resetNote")));
   reset.addEventListener("click", () => onChange(makeScenario()));
   $("presets").replaceChildren(...presetButtons.map((p) => p.button), reset);
 
@@ -139,7 +139,7 @@ export function createScenariosView(model, onChange) {
     setRange("costChange", s.costChange, "o-cost", undefined, false);
     const rate = model.ctx.eurUsd * (1 + s.fxChange);
     // A higher EUR/USD (stronger euro) makes dollar costs cheaper, so it raises profit.
-    setRange("fxChange", s.fxChange, "o-fx", `${formatSignedPct(s.fxChange)} (${rate.toFixed(3)} USD per EUR)`, true);
+    setRange("fxChange", s.fxChange, "o-fx", t("seg.scenarios.fxReadout", { change: formatSignedPct(s.fxChange), rate: formatNumber(rate, 3) }), true);
     if (document.activeElement !== form.elements.conversionRatio) form.elements.conversionRatio.value = String(s.conversionRatio);
     form.elements.volumeCategory.value = s.volumeCategory;
     form.elements.priceChannel.value = s.priceChannel;
@@ -154,11 +154,11 @@ export function createScenariosView(model, onChange) {
     const { baseline, scenario, steps } = bridge;
     const box = $("scenario-summary");
     if (baseline.volume === 0) {
-      box.textContent = "No traffic matches these filters. Widen the filters above to run a scenario.";
+      box.textContent = t("seg.scenarios.noTraffic");
       return;
     }
     if (isDefaultScenario(s)) {
-      box.textContent = `Pick a preset or move a slider to see how gross profit responds. With no changes, the scenario equals the baseline: ${formatEur(baseline.grossProfit)} gross profit, a ${formatPct(baseline.grossMarginPct)} margin.`;
+      box.textContent = t("seg.scenarios.unchanged", { profit: formatEur(baseline.grossProfit), margin: formatPct(baseline.grossMarginPct) });
       return;
     }
     const delta = scenario.grossProfit - baseline.grossProfit;
@@ -168,32 +168,34 @@ export function createScenariosView(model, onChange) {
     // Migration moves volume between SMS and WhatsApp; a channel filter hides one side of that move.
     const migrating = Object.values(s.migration).some((v) => v > 0);
     const parts = [
-      `In this scenario gross profit ${delta >= 0 ? "rises" : "falls"} by `,
+      t(delta >= 0 ? "seg.scenarios.rises" : "seg.scenarios.falls"),
       { text: formatEur(Math.abs(delta)) + (rel === null ? "" : ` (${formatSignedPct(rel)})`), cls: tone },
-      ` to ${formatEur(scenario.grossProfit)}, and the margin moves from `,
+      t("seg.scenarios.toProfit", { profit: formatEur(scenario.grossProfit) }),
       { text: formatPct(baseline.grossMarginPct), cls: toneClass(baseline.grossMarginPct) },
-      " to ",
+      t("seg.scenarios.to"),
       { text: formatPct(scenario.grossMarginPct), cls: toneClass(scenario.grossMarginPct) },
-      ".",
+      t("seg.scenarios.end"),
     ];
-    if (Math.abs(biggest.delta) > 0.5) parts.push(` The largest effect comes from ${inSentence(biggest.label)} (`, { text: formatSignedEur(biggest.delta), cls: toneClass(biggest.delta) }, ").");
+    if (Math.abs(biggest.delta) > 0.5) {
+      parts.push(t("seg.scenarios.largest", { step: inSentence(biggest.label) }), { text: formatSignedEur(biggest.delta), cls: toneClass(biggest.delta) }, t("seg.scenarios.largestEnd"));
+    }
     if (migrating && filters.channel !== "all") {
-      parts.push(` Note: the channel filter shows only ${filters.channel}, so traffic moving between SMS and WhatsApp is only half visible; set Channel to "All channels" to see the full effect.`);
+      parts.push(t("seg.scenarios.channelNote", { channel: model.channelName(filters.channel) }));
     }
     setSentence(box, parts);
   }
 
   function renderCompare({ baseline, scenario }) {
     const rows = [
-      ["Messages", baseline.volume, scenario.volume, formatCount, true, false],
-      ["Revenue", baseline.revenue, scenario.revenue, formatEur, true, false],
-      ["Delivery and platform cost", baseline.totalCost, scenario.totalCost, formatEur, false, false],
-      ["Gross profit", baseline.grossProfit, scenario.grossProfit, formatEur, true, false],
-      ["Gross margin", baseline.grossMarginPct, scenario.grossMarginPct, formatPct, true, true],
+      [t("seg.scenarios.rowMessages"), baseline.volume, scenario.volume, formatCount, true, false],
+      [t("seg.scenarios.rowRevenue"), baseline.revenue, scenario.revenue, formatEur, true, false],
+      [t("seg.scenarios.rowCost"), baseline.totalCost, scenario.totalCost, formatEur, false, false],
+      [t("seg.scenarios.rowGrossProfit"), baseline.grossProfit, scenario.grossProfit, formatEur, true, false],
+      [t("seg.scenarios.rowMargin"), baseline.grossMarginPct, scenario.grossMarginPct, formatPct, true, true],
     ];
     const table = el("table", "compare");
     const head = el("tr");
-    for (const label of ["", "Baseline", "Scenario", "Change"]) {
+    for (const label of ["", t("seg.scenarios.colBaseline"), t("seg.scenarios.colScenario"), t("seg.scenarios.colChange")]) {
       const th = el("th", "", label);
       th.scope = "col";
       head.append(th);
@@ -224,12 +226,12 @@ export function createScenariosView(model, onChange) {
   function renderAffected(containerId, items, nameOf) {
     const box = $(containerId);
     if (items.length === 0) {
-      box.replaceChildren(el("p", "none", "Nothing changes with the current settings."));
+      box.replaceChildren(el("p", "none", t("seg.scenarios.nothingChanges")));
       return;
     }
     const table = el("table");
     const head = el("tr");
-    for (const label of ["", "Baseline", "Scenario", "Change"]) {
+    for (const label of ["", t("seg.scenarios.colBaseline"), t("seg.scenarios.colScenario"), t("seg.scenarios.colChange")]) {
       const th = el("th", "", label);
       th.scope = "col";
       head.append(th);
@@ -263,7 +265,7 @@ export function createScenariosView(model, onChange) {
     const bridge = marginBridge(states, select);
     renderSummary(bridge, current, filters);
     renderCompare(bridge);
-    if (!chart) chart = createBridgeChart($("bridge-chart"));
+    const chart = chartOn($("bridge-chart")) ?? createBridgeChart($("bridge-chart"));
     updateBridgeChart(chart, bridge);
 
     const base = states[0];
@@ -274,9 +276,9 @@ export function createScenariosView(model, onChange) {
     const customers = mostAffected(baseRows, base.ctx, lastRows, last.ctx, (r) => r.customer_id);
     renderAffected("affected-routes", routes, (key) => {
       const [country, channel] = key.split("|");
-      return `${countryNames[country]} ${channel}`;
+      return t("seg.routes.routeName", { country: countryNames[country], channel: model.channelName(channel) });
     });
-    renderAffected("affected-customers", customers, (id) => customersById[id]?.name ?? id);
+    renderAffected("affected-customers", customers, (id) => customerNames[id] ?? id);
   }
 
   return { render };

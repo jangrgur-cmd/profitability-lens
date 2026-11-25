@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The title and description stay in English here for link previews and search engines;
+       the page sets the title in the interface language (rating.page.title). -->
+  <title data-i18n="rating.page.title">Company rating · Profitability Lens</title>
+  <meta name="description" content="Free, open-source profitability rating that runs in your browser: enter a few lines from an income statement and balance sheet and get an A–E grade, eight ratios with benchmark bands, a DuPont breakdown and red flags. Your data never leaves the browser. English and Croatian.">
+  <meta name="theme-color" content="#2f54eb">
+  <link rel="icon" href="modules/messaging/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="src/shared/theme.css">
+  <link rel="stylesheet" href="src/rating/rating.css">
+</head>
+<body>
+  <!-- Every visible text comes from src/shared/lang/en.js and hr.js (data-i18n keys). -->
+  <a class="skip-link" href="#main" data-i18n="common.skipLink"></a>
+  <header id="site-header"></header>
+
+  <main id="main" class="wrap">
+    <div class="page-intro">
+      <h1 data-i18n="rating.page.heading"></h1>
+      <p class="lede" data-i18n="rating.page.lede"></p>
+    </div>
+
+    <div class="rating-layout">
+      <form class="rating-form card" id="rating-form" novalidate aria-labelledby="form-title">
+        <div class="form-head">
+          <h2 id="form-title" class="form-title" data-i18n="rating.page.formTitle"></h2>
+          <div class="form-tools">
+            <button type="button" class="button-quiet" id="import-json" data-i18n="rating.page.importJson"></button>
+            <button type="button" class="button-quiet" id="export-json" data-i18n="rating.page.exportJson"></button>
+            <button type="button" class="button-quiet" id="clear-form" data-i18n="rating.page.clear"></button>
+            <input type="file" id="import-file" accept=".json,application/json" hidden>
+          </div>
+        </div>
+
+        <div class="examples" role="group" aria-labelledby="examples-label">
+          <p id="examples-label" class="examples__label" data-i18n="rating.page.examples"></p>
+          <div class="chips" id="example-chips"></div>
+        </div>
+
+        <div class="source-note" id="source-note" role="status" hidden></div>
+        <div class="error-summary" id="error-summary" role="alert" tabindex="-1" hidden></div>
+
+        <div class="field field--text">
+          <label for="company-name"><span data-i18n="rating.page.companyName"></span> <span class="optional" data-i18n="rating.page.optional"></span></label>
+          <input id="company-name" name="companyName" type="text" autocomplete="organization" maxlength="120">
+        </div>
+        <div class="field field--text">
+          <label for="industry" data-i18n="rating.page.industry"></label>
+          <select id="industry" name="industry" aria-describedby="industry-note"></select>
+          <p class="field__note" id="industry-note"></p>
+        </div>
+
+        <p class="form-hint" id="amount-hint" data-i18n-html="rating.page.amountHint"></p>
+
+        <div id="field-groups"></div>
+
+        <div class="form-submit">
+          <button type="submit" class="button button--primary button--wide" data-i18n="rating.page.submit"></button>
+          <p class="stale-note" id="stale-note" hidden data-i18n="rating.page.stale"></p>
+        </div>
+      </form>
+
+      <section class="results" id="results" aria-labelledby="results-title" tabindex="-1">
+        <h2 id="results-title" class="sr-only" data-i18n="rating.page.ratingTitle"></h2>
+        <div id="results-body"></div>
+      </section>
+    </div>
+
+    <p class="sr-only" id="announcer" aria-live="polite"></p>
+  </main>
+
+  <footer class="wrap site-footer">
+    <p data-i18n="rating.page.footerLicence"></p>
+    <p data-i18n-html="rating.page.footerMethod"></p>
+  </footer>
+
+  <script type="module" src="src/rating/app.js"></script>
+</body>
+</html>

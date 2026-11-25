@@ -11,7 +11,7 @@ test("every field is complete and has a Croatian term", () => {
   for (const f of FIELDS) {
     assert.ok(!ids.has(f.id), `duplicate id ${f.id}`);
     ids.add(f.id);
-    assert.ok(f.label && f.help && f.hr, `${f.id} needs label, help and hr`);
+    assert.ok(f.label && f.help && f.altTerm, `${f.id} needs label, help and altTerm`);
     assert.ok(GROUPS.some((g) => g.id === f.group), `${f.id} has unknown group ${f.group}`);
     assert.ok(["positive", "nonNegative", "any"].includes(f.sign), `${f.id} has unknown sign rule`);
   }

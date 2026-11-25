@@ -3,6 +3,8 @@
 // Pure functions only. A ratio that cannot be computed is returned as null,
 // never as 0, Infinity or NaN, so the UI can say "n/a" instead of a fake value.
 
+import { t } from "./i18n.js";
+
 /**
  * Divides two numbers, or returns null when the result has no meaning:
  * a zero denominator, or a missing or non-finite input.
@@ -28,15 +30,13 @@ export function margin(profit, revenue) {
 
 /**
  * The five bands of a benchmark scale, from worst to best. A value at or
- * above a band's threshold is in that band (Poor has no threshold).
+ * above a band's threshold is in that band (Poor has no threshold). Labels
+ * are read in the interface language.
  */
-export const BANDS = [
-  { id: "poor", label: "Poor" },
-  { id: "weak", label: "Weak" },
-  { id: "fair", label: "Fair" },
-  { id: "good", label: "Good" },
-  { id: "excellent", label: "Excellent" },
-];
+export const BANDS = ["poor", "weak", "fair", "good", "excellent"].map((id) => ({
+  id,
+  get label() { return t(`rating.bands.${id}`); },
+}));
 
 /**
  * Checks a benchmark scale: four finite thresholds [poor, fair, good, excellent],
@@ -100,4 +100,29 @@ export function scoreAgainstThresholds(value, thresholds) {
     }
   }
   return 100; // above excellent
+}
+
+/**
+ * How segment margins add up to the company's gross margin.
+ *
+ *   company margin = Σ segment revenue share × segment margin
+ *                  = Σ segment gross profit ÷ total revenue
+ *
+ * Each segment's contribution is its gross profit as a share of total
+ * revenue, so the contributions add up exactly to the company margin.
+ * Example: SMS earns 60% of revenue at a 20% margin → 0.6 × 0.2 = 12 points.
+ * @param {{label: string, revenue: number, grossProfit: number}[]} segments
+ * @returns {{rows: {label: string, revenueShare: number|null, margin: number|null, contribution: number|null}[],
+ *            total: {revenue: number, grossProfit: number, margin: number|null}}}
+ */
+export function marginContributions(segments) {
+  const revenue = segments.reduce((sum, s) => sum + s.revenue, 0);
+  const grossProfit = segments.reduce((sum, s) => sum + s.grossProfit, 0);
+  const rows = segments.map((s) => ({
+    label: s.label,
+    revenueShare: safeDivide(s.revenue, revenue),
+    margin: margin(s.grossProfit, s.revenue),
+    contribution: safeDivide(s.grossProfit, revenue),
+  }));
+  return { rows, total: { revenue, grossProfit, margin: margin(grossProfit, revenue) } };
 }

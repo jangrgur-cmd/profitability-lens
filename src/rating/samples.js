@@ -15,12 +15,14 @@
  * @property {Record<string, number|null>} values in EUR
  */
 
+import { t } from "../shared/i18n.js";
+
 /** @type {Sample[]} */
 export const SAMPLES = [
   {
     id: "bakery",
     name: "Pekara Lastavica d.o.o.",
-    description: "Fictional regional bakery: steady margins, modest debt and two years of figures.",
+    get description() { return t("rating.samples.bakery"); },
     industryId: "manufacturing",
     fictional: true,
     values: {
@@ -43,7 +45,7 @@ export const SAMPLES = [
   {
     id: "hotel",
     name: "Hotel Borovina d.d.",
-    description: "Fictional seaside hotel: costs reported by nature (no COGS), heavy depreciation and a large bank loan.",
+    get description() { return t("rating.samples.hotel"); },
     industryId: "tourism",
     fictional: true,
     values: {
@@ -66,7 +68,7 @@ export const SAMPLES = [
   {
     id: "startup",
     name: "Oblak Software d.o.o.",
-    description: "Fictional software start-up: high gross margin, but spending on growth produces a net loss. No prior-year figures.",
+    get description() { return t("rating.samples.startup"); },
     industryId: "software",
     fictional: true,
     values: {

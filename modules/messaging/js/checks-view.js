@@ -2,6 +2,7 @@
 
 import { runDataChecks } from "./checks.js";
 import { formatInteger } from "../../../src/shared/format.js";
+import { t } from "../../../src/shared/i18n.js";
 
 const $ = (id) => document.getElementById(id);
 
@@ -19,15 +20,15 @@ export function createChecksView(model) {
     const results = runDataChecks(model, rows);
     const failed = results.filter((r) => !r.pass);
     $("checks-summary").textContent = failed.length === 0
-      ? `All ${results.length} checks pass. Revenue reconciliations use the ${formatInteger(rows.length)} rows in the current selection; the other checks use all ${formatInteger(model.rows.length)} rows.`
-      : `${failed.length} of ${results.length} checks fail: ${failed.map((r) => r.label).join("; ")}.`;
+      ? t("seg.checks.allPass", { count: results.length, selected: formatInteger(rows.length), total: formatInteger(model.rows.length) })
+      : t("seg.checks.someFail", { failed: failed.length, count: results.length, labels: failed.map((r) => r.label).join("; ") });
 
     $("checks-list").replaceChildren(...results.map((r) => {
       const li = el("li", `check ${r.pass ? "check--pass" : "check--fail"}`);
-      const badge = el("span", "check-badge", r.pass ? "✓ Pass" : "✗ Fail");
+      const badge = el("span", "check-badge", t(r.pass ? "seg.checks.pass" : "seg.checks.fail"));
       const body = el("div", "check-body");
       const head = el("div", "check-head");
-      head.append(el("strong", "", r.label), el("span", "check-scope", r.scope === "selection" ? "Current selection" : "All data"));
+      head.append(el("strong", "", r.label), el("span", "check-scope", t(r.scope === "selection" ? "seg.checks.scopeSelection" : "seg.checks.scopeAll")));
       body.append(head, el("p", "check-detail", r.detail));
       li.append(badge, body);
       return li;

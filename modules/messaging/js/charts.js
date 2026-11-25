@@ -2,18 +2,31 @@
 // Each chart is created once and then updated in place when filters change.
 
 import { formatEur, formatPct, formatCount } from "../../../src/shared/format.js";
+import { t } from "../../../src/shared/i18n.js";
 
 const Chart = window.Chart;
 
-/** Reads a colour token from the CSS custom properties. */
+/**
+ * Reads a colour token from the CSS custom properties, resolved for the
+ * current light or dark theme. Tokens are written as light-dark(…, …) in
+ * theme.css, which only resolves when used as a colour, so a hidden probe
+ * element applies the token and reports the computed colour.
+ */
 function token(name) {
-  return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  const probe = document.createElement("span");
+  probe.style.display = "none";
+  probe.style.color = `var(${name})`;
+  document.body.append(probe);
+  const colour = getComputedStyle(probe).color;
+  probe.remove();
+  return colour;
 }
 
-/** Colours used by the charts, read once from style.css so there is one source. */
+/** Colours used by the charts, read from the CSS tokens so there is one source. */
 function palette() {
   return {
     ink: token("--ink"),
+    surface: token("--surface"),
     muted: token("--ink-muted"),
     rule: token("--rule"),
     profit: token("--profit"),
@@ -53,6 +66,10 @@ function applyDefaults() {
   Chart.defaults.plugins.legend.labels.boxHeight = 8;
   Chart.defaults.plugins.legend.labels.padding = 16;
   Chart.defaults.plugins.tooltip.backgroundColor = p.ink;
+  // Tooltip text in the page colour, so it reads on the ink background in both themes.
+  Chart.defaults.plugins.tooltip.titleColor = p.surface;
+  Chart.defaults.plugins.tooltip.bodyColor = p.surface;
+  Chart.defaults.plugins.tooltip.footerColor = p.surface;
   Chart.defaults.plugins.tooltip.padding = 12;
   Chart.defaults.plugins.tooltip.cornerRadius = 8;
   Chart.defaults.plugins.tooltip.titleFont = { weight: "600" };
@@ -69,6 +86,24 @@ function ensureDefaults() {
   }
 }
 
+/**
+ * Destroys every chart so the next render creates it again in the current
+ * theme's colours. Call after the light/dark theme changes.
+ */
+export function restyleCharts() {
+  for (const chart of Object.values(Chart.instances)) chart.destroy();
+  defaultsApplied = false;
+}
+
+/**
+ * The live chart on a canvas, or null. Views use it instead of keeping their
+ * own reference, so a chart destroyed by restyleCharts is created again.
+ * @param {HTMLCanvasElement} canvas
+ */
+export function chartOn(canvas) {
+  return Chart.getChart(canvas) ?? null;
+}
+
 // ---------------------------------------------------------------------------
 // Monthly trend: revenue and gross profit bars, gross margin line on a second axis
 // ---------------------------------------------------------------------------
@@ -81,10 +116,10 @@ export function createTrendChart(canvas) {
     data: {
       labels: [],
       datasets: [
-        { type: "bar", label: "Revenue", data: [], backgroundColor: p.revenue, yAxisID: "eur", order: 2, borderRadius: 4 },
-        { type: "bar", label: "Gross profit", data: [], backgroundColor: [], yAxisID: "eur", order: 1, borderRadius: 4 },
+        { type: "bar", label: t("seg.charts.revenue"), data: [], backgroundColor: p.revenue, yAxisID: "eur", order: 2, borderRadius: 4 },
+        { type: "bar", label: t("seg.charts.grossProfit"), data: [], backgroundColor: [], yAxisID: "eur", order: 1, borderRadius: 4 },
         {
-          type: "line", label: "Gross margin", data: [], yAxisID: "pct", order: 0,
+          type: "line", label: t("seg.charts.grossMargin"), data: [], yAxisID: "pct", order: 0,
           borderColor: p.ink, backgroundColor: p.ink, borderWidth: 2, pointRadius: 3, tension: 0.25,
         },
       ],
@@ -143,39 +178,42 @@ export function updateTrendChart(chart, months, monthLabels) {
   chart.canvas.setAttribute("aria-label", describeTrend(months, monthLabels));
 }
 
-/** Plain-English summary of the trend chart for screen readers. */
+/** Plain-language summary of the trend chart for screen readers. */
 function describeTrend(months, monthLabels) {
   const withRevenue = months.filter((m) => m.revenue > 0);
-  if (withRevenue.length === 0) return "Monthly trend chart: no traffic in the selected filters.";
+  if (withRevenue.length === 0) return t("seg.charts.trendEmpty");
   const best = withRevenue.reduce((a, b) => (b.grossProfit > a.grossProfit ? b : a));
   const worst = withRevenue.reduce((a, b) => (b.grossProfit < a.grossProfit ? b : a));
-  return (
-    `Monthly revenue and gross profit bar chart with gross margin line. ` +
-    `Highest gross profit in ${monthLabels[best.month - 1]} (${formatEur(best.grossProfit)}, margin ${formatPct(best.grossMarginPct)}); ` +
-    `lowest in ${monthLabels[worst.month - 1]} (${formatEur(worst.grossProfit)}, margin ${formatPct(worst.grossMarginPct)}).`
-  );
+  return t("seg.charts.trendSummary", {
+    bestMonth: monthLabels[best.month - 1], bestProfit: formatEur(best.grossProfit), bestMargin: formatPct(best.grossMarginPct),
+    worstMonth: monthLabels[worst.month - 1], worstProfit: formatEur(worst.grossProfit), worstMargin: formatPct(worst.grossMarginPct),
+  });
 }
 
 // ---------------------------------------------------------------------------
 // Channel mix: three 100% bars (messages, revenue, gross profit) split by channel
 // ---------------------------------------------------------------------------
 
-const MIX_ROWS = ["Messages", "Revenue", "Gross profit"];
-
-/** Creates the channel mix chart with one dataset per channel. */
-export function createMixChart(canvas, channels) {
+/**
+ * Creates the channel mix chart with one dataset per channel.
+ * @param {HTMLCanvasElement} canvas
+ * @param {string[]} channels channel ids
+ * @param {(channel: string) => string} channelName display name of a channel
+ */
+export function createMixChart(canvas, channels, channelName) {
   ensureDefaults();
   const p = palette();
   return new Chart(canvas, {
     type: "bar",
     data: {
-      labels: MIX_ROWS,
+      labels: [t("seg.charts.messages"), t("seg.charts.revenue"), t("seg.charts.grossProfit")],
       datasets: channels.map((channel) => ({
-        label: channel,
+        channel,
+        label: channelName(channel),
         data: [],
         raw: [],
         backgroundColor: p.channels[channel],
-        borderColor: "#ffffff",
+        borderColor: p.surface,
         borderWidth: 1,
       })),
     },
@@ -193,8 +231,8 @@ export function createMixChart(canvas, channels) {
           callbacks: {
             label: (item) => {
               const raw = item.dataset.raw[item.dataIndex];
-              const amount = item.dataIndex === 0 ? `${formatCount(raw)} messages` : formatEur(raw);
-              return ` ${item.dataset.label}: ${formatPct(item.raw)} (${amount})`;
+              const amount = item.dataIndex === 0 ? t("seg.charts.mixMessages", { count: formatCount(raw) }) : formatEur(raw);
+              return ` ${t("seg.charts.mixTooltip", { channel: item.dataset.label, share: formatPct(item.raw), amount })}`;
             },
           },
         },
@@ -220,7 +258,7 @@ export function updateMixChart(chart, channelTotals) {
   const share = (value, total) => (total > 0 ? value / total : 0);
 
   for (const dataset of chart.data.datasets) {
-    const c = byChannel[dataset.label];
+    const c = byChannel[dataset.channel];
     const volume = c?.volume ?? 0;
     const revenue = c?.revenue ?? 0;
     const profit = c?.grossProfit ?? 0;
@@ -232,12 +270,13 @@ export function updateMixChart(chart, channelTotals) {
     ];
   }
   chart.update();
-  chart.canvas.setAttribute("aria-label", describeMix(channelTotals, totals, profitShareValid));
+  const nameOf = (channel) => chart.data.datasets.find((d) => d.channel === channel)?.label ?? channel;
+  chart.canvas.setAttribute("aria-label", describeMix(channelTotals, totals, profitShareValid, nameOf));
 
-  if (channelTotals.length === 0) return "No traffic matches these filters.";
+  if (channelTotals.length === 0) return t("seg.noTraffic");
   if (!profitShareValid) {
-    const losers = channelTotals.filter((c) => c.grossProfit < 0).map((c) => c.channel);
-    return `Gross profit shares are not shown: ${losers.join(" and ")} ${losers.length === 1 ? "is" : "are"} loss-making in this selection.`;
+    const losers = channelTotals.filter((c) => c.grossProfit < 0).map((c) => nameOf(c.channel));
+    return t("seg.charts.mixLosers", { count: losers.length, channels: losers.join(t("common.and")) });
   }
   return null;
 }
@@ -255,7 +294,7 @@ export function createWhaleChart(canvas) {
     data: {
       datasets: [
         {
-          label: "Cumulative gross profit",
+          label: t("seg.charts.whaleLine"),
           data: [],
           names: [],
           borderColor: p.profit,
@@ -265,7 +304,7 @@ export function createWhaleChart(canvas) {
           tension: 0,
         },
         {
-          label: "Peak",
+          label: t("seg.charts.whalePeak"),
           data: [],
           showLine: false,
           pointRadius: 6,
@@ -274,7 +313,7 @@ export function createWhaleChart(canvas) {
           backgroundColor: p.ink,
         },
         {
-          label: "100% of gross profit",
+          label: t("seg.charts.whaleFull"),
           data: [{ x: 0, y: 1 }, { x: 1, y: 1 }],
           borderColor: p.muted,
           borderWidth: 1,
@@ -290,13 +329,13 @@ export function createWhaleChart(canvas) {
       scales: {
         x: {
           type: "linear", min: 0, max: 1,
-          title: { display: true, text: "Share of customers (most profitable first)" },
+          title: { display: true, text: t("seg.charts.whaleX") },
           ticks: { callback: (v) => formatPct(v), maxTicksLimit: 6 },
           grid: { display: false },
         },
         y: {
           beginAtZero: true,
-          title: { display: true, text: "Share of gross profit" },
+          title: { display: true, text: t("seg.charts.whaleY") },
           ticks: { callback: (v) => formatPct(v), maxTicksLimit: 6 },
           grid: { color: p.rule },
         },
@@ -307,7 +346,7 @@ export function createWhaleChart(canvas) {
           filter: (item) => item.datasetIndex < 2,
           callbacks: {
             title: (items) => items[0]?.raw.name ?? "",
-            label: (item) => ` ${formatPct(item.raw.x)} of customers earn ${formatPct(item.raw.y)} of gross profit`,
+            label: (item) => ` ${t("seg.charts.whaleTooltip", { customers: formatPct(item.raw.x), profit: formatPct(item.raw.y) })}`,
           },
         },
       },
@@ -326,23 +365,23 @@ export function updateWhaleChart(chart, curve, nameOf) {
   const [line, peak] = chart.data.datasets;
   const valid = curve.points.length > 0 && curve.points.every((pt) => pt.profitSharePct !== null);
   line.data = valid
-    ? [{ x: 0, y: 0, name: "Start" }, ...curve.points.map((pt) => ({ x: pt.customerSharePct, y: pt.profitSharePct, name: nameOf(pt.customer_id) }))]
+    ? [{ x: 0, y: 0, name: t("seg.charts.whaleStart") }, ...curve.points.map((pt) => ({ x: pt.customerSharePct, y: pt.profitSharePct, name: nameOf(pt.customer_id) }))]
     : [];
   peak.data = valid && curve.peak
-    ? [{ x: curve.peak.customerSharePct, y: curve.peak.profitSharePct, name: `Peak: ${nameOf(curve.peak.customer_id)}` }]
+    ? [{ x: curve.peak.customerSharePct, y: curve.peak.profitSharePct, name: t("seg.charts.whalePeakName", { name: nameOf(curve.peak.customer_id) }) }]
     : [];
   chart.update();
 
   let summary;
-  if (curve.points.length === 0) summary = "No customers match these filters.";
-  else if (!valid) summary = "Total gross profit in this selection is zero or negative, so profit shares cannot be shown.";
+  if (curve.points.length === 0) summary = t("seg.charts.whaleNoCustomers");
+  else if (!valid) summary = t("seg.charts.whaleInvalid");
   else if (curve.peak.profitSharePct > 1 + 1e-9) {
-    const leaders = curve.peak.rank === 1 ? "the most profitable customer" : `the ${curve.peak.rank} most profitable customers`;
-    summary = `The curve peaks at ${formatPct(curve.peak.profitSharePct)} of gross profit after ${leaders}; the remaining customers lose money and give back the difference.`;
+    const leaders = curve.peak.rank === 1 ? t("seg.charts.whaleLeaderOne") : t("seg.charts.whaleLeaders", { count: curve.peak.rank });
+    summary = t("seg.charts.whalePeaks", { share: formatPct(curve.peak.profitSharePct), leaders });
   } else {
-    summary = "Every customer in this selection is profitable, so the curve rises steadily to 100% without overshooting.";
+    summary = t("seg.charts.whaleAllProfitable");
   }
-  chart.canvas.setAttribute("aria-label", `Whale curve chart. ${summary}`);
+  chart.canvas.setAttribute("aria-label", t("seg.charts.whaleLabel", { summary }));
   return summary;
 }
 
@@ -363,7 +402,7 @@ export function createBridgeChart(canvas) {
   ensureDefaults();
   return new Chart(canvas, {
     type: "bar",
-    data: { labels: [], datasets: [{ label: "Gross profit", data: [], deltas: [], margins: [], backgroundColor: [], borderRadius: 6, barPercentage: 0.7 }] },
+    data: { labels: [], datasets: [{ label: t("seg.charts.grossProfit"), data: [], deltas: [], margins: [], backgroundColor: [], borderRadius: 6, barPercentage: 0.7 }] },
     options: {
       responsive: true,
       maintainAspectRatio: false,
@@ -384,7 +423,7 @@ export function createBridgeChart(canvas) {
               const delta = ds.deltas[item.dataIndex];
               const margin = ds.margins[item.dataIndex];
               const amount = delta === null ? formatEur(item.raw[1]) : `${delta >= 0 ? "+" : ""}${formatEur(delta)}`;
-              return ` ${amount} (gross margin ${formatPct(margin)} after this step)`;
+              return ` ${t("seg.charts.bridgeTooltip", { amount, margin: formatPct(margin) })}`;
             },
           },
         },
@@ -405,7 +444,7 @@ export function createBridgeChart(canvas) {
 export function updateBridgeChart(chart, bridge) {
   const p = palette();
   const ds = chart.data.datasets[0];
-  const labels = ["Baseline"];
+  const labels = [t("seg.charts.bridgeBaseline")];
   const bars = [];
   const colours = [p.muted];
   const deltas = [null];
@@ -422,7 +461,7 @@ export function updateBridgeChart(chart, bridge) {
     deltas.push(step.delta);
     margins.push(step.marginAfter);
   }
-  labels.push("Scenario");
+  labels.push(t("seg.charts.bridgeScenario"));
   colours.push(p.ink);
   deltas.push(null);
   margins.push(bridge.scenario.grossMarginPct);
@@ -441,20 +480,23 @@ export function updateBridgeChart(chart, bridge) {
   chart.data.labels = labels;
   chart.update();
 
-  const parts = bridge.steps.filter((s) => Math.abs(s.delta) > 0.5).map((s) => `${s.label} ${s.delta >= 0 ? "+" : ""}${formatEur(s.delta)}`);
+  const parts = bridge.steps.filter((s) => Math.abs(s.delta) > 0.5)
+    .map((s) => t("seg.charts.bridgeEffect", { step: s.label, amount: `${s.delta >= 0 ? "+" : ""}${formatEur(s.delta)}` }));
   chart.canvas.setAttribute(
     "aria-label",
-    `Margin bridge from baseline gross profit ${formatEur(bridge.baseline.grossProfit)} to scenario ${formatEur(bridge.scenario.grossProfit)}. ` +
-      (parts.length ? `Effects: ${parts.join("; ")}.` : "No parameter changes gross profit."),
+    t("seg.charts.bridgeSummary", { baseline: formatEur(bridge.baseline.grossProfit), scenario: formatEur(bridge.scenario.grossProfit) }) +
+      (parts.length ? t("seg.charts.bridgeEffects", { effects: parts.join("; ") }) : t("seg.charts.bridgeNoEffects")),
   );
 }
 
-/** Plain-English summary of the channel mix chart for screen readers. */
-function describeMix(channelTotals, totals, profitShareValid) {
-  if (channelTotals.length === 0) return "Channel mix chart: no traffic in the selected filters.";
+/** Plain-language summary of the channel mix chart for screen readers. */
+function describeMix(channelTotals, totals, profitShareValid, nameOf) {
+  if (channelTotals.length === 0) return t("seg.charts.mixEmpty");
   const parts = channelTotals.map((c) => {
-    const profitPart = profitShareValid ? `, ${formatPct(c.grossProfit / totals.grossProfit)} of gross profit` : "";
-    return `${c.channel}: ${formatPct(c.volume / totals.volume)} of messages, ${formatPct(c.revenue / totals.revenue)} of revenue${profitPart}`;
+    const profitPart = profitShareValid ? t("seg.charts.mixProfitPart", { profit: formatPct(c.grossProfit / totals.grossProfit) }) : "";
+    return t("seg.charts.mixPart", {
+      channel: nameOf(c.channel), messages: formatPct(c.volume / totals.volume), revenue: formatPct(c.revenue / totals.revenue),
+    }) + profitPart;
   });
-  return `Channel mix stacked bar chart. ${parts.join("; ")}.`;
+  return t("seg.charts.mixSummary", { parts: parts.join("; ") });
 }

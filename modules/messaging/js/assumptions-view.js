@@ -4,10 +4,15 @@ import { createSortableTable } from "./tables.js";
 import { toCsv, downloadCsv } from "./export.js";
 import { STEPS } from "./scenarios.js";
 import { formatCount, formatPct } from "../../../src/shared/format.js";
+import { t } from "../../../src/shared/i18n.js";
 
 const $ = (id) => document.getElementById(id);
 
-const STATUS_LABELS = { sourced: "Sourced", estimated: "Estimated", placeholder: "Placeholder" };
+/** Assumption statuses; their labels are seg.assumptions.status<Status> in the language files. */
+const STATUSES = ["sourced", "estimated", "placeholder"];
+const statusLabel = (status) => (STATUSES.includes(status)
+  ? t(`seg.assumptions.status${status[0].toUpperCase()}${status.slice(1)}`)
+  : status);
 
 /** Creates an element with optional class and text. */
 function el(tag, className, text) {
@@ -17,14 +22,14 @@ function el(tag, className, text) {
   return node;
 }
 
-/** Shows a value as stored: numbers without rounding noise, text as is. */
+/** Shows a value as stored: numbers without rounding noise (in the language's decimal separator), text as is. */
 function showValue(value) {
-  return typeof value === "number" ? String(Number(value.toPrecision(6))) : String(value);
+  return typeof value === "number" ? String(Number(value.toPrecision(6))).replace(".", t("format.decimal")) : String(value);
 }
 
 /** Status as a word inside a tinted badge (the word carries the meaning, not the colour). */
 function statusBadge(status) {
-  return el("span", `status status--${status}`, STATUS_LABELS[status] ?? status);
+  return el("span", `status status--${status}`, statusLabel(status));
 }
 
 /** Link to the source page, labelled with its site name. */
@@ -49,18 +54,22 @@ function matchesFilters(a, { country, channel, category, industry }) {
 }
 
 export function createAssumptionsView(model) {
-  const { assumptions, customers, countryNames } = model;
+  const { assumptions, customers, countryNames, customerNames } = model;
   let filters = null;
 
   // --- Group and status selects ----------------------------------------------------
 
   const groups = [...new Set(assumptions.map((a) => a.group))];
   const groupSelect = $("a-group");
-  groupSelect.replaceChildren(el("option", "", "All groups"), ...groups.map((g) => el("option", "", g)));
+  groupSelect.replaceChildren(el("option", "", t("seg.assumptions.allGroups")), ...groups.map((g) => {
+    const option = el("option", "", model.assumptionGroupName(g));
+    option.value = g;
+    return option;
+  }));
   groupSelect.options[0].value = "all";
   const statusSelect = $("a-status");
-  statusSelect.replaceChildren(el("option", "", "All statuses"), ...Object.entries(STATUS_LABELS).map(([v, l]) => {
-    const o = el("option", "", l);
+  statusSelect.replaceChildren(el("option", "", t("seg.assumptions.allStatuses")), ...STATUSES.map((v) => {
+    const o = el("option", "", statusLabel(v));
     o.value = v;
     return o;
   }));
@@ -70,16 +79,16 @@ export function createAssumptionsView(model) {
   // --- Assumptions table -------------------------------------------------------------
 
   const columns = [
-    { key: "label", label: "Assumption", type: "text", className: "wrap-label" },
-    { key: "value", label: "Value", type: "number", value: (a) => (typeof a.value === "number" ? a.value : null), format: (_, a) => showValue(a.value) },
-    { key: "unit", label: "Unit", type: "text", className: "wrap-unit" },
-    { key: "status", label: "Status", type: "text", cell: (a) => statusBadge(a.status) },
-    { key: "source", label: "Source", type: "text", cell: (a) => sourceLink(a.source) },
-    { key: "note", label: "Note", type: "text", className: "wrap-note" },
+    { key: "label", label: t("seg.assumptions.colAssumption"), type: "text", className: "wrap-label" },
+    { key: "value", label: t("seg.assumptions.colValue"), type: "number", value: (a) => (typeof a.value === "number" ? a.value : null), format: (_, a) => showValue(a.value) },
+    { key: "unit", label: t("seg.assumptions.colUnit"), type: "text", className: "wrap-unit" },
+    { key: "status", label: t("seg.assumptions.colStatus"), type: "text", cell: (a) => statusBadge(a.status) },
+    { key: "source", label: t("seg.assumptions.colSource"), type: "text", cell: (a) => sourceLink(a.source) },
+    { key: "note", label: t("seg.assumptions.colNote"), type: "text", className: "wrap-note" },
   ];
   const table = createSortableTable($("assumptions-table"), {
     columns,
-    caption: "Every input assumption with its value, unit, status and source",
+    caption: t("seg.assumptions.tableCaption"),
     sort: { key: "label", direction: "asc" },
   });
   const csvColumns = ["id", "group", "label", "value", "unit", "status", "source", "note"].map((key) => ({ label: key, key }));
@@ -88,17 +97,17 @@ export function createAssumptionsView(model) {
   // --- Customer archetypes table --------------------------------------------------------
 
   const archetypeColumns = [
-    { key: "name", label: "Customer", type: "text" },
-    { key: "industry", label: "Industry", type: "text" },
-    { key: "home", label: "Home", type: "text", value: (c) => countryNames[c.home_country] },
-    { key: "size_tier", label: "Size", type: "text" },
-    { key: "discount", label: "Discount", type: "number", value: (c) => model.ctx.discountByCustomer[c.id], format: formatPct },
-    { key: "base_monthly_volume", label: "Messages a month", type: "number", format: formatCount },
-    { key: "volume_note", label: "How the volume was estimated", type: "text", className: "wrap-note", value: (c) => c.volume_note.replace(/^Estimated: /, "") },
+    { key: "name", label: t("seg.assumptions.colCustomer"), type: "text", value: (c) => customerNames[c.id] },
+    { key: "industry", label: t("seg.assumptions.colIndustry"), type: "text", value: (c) => model.industryName(c.industry) },
+    { key: "home", label: t("seg.assumptions.colHome"), type: "text", value: (c) => countryNames[c.home_country] },
+    { key: "size_tier", label: t("seg.assumptions.colSize"), type: "text", value: (c) => model.sizeName(c.size_tier) },
+    { key: "discount", label: t("seg.assumptions.colDiscount"), type: "number", value: (c) => model.ctx.discountByCustomer[c.id], format: formatPct },
+    { key: "base_monthly_volume", label: t("seg.assumptions.colVolume"), type: "number", format: formatCount },
+    { key: "volume_note", label: t("seg.assumptions.colVolumeNote"), type: "text", className: "wrap-note", value: (c) => c.volume_note.replace(/^Estimated: /, "") },
   ];
   const archetypes = createSortableTable($("archetypes-table"), {
     columns: archetypeColumns,
-    caption: "Customer archetypes with their estimated monthly volume",
+    caption: t("seg.assumptions.archetypesCaption"),
     sort: { key: "base_monthly_volume", direction: "desc" },
   });
   const archetypeCsv = [
@@ -141,10 +150,10 @@ export function createAssumptionsView(model) {
     archetypes.render(customers.filter((c) => customerMatches(c, filters)));
 
     const count = (s) => assumptions.filter((a) => a.status === s).length;
-    const narrowed = shown.length < assumptions.length ? ` Showing ${shown.length} that match the filters.` : "";
-    $("assumptions-summary").textContent =
-      `${assumptions.length} assumptions: ${count("sourced")} read from public sources, ${count("estimated")} estimated ` +
-      `with the reasoning in the note, ${count("placeholder")} placeholders.${narrowed}`;
+    const narrowed = shown.length < assumptions.length ? t("seg.assumptions.narrowed", { count: shown.length }) : "";
+    $("assumptions-summary").textContent = t("seg.assumptions.summary", {
+      total: assumptions.length, sourced: count("sourced"), estimated: count("estimated"), placeholder: count("placeholder"),
+    }) + narrowed + t("seg.assumptions.sourceLanguageNote");
   }
 
   return { render };

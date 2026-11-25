@@ -2,7 +2,7 @@
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { safeDivide, margin, bandFor, scoreAgainstThresholds, assertThresholds } from "../src/shared/margin.js";
+import { safeDivide, margin, bandFor, scoreAgainstThresholds, assertThresholds, marginContributions } from "../src/shared/margin.js";
 
 const SCALE = [0, 5, 10, 20];
 
@@ -57,4 +57,26 @@ test("thresholds must be four strictly ascending numbers", () => {
   assert.throws(() => assertThresholds([4, 3, 2, 1]), /strictly ascending/);
   assert.throws(() => assertThresholds([1, 2, Number.NaN, 4]), /four numbers/);
   assert.throws(() => bandFor(1, [1, 1, 1, 1]), /strictly ascending/);
+});
+
+test("marginContributions: segment margins weighted by revenue add up to the company margin", () => {
+  const { rows, total } = marginContributions([
+    { label: "SMS", revenue: 600, grossProfit: 120 }, // 20% margin, 60% of revenue → 12 points
+    { label: "WhatsApp", revenue: 300, grossProfit: 15 }, // 5% margin → 1.5 points
+    { label: "Voice", revenue: 100, grossProfit: -10 }, // loss → −1 point
+  ]);
+  assert.deepEqual(rows.map((r) => r.label), ["SMS", "WhatsApp", "Voice"]);
+  assert.deepEqual(rows.map((r) => r.revenueShare), [0.6, 0.3, 0.1]);
+  assert.deepEqual(rows.map((r) => r.margin), [0.2, 0.05, -0.1]);
+  assert.deepEqual(rows.map((r) => r.contribution), [0.12, 0.015, -0.01]);
+  assert.deepEqual(total, { revenue: 1000, grossProfit: 125, margin: 0.125 });
+  const sum = rows.reduce((s, r) => s + r.revenueShare * r.margin, 0);
+  assert.ok(Math.abs(sum - total.margin) < 1e-12);
+});
+
+test("marginContributions never fakes a margin on zero revenue", () => {
+  const { rows, total } = marginContributions([{ label: "Viber", revenue: 0, grossProfit: 0 }]);
+  assert.deepEqual(rows[0], { label: "Viber", revenueShare: null, margin: null, contribution: null });
+  assert.equal(total.margin, null);
+  assert.deepEqual(marginContributions([]).rows, []);
 });

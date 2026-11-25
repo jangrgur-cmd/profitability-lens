@@ -16,6 +16,8 @@
 //   "12.50" = 12.5, "1234.567" = 1234.567.
 // - Spaces were used for thousands ("1 234,567"): a lone "." or "," is decimal.
 
+import { t } from "./i18n.js";
+
 const CURRENCY = /€|\$|£|(?<![a-z])(?:eur|usd|gbp|hrk|kn)(?![a-z])/gi;
 const SPACES = /[\s  ]/g;
 const MINUS_SIGNS = /^[-−–]/;
@@ -103,5 +105,5 @@ function blank() {
 }
 
 function invalid() {
-  return { value: null, error: "Not a number. Use digits, e.g. 1.234.567,89 or 1,234,567.89." };
+  return { value: null, error: t("parse.notANumber") };
 }

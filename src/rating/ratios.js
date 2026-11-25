@@ -7,6 +7,7 @@
 // Ratio values are shares (0.15 for 15%).
 
 import { safeDivide, margin } from "../shared/margin.js";
+import { t } from "../shared/i18n.js";
 
 /** Income tax rates above this are treated as one-offs and capped for NOPAT. */
 const MAX_TAX_RATE = 0.5;
@@ -94,83 +95,61 @@ const notMeaningful = (reason, numerator, denominator) => ({ status: "not_meanin
 
 /** ROE (and DuPont) need positive equity at year end and on average. */
 function equityProblem(s) {
-  if (s.equity <= 0) return "Equity is zero or negative, so a return on it has no meaning.";
-  if (s.avgEquity <= 0) return "Average equity is zero or negative, so a return on it has no meaning.";
+  if (s.equity <= 0) return t("rating.reasons.equity");
+  if (s.avgEquity <= 0) return t("rating.reasons.avgEquity");
   return null;
 }
 
 /**
- * The eight ratios, in display order. Weights add up to 100.
- * `shortLabel` is the name inside a sentence; `formula` names the parts; `compute` returns a RatioResult from a Statement.
+ * A ratio definition. `numeratorTerm` and `denominatorTerm` name its building blocks
+ * (keys of rating.terms in the language files). Texts are getters, read in the
+ * current interface language: `label`, `shortLabel` (the name inside a
+ * sentence), `formula`, `numeratorLabel`, `denominatorLabel`, `meaning`
+ * and `improve`. `compute` returns a RatioResult from a Statement.
  */
+function ratio(id, group, weight, numeratorTerm, denominatorTerm, compute) {
+  const text = (field) => t(`rating.ratios.${id}.${field}`);
+  return {
+    id, group, weight, numeratorTerm, denominatorTerm, compute,
+    get label() { return text("label"); },
+    get shortLabel() { return text("short"); },
+    get formula() { return text("formula"); },
+    get numeratorLabel() { return t(`rating.terms.${numeratorTerm}`); },
+    get denominatorLabel() { return t(`rating.terms.${denominatorTerm}`); },
+    get meaning() { return text("meaning"); },
+    get improve() { return text("improve"); },
+  };
+}
+
+/** The eight ratios, in display order. Weights add up to 100. */
 export const RATIOS = [
-  {
-    id: "grossMargin", label: "Gross margin", shortLabel: "gross margin", group: "margins", weight: 10,
-    formula: "Gross profit ÷ Revenue", numeratorLabel: "Gross profit", denominatorLabel: "Revenue",
-    meaning: "How much of each sale is left after the direct cost of what was sold. It reflects pricing power and purchasing or production efficiency.",
-    improve: "Raise prices or move the mix towards higher-margin products; negotiate supplier prices; cut waste in production.",
-    compute: (s) => (s.grossProfit === null ? missing("cogs") : ok(s.grossProfit, s.revenue)),
-  },
-  {
-    id: "ebitdaMargin", label: "EBITDA margin", shortLabel: "EBITDA margin", group: "margins", weight: 10,
-    formula: "EBITDA ÷ Revenue", numeratorLabel: "EBITDA", denominatorLabel: "Revenue",
-    meaning: "Operating profit before depreciation and amortisation: the cash-like profit the day-to-day business generates from each sale.",
-    improve: "Grow revenue faster than fixed costs; review staff, rent and service contracts; automate repetitive work.",
-    compute: (s) => ok(s.ebitda, s.revenue),
-  },
-  {
-    id: "operatingMargin", label: "Operating margin (EBIT)", shortLabel: "operating margin", group: "margins", weight: 15,
-    formula: "EBIT ÷ Revenue", numeratorLabel: "EBIT", denominatorLabel: "Revenue",
-    meaning: "Profit from operations after all operating costs, including the wear of assets, before interest and tax.",
-    improve: "Everything that lifts EBITDA margin, plus using assets longer or selling idle ones to lower depreciation.",
-    compute: (s) => ok(s.ebit, s.revenue),
-  },
-  {
-    id: "netMargin", label: "Net margin", shortLabel: "net margin", group: "margins", weight: 15,
-    formula: "Net income ÷ Revenue", numeratorLabel: "Net income", denominatorLabel: "Revenue",
-    meaning: "What is left for the owners from each sale after every cost, interest and tax.",
-    improve: "Improve operating margin; refinance expensive debt; use legitimate tax reliefs.",
-    compute: (s) => ok(s.netIncome, s.revenue),
-  },
-  {
-    id: "roa", label: "Return on assets (ROA)", shortLabel: "ROA", group: "returns", weight: 15,
-    formula: "Net income ÷ Average total assets", numeratorLabel: "Net income", denominatorLabel: "Average total assets",
-    meaning: "How much profit the company earns on everything it owns, however that is financed.",
-    improve: "Raise margins, or sell more with the same assets: collect receivables faster, hold less stock, dispose of idle assets.",
-    compute: (s) => ok(s.netIncome, s.avgAssets),
-  },
-  {
-    id: "roe", label: "Return on equity (ROE)", shortLabel: "ROE", group: "returns", weight: 15,
-    formula: "Net income ÷ Average equity", numeratorLabel: "Net income", denominatorLabel: "Average equity",
-    meaning: "The return the owners earn on the capital they have in the business. Debt raises it, but also raises risk: see the DuPont breakdown.",
-    improve: "Raise margins and asset turnover. More debt lifts ROE too, but only safely while interest is well covered.",
-    compute: (s) => {
+  ratio("grossMargin", "margins", 10, "grossProfit", "revenue",
+    (s) => (s.grossProfit === null ? missing("cogs") : ok(s.grossProfit, s.revenue))),
+  ratio("ebitdaMargin", "margins", 10, "ebitda", "revenue",
+    (s) => ok(s.ebitda, s.revenue)),
+  ratio("operatingMargin", "margins", 15, "ebit", "revenue",
+    (s) => ok(s.ebit, s.revenue)),
+  ratio("netMargin", "margins", 15, "netIncome", "revenue",
+    (s) => ok(s.netIncome, s.revenue)),
+  ratio("roa", "returns", 15, "netIncome", "avgAssets",
+    (s) => ok(s.netIncome, s.avgAssets)),
+  ratio("roe", "returns", 15, "netIncome", "avgEquity",
+    (s) => {
       const problem = equityProblem(s);
       return problem ? notMeaningful(problem, s.netIncome, s.avgEquity) : ok(s.netIncome, s.avgEquity);
-    },
-  },
-  {
-    id: "roce", label: "Return on capital employed (ROCE)", shortLabel: "ROCE", group: "returns", weight: 10,
-    formula: "EBIT ÷ (Total assets − Current liabilities)", numeratorLabel: "EBIT", denominatorLabel: "Capital employed",
-    meaning: "Operating profit earned on the long-term capital in the business, from owners and lenders alike. Compare it with the cost of borrowing.",
-    improve: "Raise operating margin; release capital tied up in stock, receivables or idle assets.",
-    compute: (s) => {
+    }),
+  ratio("roce", "returns", 10, "ebit", "capitalEmployed",
+    (s) => {
       if (s.capitalEmployed === null) return missing("currentLiabilities");
-      if (s.capitalEmployed <= 0) return notMeaningful("Current liabilities are at least as large as total assets, so capital employed is zero or negative.", s.ebit, s.capitalEmployed);
+      if (s.capitalEmployed <= 0) return notMeaningful(t("rating.reasons.capitalEmployed"), s.ebit, s.capitalEmployed);
       return ok(s.ebit, s.capitalEmployed);
-    },
-  },
-  {
-    id: "roic", label: "Return on invested capital (ROIC)", shortLabel: "ROIC", group: "returns", weight: 10,
-    formula: "NOPAT ÷ (Debt + Equity − Cash)", numeratorLabel: "NOPAT", denominatorLabel: "Invested capital",
-    meaning: "After-tax operating profit on the money invested in operations. A business creates value when ROIC is above its cost of capital.",
-    improve: "Raise operating margin; invest only in projects that earn more than the cost of capital; avoid holding more cash than needed while also borrowing.",
-    compute: (s) => {
+    }),
+  ratio("roic", "returns", 10, "nopat", "investedCapital",
+    (s) => {
       if (s.investedCapital === null) return missing("debt");
-      if (s.investedCapital <= 0) return notMeaningful("Cash exceeds debt plus equity, so invested capital is zero or negative.", s.nopat, s.investedCapital);
+      if (s.investedCapital <= 0) return notMeaningful(t("rating.reasons.investedCapital"), s.nopat, s.investedCapital);
       return ok(s.nopat, s.investedCapital);
-    },
-  },
+    }),
 ];
 
 /**

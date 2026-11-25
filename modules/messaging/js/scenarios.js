@@ -15,6 +15,7 @@
 // profit after step k minus the profit after step k − 1.
 
 import { summarize } from "./calc.js";
+import { t } from "../../../src/shared/i18n.js";
 
 /** A scenario where nothing changes. Every parameter defaults to "no change". */
 export const DEFAULT_SCENARIO = Object.freeze({
@@ -196,14 +197,15 @@ export function applyFxChange(ctx, { fxChange }) {
 // Running a scenario
 // ---------------------------------------------------------------------------
 
-/** The steps in their fixed order, with labels for the UI and the bridge. */
-export const STEPS = Object.freeze([
-  { key: "volume", label: "Volume", description: "Message volume is multiplied by (1 + change), for all traffic or one category." },
-  { key: "migration", label: "SMS → WhatsApp", description: "A share of SMS volume per category moves to the same customer's WhatsApp traffic in the same month and country, at WhatsApp prices and costs; the conversion ratio sets how many WhatsApp messages replace one SMS." },
-  { key: "price", label: "Customer price", description: "Our own fee is multiplied by (1 + change), for all channels or one; pass-through fees stay as they are." },
-  { key: "cost", label: "Operator cost", description: "Delivery cost is multiplied by (1 + change), for all channels or one and for the chosen countries; customer prices do not follow." },
-  { key: "fx", label: "Exchange rate", description: "The EUR/USD rate is multiplied by (1 + change), which changes the euro value of every cost billed in dollars." },
-]);
+/**
+ * The steps in their fixed order. Labels and descriptions for the UI and the
+ * bridge are read in the interface language (seg.scenarios.steps).
+ */
+export const STEPS = Object.freeze(["volume", "migration", "price", "cost", "fx"].map((key) => Object.freeze({
+  key,
+  get label() { return t(`seg.scenarios.steps.${key}`); },
+  get description() { return t(`seg.scenarios.steps.${key}Description`); },
+})));
 
 /**
  * Applies a scenario step by step.
@@ -216,7 +218,7 @@ export const STEPS = Object.freeze([
  */
 export function runScenario(rows, ctx, scenario, rates) {
   const s = makeScenario(scenario);
-  const states = [{ key: "baseline", label: "Baseline", rows, ctx }];
+  const states = [{ key: "baseline", label: t("seg.scenarios.steps.baseline"), rows, ctx }];
   let current = rows;
   current = applyVolumeChange(current, s);
   states.push({ key: "volume", label: STEPS[0].label, rows: current, ctx });
@@ -292,20 +294,20 @@ export function mostAffected(baselineRows, baselineCtx, scenarioRows, scenarioCt
 export const PRESETS = Object.freeze([
   {
     id: "operator-increase",
-    label: "Operator price increase",
-    description: "European operators raise SMS termination costs by 15% in Croatia, Germany, France and the UK; customer prices stay the same.",
+    get label() { return t("seg.scenarios.presets.operatorIncrease"); },
+    get description() { return t("seg.scenarios.presets.operatorIncreaseDescription"); },
     scenario: { costChange: 0.15, costChannel: "SMS", costCountries: ["HR", "DE", "FR", "GB"] },
   },
   {
     id: "shift-to-whatsapp",
-    label: "Shift to WhatsApp",
-    description: "25% of marketing and utility SMS moves to WhatsApp, with one WhatsApp message replacing each SMS.",
+    get label() { return t("seg.scenarios.presets.whatsappShift"); },
+    get description() { return t("seg.scenarios.presets.whatsappShiftDescription"); },
     scenario: { migration: { marketing: 0.25, utility: 0.25 } },
   },
   {
     id: "strong-dollar",
-    label: "Strong dollar",
-    description: "EUR/USD falls 10%, so Meta's fees and US costs, which are billed in dollars, cost more in euros.",
+    get label() { return t("seg.scenarios.presets.strongDollar"); },
+    get description() { return t("seg.scenarios.presets.strongDollarDescription"); },
     scenario: { fxChange: -0.1 },
   },
 ]);

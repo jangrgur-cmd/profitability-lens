@@ -2,7 +2,7 @@
 
 import { loadModel } from "./data.js";
 import { filterRows, availableFilterValues, summarize, monthlyTotals, channelTotals } from "./calc.js";
-import { createTrendChart, updateTrendChart, createMixChart, updateMixChart } from "./charts.js";
+import { createTrendChart, updateTrendChart, createMixChart, updateMixChart, restyleCharts, chartOn } from "./charts.js";
 import { formatEur, formatPct, formatPerMessage, formatCount, formatInteger, toneClass } from "../../../src/shared/format.js";
 import { TABS, parseHash, serializeHash, filtersAreDefault, defaultState } from "./state.js";
 import { createRoutesView } from "./routes-view.js";
@@ -10,16 +10,20 @@ import { createCustomersView } from "./customers-view.js";
 import { createScenariosView } from "./scenarios-view.js";
 import { createAssumptionsView } from "./assumptions-view.js";
 import { createChecksView } from "./checks-view.js";
+import { renderMarginContributions, initHandoffLink } from "./learn-view.js";
+import { mountSiteHeader } from "../../../src/shared/site-header.js";
+import { isLearnMode } from "../../../src/shared/prefs.js";
+import { t, hasText } from "../../../src/shared/i18n.js";
+import { inCountry } from "./labels.js";
 
 const $ = (id) => document.getElementById(id);
 
-/** Longer channel names for the filter, where the short name is not self-explanatory. */
-const CHANNEL_LABELS = { Voice: "Voice (passcode calls)" };
+/** Longer channel name for the filter, where the short name is not self-explanatory (seg.channelLong). */
+const channelFilterLabel = (channel) => (hasText(`seg.channelLong.${channel}`) ? t(`seg.channelLong.${channel}`) : app.model.channelName(channel));
 
 const app = {
   model: null,
   state: defaultState(),
-  charts: {},
   views: {},
 };
 
@@ -98,7 +102,7 @@ function arrangeOptions(select, available, current) {
   const children = [makeOption(all.value, all.label), ...withTraffic.map((o) => makeOption(o.value, o.label))];
   if (withoutTraffic.length > 0) {
     const group = document.createElement("optgroup");
-    group.label = "No traffic with these filters";
+    group.label = t("seg.filters.noTraffic");
     group.append(...withoutTraffic.map((o) => makeOption(o.value, o.label, true)));
     children.push(group);
   }
@@ -111,18 +115,21 @@ function initFilters() {
   fillSelect($("f-from"), months);
   fillSelect($("f-to"), months);
   fillSelect($("f-country"), [
-    { value: "all", label: "All countries" },
+    { value: "all", label: t("seg.filters.allCountries") },
     ...[...dimensions.countries].sort((a, b) => a.name.localeCompare(b.name)).map((c) => ({ value: c.code, label: c.name })),
   ]);
   fillSelect($("f-channel"), [
-    { value: "all", label: "All channels" },
-    ...dimensions.channels.map((c) => ({ value: c, label: CHANNEL_LABELS[c] ?? c })),
+    { value: "all", label: t("seg.filters.allChannels") },
+    ...dimensions.channels.map((c) => ({ value: c, label: channelFilterLabel(c) })),
   ]);
   fillSelect($("f-category"), [
-    { value: "all", label: "All categories" },
-    ...dimensions.categories.map((c) => ({ value: c.id, label: c.label })),
+    { value: "all", label: t("seg.filters.allCategories") },
+    ...dimensions.categories.map((c) => ({ value: c.id, label: app.model.categoryLabels[c.id] })),
   ]);
-  fillSelect($("f-industry"), [{ value: "all", label: "All industries" }, ...dimensions.industries.map((i) => ({ value: i, label: i }))]);
+  fillSelect($("f-industry"), [
+    { value: "all", label: t("seg.filters.allIndustries") },
+    ...dimensions.industries.map((i) => ({ value: i, label: app.model.industryName(i) })),
+  ]);
 
   $("filters").addEventListener("change", (event) => {
     const { name, value } = event.target;
@@ -161,7 +168,7 @@ function syncFilterControls(filters) {
 /** Describes the selected period, e.g. "Full model year" or "Mar–Jun". */
 function periodText({ monthFrom, monthTo }) {
   const labels = app.model.monthLabels;
-  if (monthFrom === 1 && monthTo === labels.length) return "Full model year";
+  if (monthFrom === 1 && monthTo === labels.length) return t("seg.overview.fullYear");
   if (monthFrom === monthTo) return labels[monthFrom - 1];
   return `${labels[monthFrom - 1]}–${labels[monthTo - 1]}`;
 }
@@ -170,13 +177,13 @@ function periodText({ monthFrom, monthTo }) {
 function scopeText({ country, channel, category, industry }) {
   const { countryNames, categoryLabels } = app.model;
   const parts = [];
-  const where = country === "all" ? null : `in ${countryNames[country]}`;
-  const channelName = channel === "Voice" ? "voice passcode calls" : channel;
-  if (channel !== "all") parts.push(where ? `${channelName} ${where}` : channelName);
-  else if (where) parts.push(`all channels ${where}`);
-  if (category !== "all") parts.push(`${categoryLabels[category].toLowerCase()} traffic`);
-  if (industry !== "all") parts.push(`${industry} customers`);
-  return parts.length ? parts.join(", ") : "all traffic";
+  const where = country === "all" ? null : inCountry(country, countryNames[country]);
+  const channelName = channel === "Voice" ? t("seg.overview.voiceInSentence") : app.model.channelName(channel);
+  if (channel !== "all") parts.push(where ? t("seg.overview.channelIn", { channel: channelName, where }) : channelName);
+  else if (where) parts.push(t("seg.overview.allChannelsIn", { where }));
+  if (category !== "all") parts.push(t("seg.overview.categoryTraffic", { category: categoryLabels[category].toLowerCase() }));
+  if (industry !== "all") parts.push(t("seg.overview.industryCustomers", { industry: app.model.industryName(industry) }));
+  return parts.length ? parts.join(t("common.listSeparator")) : t("seg.overview.allTraffic");
 }
 
 /** Builds the headline sentence. Profit or loss is stated in words, not only by colour. */
@@ -190,39 +197,42 @@ function renderStatement(totals, filters) {
   el.append(scope);
 
   if (totals.volume === 0) {
-    el.append("no traffic matches these filters. Widen the month range or set a filter back to All.");
+    el.append(t("seg.overview.noTraffic"));
     return;
   }
   const isLoss = totals.grossProfit < 0;
   const figure = document.createElement("span");
   figure.className = `figure figure--${isLoss ? "loss" : "profit"}`;
   figure.textContent = isLoss
-    ? `a ${formatEur(Math.abs(totals.grossProfit))} gross loss`
-    : `${formatEur(totals.grossProfit)} gross profit`;
+    ? t("seg.overview.grossLoss", { amount: formatEur(Math.abs(totals.grossProfit)) })
+    : t("seg.overview.grossProfit", { amount: formatEur(totals.grossProfit) });
   const margin = document.createElement("span");
   margin.className = toneClass(totals.grossMarginPct);
   margin.textContent = formatPct(totals.grossMarginPct);
-  el.append(figure, ` on ${formatEur(totals.revenue)} revenue, a `, margin, " margin.");
+  el.append(figure, t("seg.overview.onRevenue", { amount: formatEur(totals.revenue) }), margin, t("seg.overview.margin"));
 }
 
 /** Renders the row of five headline figures. */
 function renderKpis(totals) {
   const isLoss = totals.grossProfit < 0;
   const items = [
-    { label: "Revenue", value: formatEur(totals.revenue), detail: "after customer discounts" },
+    { label: t("seg.overview.kpiRevenue"), value: formatEur(totals.revenue), detail: t("seg.overview.kpiRevenueDetail") },
     {
-      label: "Gross profit",
+      label: t("seg.overview.kpiGrossProfit"),
       value: formatEur(totals.grossProfit),
       tone: toneClass(totals.grossProfit),
       loss: isLoss,
-      detail: `after ${formatEur(totals.deliveryCost)} delivery and ${formatEur(totals.platformCost)} platform cost`,
+      detail: t("seg.overview.kpiGrossProfitDetail", { delivery: formatEur(totals.deliveryCost), platform: formatEur(totals.platformCost) }),
     },
-    { label: "Gross margin", value: formatPct(totals.grossMarginPct), tone: toneClass(totals.grossMarginPct), loss: isLoss, detail: "gross profit ÷ revenue" },
-    { label: "Messages", value: formatCount(totals.volume), detail: `${formatInteger(totals.volume)} (voice counted per call)` },
     {
-      label: "Revenue per message",
+      label: t("seg.overview.kpiMargin"), value: formatPct(totals.grossMarginPct), tone: toneClass(totals.grossMarginPct), loss: isLoss,
+      detail: t("seg.overview.kpiMarginDetail"),
+    },
+    { label: t("seg.overview.kpiMessages"), value: formatCount(totals.volume), detail: t("seg.overview.kpiMessagesDetail", { count: formatInteger(totals.volume) }) },
+    {
+      label: t("seg.overview.kpiRevenuePerMessage"),
       value: formatPerMessage(totals.revenuePerMessage),
-      detail: `cost ${formatPerMessage(totals.costPerMessage)}`,
+      detail: t("seg.overview.kpiCostPerMessage", { cost: formatPerMessage(totals.costPerMessage) }),
     },
   ];
   $("kpis").replaceChildren(
@@ -237,7 +247,7 @@ function renderKpis(totals) {
       if (item.loss) {
         const mark = document.createElement("span");
         mark.className = "loss-mark";
-        mark.textContent = "▼ loss";
+        mark.textContent = t("seg.overview.lossMark");
         value.append(mark);
       }
       const detail = document.createElement("span");
@@ -257,15 +267,16 @@ function renderOverview(rows) {
   renderStatement(totals, filters);
   renderKpis(totals);
 
-  if (!app.charts.trend) app.charts.trend = createTrendChart($("trend-chart"));
-  if (!app.charts.mix) app.charts.mix = createMixChart($("mix-chart"), dimensions.channels);
+  const trendChart = chartOn($("trend-chart")) ?? createTrendChart($("trend-chart"));
+  const mixChart = chartOn($("mix-chart")) ?? createMixChart($("mix-chart"), dimensions.channels, app.model.channelName);
 
   const months = monthlyTotals(rows, ctx, monthLabels.length).slice(filters.monthFrom - 1, filters.monthTo);
-  updateTrendChart(app.charts.trend, months, monthLabels);
+  updateTrendChart(trendChart, months, monthLabels);
 
-  const note = updateMixChart(app.charts.mix, channelTotals(rows, ctx));
+  const note = updateMixChart(mixChart, channelTotals(rows, ctx));
   $("mix-note").hidden = !note;
   $("mix-note").textContent = note ?? "";
+  if (isLearnMode()) renderMarginContributions(rows, ctx, app.model.channelName);
 }
 
 // ---------------------------------------------------------------------------
@@ -290,7 +301,7 @@ function render() {
   syncFilterControls(state.filters);
 
   const rows = filterRows(model.rows, state.filters, model.customersById);
-  $("filter-count").textContent = `${formatInteger(rows.length)} of ${formatInteger(model.rows.length)} traffic rows`;
+  $("filter-count").textContent = t("seg.filters.rowCount", { shown: formatInteger(rows.length), total: formatInteger(model.rows.length) });
 
   const tag = filterTag(state.filters);
   if (state.tab === "overview") renderOverview(rows);
@@ -302,13 +313,14 @@ function render() {
 }
 
 async function init() {
+  mountSiteHeader($("site-header"), { active: "segments", root: "../../" });
   initTabs();
   try {
     app.model = await loadModel();
   } catch (error) {
     const box = $("load-error");
     box.hidden = false;
-    box.textContent = `The data could not be loaded: ${error.message}. Open the page through a local web server (for example "npx serve .") rather than as a file.`;
+    box.textContent = t("seg.loadError", { message: error.message });
     return;
   }
   initFilters();
@@ -317,7 +329,14 @@ async function init() {
   app.views.scenarios = createScenariosView(app.model, (scenario) => setState({ scenario }));
   app.views.assumptions = createAssumptionsView(app.model);
   app.views.checks = createChecksView(app.model);
+  initHandoffLink(app.model);
   app.state = parseHash(location.hash, app.model.dimensions);
+  window.addEventListener("learnmodechange", render);
+  window.addEventListener("themechange", () => {
+    // Charts read their colours when they are created: rebuild them in the new theme.
+    restyleCharts();
+    render();
+  });
   window.addEventListener("hashchange", () => {
     app.state = parseHash(location.hash, app.model.dimensions);
     render();

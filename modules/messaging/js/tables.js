@@ -7,6 +7,8 @@
 // - cell(row): optional, returns a DOM node instead of plain text
 // Clicking a column header sorts by it; clicking again reverses the order.
 
+import { t } from "../../../src/shared/i18n.js";
+
 /**
  * Sorts rows by one column. Text sorts A→Z, numbers small→large; "desc" reverses.
  * null values always go last. Ties keep their original order (stable sort).
@@ -123,7 +125,7 @@ export function createSortableTable(container, options) {
       const td = document.createElement("td");
       td.colSpan = columns.length;
       td.className = "empty";
-      td.textContent = "No traffic matches these filters.";
+      td.textContent = t("seg.noTraffic");
       tr.append(td);
       body.push(tr);
     }

@@ -20,7 +20,7 @@ Purpose: faster business analysis, and a learning tool for students, small busin
 - **No external network calls, telemetry or CDNs.** Fonts and icons are local or system. Chart.js is served from `lib/`. `fetch()` is allowed only for files in this repo.
 - **MIT licence.**
 - **Fictional data is labelled fictional.** Example companies, customers and simulated traffic say so in the UI. Benchmarks are never presented as official statistics.
-- **English** for UI, code, comments and docs (an HR/EN switch comes in Phase 5; Croatian terms already appear in field help).
+- **Two UI languages, English and Croatian** (EN/HR switch in the shared header; default from the browser language, remembered in localStorage). Code, comments and docs stay in English. **All UI text lives in `src/shared/lang/en.js` and `hr.js`; no hard-coded text in the UI** (see §8).
 
 ## 3. Architecture
 
@@ -34,6 +34,8 @@ One repo, one site, shared navigation between modules. All calculation code is p
 │   │   ├── parse.js            # parse typed amounts (HR/EN formats)
 │   │   ├── format.js           # all number/percent/currency display formatting
 │   │   ├── margin.js           # margin, safe division, band calculations
+│   │   ├── i18n.js             # t(key, params), language detection and switch
+│   │   ├── lang/en.js, hr.js   # every UI text, same keys in both languages
 │   │   └── ...                 # status colours/styles, nav, Learn mode state
 │   └── rating/
 │       ├── fields.js           # input schema: drives form, validation, JSON import/export
@@ -52,6 +54,10 @@ One repo, one site, shared navigation between modules. All calculation code is p
 ```
 
 Settled in Phase 1: `src/shared/` holds `parse.js`, `format.js` and `margin.js`; UI helpers (status styles, nav, Learn mode) join it in Phase 2. The rating method and definition choices are in `docs/methodology.md`.
+
+Settled in Phase 2: `src/shared/` also holds `theme.css` (tokens for light and dark via `light-dark()`, header, buttons, pills, Learn mode rule), `site-header.js` (shared header), `prefs.js` (localStorage: theme, Learn mode, saved form), `status.js` (band and severity pills), `dom.js` (DOM builder, no HTML strings), `track.js` (benchmark track geometry) and `handoff.js` (segment → rating hand-off in the URL hash). `src/rating/report.js` holds the words around a rating (show the math, DuPont sentences, text summary); `src/rating/rating.css` the page styles.
+
+Languages (added during Phase 2): `src/shared/i18n.js` with `src/shared/lang/en.js` and `hr.js`. Engine texts (field labels, ratio names, flags, summaries) are getters that read the current language, so the pure modules stay testable in either language (`useLanguage("hr")` in tests). Croatian names for the messaging data (countries, months, customers…) are in the `data` section of `hr.js`; English names come from the data files. Assumption labels, notes and sources stay in English. The financial term list is `docs/terminology.md`.
 
 ### 3.1 Number parsing (`src/shared/parse.js`)
 
@@ -147,12 +153,13 @@ When on: each ratio expands to "Show the math" (formula → formula with the use
 - **Phase 2** – Company rating UI, Learn mode, examples, export/import/print, shared navigation and design, two-way module connection.
 - **Phase 3** – Multi-year (2–5 years, YoY, sparklines); what-if sliders with live grade; peer comparison (up to 3); paste import from Excel/CSV with EN/HR label mapping; generalised segment module (user table, contribution margin, ranked chart, top-20% profit share).
 - **Phase 4** – Glossary, 5 practice cases with "guess the grade" quiz, downloadable one-page formula cheat sheet.
-- **Phase 5** – HR/EN switch, README (screenshots/GIF, demo link, method, assumptions, limitations, "how I built it with Claude Code"), GitHub Actions (tests + Pages deploy), issue templates, CHANGELOG. **Ask before creating the repo or pushing anything.**
+- **Phase 5** – README (screenshots/GIF, demo link, method, assumptions, limitations, "how I built it with Claude Code"), GitHub Actions (tests + Pages deploy), issue templates, CHANGELOG. **Ask before creating the repo or pushing anything.**
 
 ## 8. Rules for Claude Code
 
 - Calculation code is pure and fully tested. Run `node --test` after every change to an engine.
 - Small, readable modules; JSDoc on public functions; no dead code.
+- **Every new piece of UI text goes into both language files**, `src/shared/lang/en.js` and `hr.js`, under the same key and with the same `{placeholders}` (plurals: `one/other` in English, `one/few/other` in Croatian), and is read with `t("key")` or a `data-i18n` attribute. No hard-coded text in HTML or JS. Use standard Croatian accounting terminology and add any new financial term to `docs/terminology.md`. Numbers always go through `src/shared/format.js`, which follows the language. `tests/i18n.test.mjs` fails on a missing key, a placeholder mismatch or a key used in code but absent from either file.
 - Before calling a phase done: open the page in a browser and check desktop + mobile width, light + dark.
 - Never add an API key, telemetry or external network call.
 - If a financial definition is ambiguous, pick the textbook one, document it in the methodology section and in DECISIONS.md, and tell Frost.

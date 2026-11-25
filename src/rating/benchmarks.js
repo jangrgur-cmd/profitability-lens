@@ -12,12 +12,15 @@
 
 import { assertThresholds } from "../shared/margin.js";
 import { RATIOS } from "./ratios.js";
+import { t } from "../shared/i18n.js";
 
 /** Where the thresholds come from, shown next to every benchmark in the UI. */
 export const BENCHMARK_SOURCE = {
   kind: "rule-of-thumb",
-  label: "Rule-of-thumb thresholds",
-  note: "Judgement-based starting points for learning, not official statistics. They will be calibrated against published sector data.",
+  get label() { return t("rating.benchmarkSource.label"); },
+  /** The label inside a sentence ("rule-of-thumb thresholds"). */
+  get inlineLabel() { return t("rating.benchmarkSource.inline"); },
+  get note() { return t("rating.benchmarkSource.note"); },
 };
 
 /** The industry used when none is chosen. */
@@ -26,7 +29,7 @@ export const DEFAULT_INDUSTRY_ID = "general";
 /**
  * @typedef {object} Industry
  * @property {string} id
- * @property {string} label
+ * @property {string} label in the interface language
  * @property {string} note what is typical for the sector, in one sentence
  * @property {Record<string, number[]>} thresholds ratio id → [poor, fair, good, excellent] in %
  */
@@ -35,8 +38,8 @@ export const DEFAULT_INDUSTRY_ID = "general";
 export const INDUSTRIES = [
   {
     id: "general",
-    label: "General",
-    note: "A middle-of-the-road scale for businesses that fit no sector below.",
+    get label() { return t("rating.industries.general.label"); },
+    get note() { return t("rating.industries.general.note"); },
     thresholds: {
       grossMargin: [15, 25, 35, 50],
       ebitdaMargin: [3, 8, 12, 20],
@@ -50,8 +53,8 @@ export const INDUSTRIES = [
   },
   {
     id: "retail",
-    label: "Retail & wholesale",
-    note: "Thin margins earned many times over: high asset turnover makes up for low profit per sale.",
+    get label() { return t("rating.industries.retail.label"); },
+    get note() { return t("rating.industries.retail.note"); },
     thresholds: {
       grossMargin: [10, 20, 28, 40],
       ebitdaMargin: [2, 4, 7, 10],
@@ -65,8 +68,8 @@ export const INDUSTRIES = [
   },
   {
     id: "manufacturing",
-    label: "Manufacturing",
-    note: "Moderate margins with heavy fixed assets, so depreciation and capital returns matter.",
+    get label() { return t("rating.industries.manufacturing.label"); },
+    get note() { return t("rating.industries.manufacturing.note"); },
     thresholds: {
       grossMargin: [12, 20, 30, 40],
       ebitdaMargin: [4, 8, 12, 18],
@@ -80,8 +83,8 @@ export const INDUSTRIES = [
   },
   {
     id: "software",
-    label: "Software & SaaS",
-    note: "Very high gross margins; growth-stage companies often accept operating losses to win customers.",
+    get label() { return t("rating.industries.software.label"); },
+    get note() { return t("rating.industries.software.note"); },
     thresholds: {
       grossMargin: [50, 65, 75, 82],
       ebitdaMargin: [0, 10, 20, 30],
@@ -95,8 +98,8 @@ export const INDUSTRIES = [
   },
   {
     id: "telecom",
-    label: "Telecom & CPaaS / messaging",
-    note: "Messaging resellers pass much of the price on to operators, so gross margins are modest; network operators earn more but carry heavy assets.",
+    get label() { return t("rating.industries.telecom.label"); },
+    get note() { return t("rating.industries.telecom.note"); },
     thresholds: {
       grossMargin: [15, 25, 35, 50],
       ebitdaMargin: [3, 8, 15, 25],
@@ -110,8 +113,8 @@ export const INDUSTRIES = [
   },
   {
     id: "professional",
-    label: "Professional services",
-    note: "People-based businesses with few assets, so returns on capital can be high.",
+    get label() { return t("rating.industries.professional.label"); },
+    get note() { return t("rating.industries.professional.note"); },
     thresholds: {
       grossMargin: [20, 30, 40, 55],
       ebitdaMargin: [5, 10, 15, 22],
@@ -125,8 +128,8 @@ export const INDUSTRIES = [
   },
   {
     id: "tourism",
-    label: "Tourism & hospitality",
-    note: "Seasonal, asset-heavy businesses: healthy EBITDA margins, but property and depreciation weigh on returns.",
+    get label() { return t("rating.industries.tourism.label"); },
+    get note() { return t("rating.industries.tourism.note"); },
     thresholds: {
       grossMargin: [40, 55, 65, 75],
       ebitdaMargin: [5, 15, 25, 35],

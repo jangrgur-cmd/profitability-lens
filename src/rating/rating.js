@@ -15,15 +15,14 @@ import { formatMultiple, formatPct } from "../shared/format.js";
 import { validateValues } from "./fields.js";
 import { RATIOS, computeRatios, deriveStatement, dupont } from "./ratios.js";
 import { BENCHMARK_SOURCE, DEFAULT_INDUSTRY_ID, getIndustry } from "./benchmarks.js";
+import { t } from "../shared/i18n.js";
 
 /** Grades from best to worst; a score at or above `min` earns the grade. */
-export const GRADES = [
-  { letter: "A", label: "Excellent", min: 80 },
-  { letter: "B", label: "Strong", min: 65 },
-  { letter: "C", label: "Adequate", min: 50 },
-  { letter: "D", label: "Weak", min: 35 },
-  { letter: "E", label: "Poor", min: 0 },
-];
+export const GRADES = [["A", 80], ["B", 65], ["C", 50], ["D", 35], ["E", 0]].map(([letter, min]) => ({
+  letter,
+  min,
+  get label() { return t(`rating.grades.${letter}`); },
+}));
 
 /** Flag severities, most serious first. */
 export const SEVERITIES = ["critical", "serious", "warning", "info"];
@@ -36,8 +35,8 @@ const MIN_INTEREST_COVER = 1.5;
 const MAX_EQUITY_MULTIPLIER = 3;
 /** D&A above this share of EBITDA means asset wear eats most operating cash profit. */
 const MAX_DA_SHARE_OF_EBITDA = 0.5;
-/** Prior-year fields and how a sentence names them. */
-const PRIOR_YEAR_NAMES = { priorAssets: "total assets", priorEquity: "equity" };
+/** Prior-year fields; a sentence names them with rating.flags.noPriorYear.<id>. */
+const PRIOR_YEAR_FIELDS = ["priorAssets", "priorEquity"];
 
 /**
  * The grade for a whole-number score.
@@ -57,7 +56,7 @@ export function gradeFor(score) {
  */
 export function rate(values, industryId = DEFAULT_INDUSTRY_ID) {
   const errors = Object.values(validateValues(values));
-  if (errors.length > 0) throw new Error(`Cannot rate these inputs: ${errors.join(" ")}`);
+  if (errors.length > 0) throw new Error(t("rating.validation.cannotRate", { errors: errors.join(" ") }));
 
   const industry = getIndustry(industryId);
   const statement = deriveStatement(values);
@@ -83,13 +82,13 @@ export function rate(values, industryId = DEFAULT_INDUSTRY_ID) {
     count: available.length,
     total: ratios.length,
     weightShare: availableWeight / totalWeight,
-    label: `${available.length} of ${ratios.length} ratios`,
+    label: t("rating.coverage", { count: available.length, total: ratios.length }),
   };
   const breakdown = dupont(statement);
 
   const rating = {
     industry: { id: industry.id, label: industry.label },
-    benchmarkSource: BENCHMARK_SOURCE,
+    benchmarkSource: { kind: BENCHMARK_SOURCE.kind, label: BENCHMARK_SOURCE.label, inlineLabel: BENCHMARK_SOURCE.inlineLabel, note: BENCHMARK_SOURCE.note },
     statement,
     keyFigures: {
       revenue: statement.revenue,
@@ -117,49 +116,46 @@ export function rate(values, industryId = DEFAULT_INDUSTRY_ID) {
  */
 function buildFlags(values, { statement: s, ratios, dupont: d, coverage }) {
   const flags = [];
-  const add = (id, severity, title, detail) => flags.push({ id, severity, title, detail });
+  const add = (id, key, severity, detail) => flags.push({ id, severity, title: t(`rating.flags.${key}.title`), detail });
+  const detail = (key, params) => t(`rating.flags.${key}.detail`, params);
 
   if (s.netIncome < 0) {
-    add("net_loss", "critical", "Net loss",
-      `The company lost money this year: net income is ${formatPct(s.netIncome / s.revenue)} of revenue.`);
+    add("net_loss", "netLoss", "critical", detail("netLoss", { pct: formatPct(s.netIncome / s.revenue) }));
   }
   if (s.equity <= 0) {
-    add("negative_equity", "critical", "Equity is zero or negative",
-      "Liabilities are at least as large as assets: past losses have used up the owners' capital. ROE cannot be measured.");
+    add("negative_equity", "negativeEquity", "critical", detail("negativeEquity"));
   }
   if (s.grossProfit !== null && s.grossProfit > 0 && s.ebit < 0) {
-    add("operating_loss", "serious", "Operating loss despite a positive gross margin",
-      "Sales cover their direct costs, but overheads and depreciation are larger than the gross profit.");
+    add("operating_loss", "operatingLoss", "serious", detail("operatingLoss"));
   }
   if (s.interestCover !== null && s.interestCover < MIN_INTEREST_COVER) {
-    add("low_interest_cover", "serious", "Low interest cover",
-      s.ebit <= 0
-        ? "Operating profit (EBIT) is zero or negative, so it does not cover interest at all."
-        : `Operating profit covers interest only ${formatMultiple(s.interestCover)} (below ${formatMultiple(MIN_INTEREST_COVER, 1)}): a small fall in profit would leave too little to pay lenders.`);
+    add("low_interest_cover", "lowInterestCover", "serious", s.ebit <= 0
+      ? t("rating.flags.lowInterestCover.detailNoEbit")
+      : detail("lowInterestCover", { cover: formatMultiple(s.interestCover), min: formatMultiple(MIN_INTEREST_COVER, 1) }));
   }
   if (d.status === "ok" && d.equityMultiplier > MAX_EQUITY_MULTIPLIER) {
-    add("leverage_inflated_roe", "warning", "ROE inflated by leverage",
-      `Assets are ${formatMultiple(d.equityMultiplier, 1)} equity, so much of ROE comes from debt rather than from operations. Compare ROE with ROA.`);
+    add("leverage_inflated_roe", "leverage", "warning", detail("leverage", { multiplier: formatMultiple(d.equityMultiplier, 1) }));
   }
   if (s.ebitda > 0 && (values.da ?? 0) > MAX_DA_SHARE_OF_EBITDA * s.ebitda) {
-    add("high_depreciation", "warning", "Depreciation takes over half of EBITDA",
-      `Depreciation and amortisation are ${formatPct(values.da / s.ebitda, 0)} of EBITDA: the business needs heavy reinvestment to keep its assets running.`);
+    add("high_depreciation", "highDepreciation", "warning", detail("highDepreciation", { pct: formatPct(values.da / s.ebitda, 0) }));
   }
   if (coverage.weightShare < LOW_COVERAGE_SHARE) {
     const left = ratios.filter((r) => r.status !== "ok").map((r) => r.label);
-    add("low_coverage", "warning", "Rating based on few ratios",
-      `Only ${coverage.label} (${formatPct(coverage.weightShare, 0)} of the weight) could be calculated. Missing or not meaningful: ${left.join(", ")}.`);
+    add("low_coverage", "lowCoverage", "warning", detail("lowCoverage", {
+      coverage: coverage.label, share: formatPct(coverage.weightShare, 0), list: left.join(t("common.listSeparator")),
+    }));
   }
-  const noPrior = Object.keys(PRIOR_YEAR_NAMES).filter((id) => values[id] === null || values[id] === undefined);
+  const noPrior = PRIOR_YEAR_FIELDS.filter((id) => values[id] === null || values[id] === undefined);
   if (noPrior.length > 0) {
-    add("no_prior_year", "info", "No prior-year figures",
-      `Without prior-year ${noPrior.map((id) => PRIOR_YEAR_NAMES[id]).join(" and ")}, returns use year-end figures instead of the average over the year.`);
+    add("no_prior_year", "noPriorYear", "info", detail("noPriorYear", {
+      names: noPrior.map((id) => t(`rating.flags.noPriorYear.${id}`)).join(t("common.and")),
+    }));
   }
   return flags.sort((a, b) => SEVERITIES.indexOf(a.severity) - SEVERITIES.indexOf(b.severity));
 }
 
 /** "ROE (24.0%, Excellent)". */
-const describe = (r) => `${r.shortLabel} (${formatPct(r.value)}, ${r.band.label})`;
+const describe = (r) => t("rating.summary.ratio", { name: r.shortLabel, value: formatPct(r.value), band: r.band.label });
 
 /**
  * One plain-language sentence on the result, plus a second one when there
@@ -169,11 +165,11 @@ function buildSummary({ grade, score, industry, ratios, flags }) {
   const scored = ratios.filter((r) => r.status === "ok");
   const strongest = scored.reduce((best, r) => (r.score > best.score ? r : best));
   const weakest = scored.reduce((worst, r) => (r.score < worst.score ? r : worst));
-  let text = `${grade.label} profitability: grade ${grade.letter} (${score}/100) against rule-of-thumb ${industry.label} benchmarks`;
+  let text = t("rating.summary.lead", { grade: grade.label, letter: grade.letter, score, industry: industry.label });
   text += strongest === weakest
-    ? `, based on ${describe(strongest)}.`
-    : `; strongest is ${describe(strongest)}, weakest is ${describe(weakest)}.`;
+    ? t("rating.summary.single", { ratio: describe(strongest) })
+    : t("rating.summary.range", { best: describe(strongest), worst: describe(weakest) });
   const serious = flags.filter((f) => f.severity === "critical" || f.severity === "serious");
-  if (serious.length > 0) text += ` Watch out: ${serious.map((f) => f.title.toLowerCase()).join("; ")}.`;
+  if (serious.length > 0) text += t("rating.summary.watch", { flags: serious.map((f) => f.title.toLowerCase()).join("; ") });
   return text;
 }
