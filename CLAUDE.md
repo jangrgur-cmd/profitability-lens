@@ -61,6 +61,8 @@ Settled in Phase 3: `src/rating/` also holds `years.js` (multi-year chaining, ye
 
 Settled in Phase 4: the learning page is `learn.html` (tabs: Guess the grade, Glossary) and the cheat sheet `cheatsheet.html`, with `src/learn/` (`cases.js` five fictional practice cases, `quiz.js` guess checking, `glossary.js` entries and search, `cheatsheet.js` the sheet as data, `app.js` and `sheet-app.js` UI, `learn.css`). Cases are rated live by `rate()`, the glossary reuses the engine's ratio names and formulas, and the cheat sheet reads weights, score points (`SCORE_ANCHORS`), grades and flag limits (`FLAG_LIMITS`) from the engine. `i18n.js` has `textIn(lang, key)` for the other-language term. The method is in `docs/methodology.md` §14.
 
+Settled in Phase 5: `CHANGELOG.md` (one version per phase), `.github/workflows/ci.yml` (tests on Node 24 and 26, Pages deploy from `main` after the tests pass), `.github/ISSUE_TEMPLATE/` (bug, feature, benchmark or definition, translation) and `scripts/screenshots.mjs`, which retakes `docs/screenshots/` with a local Edge or Chrome.
+
 Languages (added during Phase 2): `src/shared/i18n.js` with `src/shared/lang/en.js` and `hr.js`. Engine texts (field labels, ratio names, flags, summaries) are getters that read the current language, so the pure modules stay testable in either language (`useLanguage("hr")` in tests). Croatian names for the messaging data (countries, months, customers…) are in the `data` section of `hr.js`; English names come from the data files. Assumption labels, notes and sources stay in English. The financial term list is `docs/terminology.md`.
 
 ### 3.1 Number parsing (`src/shared/parse.js`)
@@ -178,6 +180,7 @@ node modules/messaging/scripts/generate-data.mjs   # regenerate traffic.json aft
 node scripts/build-assumptions-doc.mjs             # regenerate docs/assumptions.md after editing assumptions
 node modules/messaging/scripts/update-golden.mjs   # ONLY when a change to the dashboard's numbers is intended
 npx serve .                                        # or: python -m http.server — then open the printed URL
+node scripts/screenshots.mjs                       # retake the README screenshots (needs Edge or Chrome)
 ```
 
 `modules/messaging/tests/golden.test.mjs` locks every number the messaging dashboard shows (totals, groupings, presets, a scenario using every step, data checks, formatting) against `tests/golden/expected.json`. A refactor must leave it green without regenerating the expected values.

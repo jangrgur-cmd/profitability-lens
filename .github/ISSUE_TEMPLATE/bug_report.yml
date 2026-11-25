@@ -1,0 +1,48 @@
+name: Bug report
+description: A number, page or button that does not behave as it should.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug. **Please do not paste a real company's confidential figures.** If the bug needs figures, use one of the fictional examples or practice cases, or numbers you are happy to make public.
+  - type: dropdown
+    id: page
+    attributes:
+      label: Page
+      options:
+        - Company rating
+        - Segment profitability
+        - Messaging case study
+        - Glossary & practice
+        - Formula cheat sheet
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: What you entered or clicked, in order. Naming an example ("Pekara Lastavica") or attaching an exported JSON file helps.
+      placeholder: |
+        1. Load the example …
+        2. Change …
+        3. Press "Rate profitability"
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected, and what happened
+      description: For a wrong number, say how you calculated the value you expected.
+    validations:
+      required: true
+  - type: dropdown
+    id: language
+    attributes:
+      label: Interface language
+      options: [English, Croatian]
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and device
+      placeholder: e.g. Firefox 140 on Windows, Safari on iPhone

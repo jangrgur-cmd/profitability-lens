@@ -1,0 +1,19 @@
+name: Feature idea
+description: Something the site could do that would help you analyse profitability or learn it.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What are you trying to do?
+      description: The question or task, before any solution. For example "compare two years of one segment table".
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: Your idea
+  - type: markdown
+    attributes:
+      value: |
+        The site is free and runs entirely in the browser: no accounts, no server, no paid services and no AI calls. Ideas that need one of these cannot be added, but a version that works without them often can.

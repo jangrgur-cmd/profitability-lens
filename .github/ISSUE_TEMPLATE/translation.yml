@@ -1,0 +1,35 @@
+name: Translation or terminology
+description: A wrong, unclear or non-standard word in English or Croatian.
+labels: [translation]
+body:
+  - type: dropdown
+    id: language
+    attributes:
+      label: Language
+      options: [Croatian, English]
+    validations:
+      required: true
+  - type: input
+    id: where
+    attributes:
+      label: Where
+      placeholder: e.g. Company rating, label of the "current liabilities" field
+    validations:
+      required: true
+  - type: input
+    id: current
+    attributes:
+      label: Current text
+    validations:
+      required: true
+  - type: input
+    id: proposed
+    attributes:
+      label: Proposed text
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why
+      description: For a financial term, where the standard form comes from (e.g. GFI-POD forms, a textbook). The current term list is [docs/terminology.md](../blob/main/docs/terminology.md).

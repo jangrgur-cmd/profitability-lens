@@ -1,0 +1,28 @@
+name: Benchmark or definition
+description: A threshold, formula or definition that looks wrong, or published sector data to calibrate a benchmark.
+labels: [method]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The industry thresholds are rule-of-thumb starting points, not official statistics, and calibrating them against published sector data is on the roadmap. The method and each definition choice are in [docs/methodology.md](../blob/main/docs/methodology.md).
+  - type: input
+    id: item
+    attributes:
+      label: Ratio, threshold or definition
+      placeholder: e.g. ROCE for Tourism & hospitality, or how the tax rate is estimated
+    validations:
+      required: true
+  - type: textarea
+    id: issue
+    attributes:
+      label: What should change, and why?
+    validations:
+      required: true
+  - type: textarea
+    id: source
+    attributes:
+      label: Source
+      description: A public dataset, textbook or standard, with year and page or link. Numbers without a source cannot be used.
+    validations:
+      required: true
