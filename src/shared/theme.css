@@ -354,6 +354,14 @@ a:hover { color: var(--accent-strong); text-decoration-thickness: 2px; }
 .tone-warning { --tone: var(--sev-warning); }
 .tone-info { --tone: var(--sev-info); }
 
+/* ---------- Byline (author line above each page's heading) ---------- */
+
+.byline {
+  margin: 0 0 var(--space-4);
+  font-size: var(--step--1);
+  color: var(--ink-faint);
+}
+
 /* ---------- Footer ---------- */
 
 .site-footer {

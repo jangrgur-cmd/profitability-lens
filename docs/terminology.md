@@ -23,6 +23,7 @@ the vocabulary of Croatian textbooks on financial statement analysis (e.g. *rent
 | Interest expense | Rashodi od kamata | GFI-POD: *rashodi s osnove kamata* |
 | Income tax | Porez na dobit | |
 | Total assets | Ukupna aktiva | Also *ukupna imovina* (used in "prosječna ukupna imovina") |
+| Total equity and liabilities | Ukupna pasiva | Used only by the paste check (it must equal total assets) |
 | Total equity | Kapital i rezerve | Also *vlastiti kapital* (used in ROE) |
 | Current liabilities | Kratkoročne obveze | |
 | Interest-bearing debt | Kamatonosne obveze | |

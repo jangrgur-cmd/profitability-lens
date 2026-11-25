@@ -1,31 +1,71 @@
 // view-paste.js: "Paste from Excel" on the Company rating page.
 //
-// UI only: a dialog where the user pastes statement lines, checks which
-// field each line goes into (readStatementPaste guesses, the user can
-// change it), sees the totals per year (pasteToYears) and fills the form.
-// The lines can also come from an .xlsx or CSV file (src/shared/file-import.js),
-// and the dialog offers the Excel template. Nothing leaves the browser.
+// UI only: a dialog where the user pastes statement lines or opens a file.
+// The lines are read at once: each line's field is matched or suggested
+// (readStatementPaste), the result is checked and rated (checkPaste,
+// rateYears), and the grade shows before anything goes into the form. The
+// user can change any line's field and the grade follows. The lines can come
+// from an .xlsx or CSV file (src/shared/file-import.js), and the dialog offers
+// the Excel template. Nothing leaves the browser.
 
-import { readStatementPaste, pasteToYears } from "./paste.js";
+import { readStatementPaste, checkPaste } from "./paste.js";
 import { FIELD_BY_ID } from "./fields.js";
-import { YEAR_FIELD_IDS } from "./years.js";
+import { YEAR_FIELD_IDS, rateYears } from "./years.js";
+import { INDUSTRIES, INDUSTRY_BY_ID } from "./benchmarks.js";
 import { formatAmountInput, formatEurFull } from "../shared/format.js";
 import { t } from "../shared/i18n.js";
 import { h, replaceChildren } from "../shared/dom.js";
-import { pill } from "../shared/status.js";
+import { pill, GRADE_TONES } from "../shared/status.js";
 import { downloadWorkbook, fileControls, readTableFile } from "../shared/file-import.js";
 import { ratingTemplate } from "./template.js";
 
+/** How long typing in the box pauses before the lines are read again (ms). */
+const READ_DELAY = 300;
+
+const CHECK_PILLS = {
+  error: () => pill("poor", "✕", t("rating.paste.checkError")),
+  warning: () => pill("fair", "!", t("rating.paste.checkWarning")),
+  ok: () => pill("good", "✓", t("rating.paste.checkOk")),
+};
+
+/** One finding of checkPaste as a sentence in the current language. */
+function checkText({ key, params: p }) {
+  const line = p.id ? t(`rating.paste.resultLine.${p.id}`) : "";
+  switch (key) {
+    case "cannotRate": return t("rating.paste.check.cannotRate", { year: p.year, problems: p.problems.join(" ") });
+    case "yearsLeftOut": return t("rating.paste.check.yearsLeftOut", { count: p.years.length, years: p.years.join(", "), year: p.year, problem: p.problems[0] });
+    case "resultMatches": return t("rating.paste.check.resultMatches", { line, count: p.count });
+    case "resultDiffers": return [
+      t("rating.paste.check.resultDiffers", {
+        line, year: p.year, pasted: formatEurFull(p.pasted), calculated: formatEurFull(p.calculated), difference: formatEurFull(p.difference),
+      }),
+      p.others > 0 ? t("rating.paste.check.otherYears", { count: p.others }) : "",
+    ].filter(Boolean).join(" ");
+    case "balanceMatches": return t("rating.paste.check.balanceMatches", { count: p.count });
+    case "balanceDiffers": return t("rating.paste.check.balanceDiffers", { year: p.year, pasted: formatEurFull(p.pasted), assets: formatEurFull(p.calculated) });
+    case "biggerThanAssets": return t("rating.paste.check.biggerThanAssets", { year: p.year, field: FIELD_BY_ID[p.fieldId].label });
+    case "placedByCheck": return t("rating.paste.check.placedByCheck", { count: p.count });
+    case "suggested": return t("rating.paste.check.suggested", { count: p.count });
+    case "notAdded": return t("rating.paste.check.notAdded", { count: p.count, field: FIELD_BY_ID[p.fieldId].label });
+    default: return t("rating.paste.check.noProblems");
+  }
+}
+
 /**
  * Creates the dialog (once) and returns a function that opens it.
- * @param {{latestYear: () => number, onApply: (years: {year: number, values: object}[]) => void}} options
- *   latestYear: the form's latest year, used when the headers name none
+ * @param {{latestYear: () => number, industryId: () => string,
+ *          onApply: (years: {year: number, values: object}[], industryId: string) => void}} options
+ *   latestYear: the form's latest year, used when the headers name none;
+ *   industryId: the form's industry, the dialog's starting choice
  * @returns {{open: (file?: File) => void}} open, optionally reading a file at once
  */
-export function createPasteDialog({ latestYear, onApply }) {
+export function createPasteDialog({ latestYear, industryId, onApply }) {
   /** @type {ReturnType<typeof readStatementPaste>|null} */
   let read = null;
   let rows = [];
+  /** @type {ReturnType<typeof checkPaste>|null} */
+  let checked = null;
+  let readTimer = 0;
 
   const textarea = h("textarea", {
     id: "paste-text", rows: 8, spellcheck: "false", "aria-describedby": "paste-help",
@@ -38,6 +78,7 @@ export function createPasteDialog({ latestYear, onApply }) {
     h("option", { value: "oldest" }, t("rating.paste.orderLast")),
     h("option", { value: "newest" }, t("rating.paste.orderFirst")));
   const yearInput = h("input", { id: "paste-year", type: "number", min: 1990, max: 2100, step: 1, inputmode: "numeric" });
+  const industrySelect = h("select", { id: "paste-industry" }, INDUSTRIES.map((i) => h("option", { value: i.id }, i.label)));
 
   const dialog = h("dialog", { class: "paste-dialog card", "aria-labelledby": "paste-title" },
     h("form", { method: "dialog", class: "paste" },
@@ -54,9 +95,7 @@ export function createPasteDialog({ latestYear, onApply }) {
         onTemplate: () => downloadWorkbook(t("rating.template.filename"), ratingTemplate({ latestYear: latestYear() })),
       }),
       fileNote,
-      h("div", { class: "paste__read" },
-        h("button", { type: "button", class: "button", on: { click: readText } }, t("rating.paste.read")),
-        h("p", { class: "paste__privacy" }, t("rating.paste.privacy"))),
+      h("p", { class: "paste__privacy" }, t("rating.paste.privacy")),
       preview,
       h("div", { class: "paste__foot" },
         h("button", { type: "submit", class: "button-quiet", value: "cancel" }, t("rating.paste.cancel")),
@@ -67,9 +106,17 @@ export function createPasteDialog({ latestYear, onApply }) {
     newestFirst: read.newestFirst ?? orderSelect.value === "newest",
     latestYear: Number.isInteger(Number(yearInput.value)) && yearInput.value !== "" ? Number(yearInput.value) : latestYear(),
   });
-  const years = () => pasteToYears(rows, read.columns.length, order());
 
   function readText() {
+    clearTimeout(readTimer);
+    if (textarea.value.trim() === "") {
+      read = null;
+      rows = [];
+      checked = null;
+      apply.disabled = true;
+      replaceChildren(preview);
+      return;
+    }
     read = readStatementPaste(textarea.value);
     rows = read.rows.map((r) => ({ ...r }));
     yearInput.value = String(read.latestYear ?? latestYear());
@@ -90,14 +137,32 @@ export function createPasteDialog({ latestYear, onApply }) {
     }
   }
 
+  /** The grade the pasted figures would get, with what it rests on. */
+  function gradeBlock() {
+    if (checked.years.length === 0) return null;
+    const trend = rateYears(checked.years, industrySelect.value);
+    const { year, rating } = trend.years[0];
+    return h("div", { class: `paste__grade tone-${GRADE_TONES[rating.grade.letter]}` },
+      h("span", { class: "paste__letter", "aria-hidden": "true" }, rating.grade.letter),
+      h("div", {},
+        h("p", { class: "paste__grade-title" }, t("rating.paste.gradeTitle", {
+          year, letter: rating.grade.letter, score: rating.score, label: rating.grade.label,
+        })),
+        h("p", { class: "paste__grade-meta" }, t("rating.paste.gradeMeta", {
+          coverage: rating.coverage.label, industry: INDUSTRY_BY_ID[industrySelect.value].label, count: trend.years.length,
+        }))));
+  }
+
   function renderPreview() {
     if (!read || read.columns.length === 0 || rows.length === 0) {
       apply.disabled = true;
+      checked = null;
       replaceChildren(preview, h("p", { class: "paste__empty" }, t("rating.paste.nothing")));
       return;
     }
+    checked = checkPaste(rows, read.columns.length, order());
+    apply.disabled = checked.years.length === 0;
     const matched = rows.filter((r) => r.fieldId).length;
-    apply.disabled = matched === 0;
     const columnLabel = (c, i) => c.header || t("rating.paste.column", { n: i + 1 });
 
     const controls = [];
@@ -107,24 +172,39 @@ export function createPasteDialog({ latestYear, onApply }) {
     }
     controls.push(h("div", { class: "field field--text" },
       h("label", { for: "paste-year" }, t("rating.paste.latestYear")), yearInput));
+    controls.push(h("div", { class: "field field--text" },
+      h("label", { for: "paste-industry" }, t("rating.page.industry")), industrySelect));
 
+    const onFieldChange = (i) => (e) => {
+      const row = rows[i];
+      row.fieldId = e.target.value || null;
+      row.status = row.fieldId ? "matched" : row.result ? "result" : "unknown";
+      renderPreview();
+    };
     const fieldSelect = (row, i) => h("select", {
       "aria-label": t("rating.paste.fieldFor", { label: row.label }),
-      on: { change: (e) => { rows[i].fieldId = e.target.value || null; rows[i].status = rows[i].fieldId ? "matched" : rows[i].status === "matched" ? "unknown" : rows[i].status; renderPreview(); } },
+      on: { change: onFieldChange(i) },
     },
     h("option", { value: "" }, t("rating.paste.notUsed")),
     YEAR_FIELD_IDS.map((id) => h("option", { value: id, selected: row.fieldId === id }, FIELD_BY_ID[id].label)));
 
     const status = (row) => {
+      if (row.status === "suggested") return pill("fair", "?", t("rating.paste.statusSuggested"));
       if (row.fieldId) return pill("good", "✓", t("rating.paste.statusMatched"));
       if (row.status === "also") return pill("fair", "!", t("rating.paste.statusAlso", { field: FIELD_BY_ID[row.suggestion].label }));
+      if (row.status === "result") return pill("none", "=", t("rating.paste.statusResult"));
       return pill("none", "–", t("rating.paste.statusUnknown"));
     };
 
-    const result = years();
+    const result = checked.years;
     replaceChildren(preview,
       h("p", { class: "paste__summary" }, t("rating.paste.summary", { count: rows.length, matched, columns: read.columns.length })),
       read.extraColumns > 0 ? h("p", { class: "paste__warn" }, t("rating.paste.extraColumns", { count: read.extraColumns })) : null,
+      gradeBlock(),
+      h("section", { class: "paste__checks", "aria-labelledby": "paste-checks-title" },
+        h("h3", { id: "paste-checks-title" }, t("rating.paste.checksTitle")),
+        h("ul", {}, checked.issues.map((issue) => h("li", { class: `paste__check paste__check--${issue.level}` },
+          CHECK_PILLS[issue.level](), h("span", {}, checkText(issue)))))),
       h("div", { class: "paste__controls" }, controls),
       h("div", { class: "table-scroll" },
         h("table", { class: "paste__table" },
@@ -133,11 +213,11 @@ export function createPasteDialog({ latestYear, onApply }) {
             h("th", { scope: "col" }, t("rating.paste.colLine")),
             read.columns.map((c, i) => h("th", { scope: "col" }, columnLabel(c, i))),
             h("th", { scope: "col" }, t("rating.paste.colField")))),
-          h("tbody", {}, rows.map((row, i) => h("tr", { class: row.fieldId ? "" : "paste__row--off" },
+          h("tbody", {}, rows.map((row, i) => h("tr", { class: row.fieldId ? (row.status === "suggested" ? "paste__row--guess" : "") : "paste__row--off" },
             h("th", { scope: "row" }, row.label || t("common.dash")),
             row.amounts.map((a) => h("td", {}, a === null ? "" : formatAmountInput(a))),
             h("td", { class: "paste__field" }, fieldSelect(row, i), status(row))))))),
-      h("div", { class: "table-scroll" },
+      result.length === 0 ? null : h("div", { class: "table-scroll" },
         h("table", { class: "paste__table paste__table--result" },
           h("caption", {}, t("rating.paste.resultCaption")),
           h("thead", {}, h("tr", {}, h("th", { scope: "col" }, t("rating.paste.colField")), result.map((y) => h("th", { scope: "col" }, String(y.year))))),
@@ -147,20 +227,27 @@ export function createPasteDialog({ latestYear, onApply }) {
       h("p", { class: "paste__note" }, t("rating.paste.costsNote")));
   }
 
+  textarea.addEventListener("input", () => {
+    clearTimeout(readTimer);
+    readTimer = setTimeout(readText, READ_DELAY);
+  });
   orderSelect.addEventListener("change", renderPreview);
   yearInput.addEventListener("input", renderPreview);
+  industrySelect.addEventListener("change", renderPreview);
   apply.addEventListener("click", () => {
-    const result = years();
+    if (!checked || checked.years.length === 0) return;
     dialog.close("apply");
-    onApply(result);
+    onApply(checked.years, industrySelect.value);
   });
 
   return {
     open(file) {
       read = null;
       rows = [];
+      checked = null;
       textarea.value = "";
       fileNote.hidden = true;
+      industrySelect.value = industryId();
       replaceChildren(preview);
       apply.disabled = true;
       if (!dialog.open) dialog.showModal();

@@ -4,7 +4,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { parseGrid, normalizeLabel, detectDelimiter } from "../src/shared/paste.js";
-import { matchLabel, readStatementPaste, pasteToYears } from "../src/rating/paste.js";
+import { matchLabel, readStatementPaste, pasteToYears, suggestField, matchResult, checkPaste } from "../src/rating/paste.js";
 import { rate } from "../src/rating/rating.js";
 import { HAND_CASE } from "./fixtures.mjs";
 
@@ -143,4 +143,134 @@ test("other operating income is matched in English and Croatian, apart from sale
   const [year] = pasteToYears(read.rows, read.columns.length, { newestFirst: true, latestYear: 2025 });
   assert.equal(year.values.revenue, 1_000_000);
   assert.equal(year.values.otherOpIncome, 50_000);
+});
+
+test("suggestField guesses unknown lines by key words, but never totals, results or parts of equity", () => {
+  assert.equal(suggestField("Troškovi prodaje"), "opex");
+  assert.equal(suggestField("Marketing expenses"), "opex");
+  assert.equal(suggestField("Prihodi od kamata"), "otherIncome", "interest income is not interest expense");
+  assert.equal(suggestField("Prihodi od subvencija"), "otherOpIncome");
+  assert.equal(suggestField("Novac na računu"), "cash");
+  assert.equal(suggestField("Leasing"), "debt");
+  assert.equal(suggestField("Obveze za kamate"), null, "a payable is not an expense");
+  assert.equal(suggestField("Obveze prema dobavljačima"), null);
+  assert.equal(suggestField("Dugotrajna imovina"), null, "part of total assets");
+  assert.equal(suggestField("Upisani kapital"), null, "part of equity");
+  assert.equal(suggestField("II. POSLOVNI RASHODI"), null, "the total holds D&A too");
+  assert.equal(suggestField("Dobit razdoblja"), null);
+  assert.equal(suggestField("Neto plaće"), null);
+});
+
+test("matchResult recognises result and total lines, with how a loss is shown", () => {
+  assert.deepEqual(matchResult("XIII. DOBIT ILI GUBITAK RAZDOBLJA"), { id: "netIncome", kind: "signed" });
+  assert.deepEqual(matchResult("Gubitak razdoblja"), { id: "netIncome", kind: "loss" });
+  assert.deepEqual(matchResult("EBITDA"), { id: "ebitda", kind: "signed" });
+  assert.deepEqual(matchResult("Operating profit"), { id: "ebit", kind: "signed" });
+  assert.deepEqual(matchResult("UKUPNO PASIVA"), { id: "liabilitiesAndEquity", kind: "signed" });
+  assert.equal(matchResult("Revenue"), null);
+});
+
+/** The hand case (CLAUDE.md §4.5) as a paste with result lines, newest first. */
+const HAND_PASTE = [
+  ["", "2025", "2024"],
+  ["Revenue", "1,000", "900"], ["Cost of goods sold", "600", "540"], ["Operating expenses", "200", "190"],
+  ["Depreciation and amortisation", "50", "45"], ["Interest expense", "30", "30"], ["Income tax", "24", "18"],
+  ["Net profit", "96", "77"],
+  ["Total assets", "1,200", "800"], ["Total equity", "500", "300"], ["Total equity and liabilities", "1,200", "800"],
+];
+const check = (lines) => {
+  const read = readStatementPaste(rowsOf(lines));
+  return { read, ...checkPaste(read.rows, read.columns.length, { newestFirst: read.newestFirst ?? true, latestYear: read.latestYear ?? 2025 }) };
+};
+
+test("checkPaste: result lines that agree with the engine pass, and the years are ready to rate", () => {
+  const { read, years, issues } = check(HAND_PASTE);
+  assert.equal(read.rows.find((r) => r.label === "Net profit").status, "result");
+  assert.equal(years.length, 2);
+  assert.deepEqual(issues.map((x) => [x.level, x.key]), [["ok", "resultMatches"], ["ok", "balanceMatches"], ["ok", "noProblems"]]);
+  assert.equal(issues[0].params.count, 2);
+});
+
+test("checkPaste: a net profit that the lines do not add up to is reported with both amounts", () => {
+  const lines = HAND_PASTE.map((l) => (l[0] === "Net profit" ? ["Net profit", "106", "77"] : l));
+  const differs = check(lines).issues.find((x) => x.key === "resultDiffers");
+  assert.deepEqual(differs.params, { id: "netIncome", year: 2025, pasted: 106, calculated: 96, difference: 10, others: 0 });
+  assert.equal(differs.level, "warning");
+});
+
+test("checkPaste: an older year the form would refuse is left out; a latest year it would refuse blocks", () => {
+  const noOldEquity = HAND_PASTE.map((l) => (l[0] === "Total equity" ? ["Total equity", "500", ""] : l));
+  const { years, issues } = check(noOldEquity);
+  assert.deepEqual(years.map((y) => y.year), [2025]);
+  const left = issues.find((x) => x.key === "yearsLeftOut");
+  assert.deepEqual(left.params.years, [2024]);
+  assert.equal(left.params.problems.length, 1);
+
+  const noAssets = check([["", "2025"], ["Revenue", "1000"], ["Total equity", "500"]]);
+  assert.deepEqual(noAssets.years, []);
+  assert.deepEqual(noAssets.issues.map((x) => [x.level, x.key]), [["error", "cannotRate"]]);
+});
+
+test("checkPaste: a guessed line goes in only while its field is empty, and is reported", () => {
+  const { read, issues } = check([
+    ["", "2025"], ["Revenue", "1000"], ["Materijalni troškovi", "300"], ["Troškovi sirovina", "200"],
+    ["Troškovi prodaje", "50"], ["Najam opreme", "20"], ["Total assets", "1200"], ["Total equity", "1500"],
+  ]);
+  const status = Object.fromEntries(read.rows.map((r) => [r.label, [r.status, r.fieldId]]));
+  assert.deepEqual(status["Troškovi sirovina"], ["also", null], "part of materials, already filled");
+  assert.deepEqual(status["Troškovi prodaje"], ["also", null]);
+  const [year] = pasteToYears(read.rows, 1, { newestFirst: true, latestYear: 2025 });
+  assert.equal(year.values.opex, 300);
+  assert.deepEqual(issues.map((x) => x.key), ["biggerThanAssets", "notAdded"], "no result line confirms leaving them out");
+  assert.deepEqual(issues[1].params, { count: 3, fieldId: "opex" });
+
+  const guessed = check([["", "2025"], ["Revenue", "1000"], ["Troškovi prodaje", "50"], ["Najam opreme", "20"],
+    ["Total assets", "1200"], ["Total equity", "500"]]);
+  assert.deepEqual(guessed.read.rows.filter((r) => r.status === "suggested").map((r) => r.fieldId), ["opex", "opex"]);
+  assert.deepEqual(guessed.issues.map((x) => [x.key, x.params.count]), [["suggested", 2]]);
+});
+
+test("checkPaste reads the Lavanda Brda test statement in Croatian: all lines placed, the balance sheet adds up", () => {
+  const { read, years, issues } = check([
+    ["Pozicija", "Bilješka", "2024", "2025"],
+    ["Prihodi od prodaje", "3", "2460000", "2780000"], ["Ostali poslovni prihodi", "4", "41000", "30000"],
+    ["Materijalni troškovi", "5", "1240000", "1395000"], ["Troškovi osoblja", "6", "648000", "715000"],
+    ["Amortizacija", "7", "196000", "214000"], ["Financijski prihodi", "10", "3000", "5000"],
+    ["Rashodi s osnove kamata", "11", "87000", "98000"], ["Porez na dobit", "12", "15000", "21000"],
+    ["Ukupna aktiva", "13", "2650000", "2840000"], ["Kapital i rezerve", "14", "845000", "870000"],
+    ["Ukupno pasiva", "", "2650000", "2840000"],
+  ]);
+  assert.equal(read.newestFirst, false);
+  assert.ok(read.rows.every((r) => r.status === "matched" || r.status === "result"));
+  assert.deepEqual(years.map((y) => y.year), [2025, 2024]);
+  assert.deepEqual(issues.map((x) => [x.level, x.key]), [["ok", "balanceMatches"], ["ok", "noProblems"]]);
+});
+
+test("resolveByResults: look-alike lines are added only when the statement's net profit says so", () => {
+  // Marketing and rent are costs of their own: only with them does net profit come to 120.
+  const siblings = check([
+    ["", "2025", "2024"], ["Prihodi od prodaje", "1.000", "900"], ["Materijalni troškovi", "600", "540"],
+    ["Troškovi marketinga", "150", "140"], ["Najam poslovnog prostora", "50", "50"], ["Amortizacija", "50", "45"],
+    ["Rashodi s osnove kamata", "30", "30"], ["Porez na dobit", "0", "0"], ["Dobit razdoblja", "120", "95"],
+    ["Ukupna aktiva", "1.200", "800"], ["Kapital i rezerve", "500", "300"],
+  ]);
+  assert.deepEqual(siblings.read.rows.filter((r) => r.byCheck).map((r) => r.label), ["Troškovi marketinga", "Najam poslovnog prostora"]);
+  assert.equal(siblings.years[0].values.opex, 800);
+  assert.deepEqual(siblings.issues.map((x) => [x.level, x.key]), [["ok", "placedByCheck"], ["ok", "resultMatches"], ["ok", "noProblems"]]);
+
+  // Raw materials are part of materials: net profit already agrees without it, so it stays out.
+  const part = check([
+    ["", "2025"], ["Prihodi od prodaje", "1.000"], ["Materijalni troškovi", "600"], ["Troškovi sirovina", "400"],
+    ["Amortizacija", "50"], ["Dobit razdoblja", "350"], ["Ukupna aktiva", "1.200"], ["Kapital i rezerve", "500"],
+  ]);
+  assert.equal(part.read.rows.find((r) => r.label === "Troškovi sirovina").status, "also");
+  assert.deepEqual(part.issues.map((x) => x.key), ["resultMatches", "noProblems"]);
+
+  // No set of lines explains the difference: nothing is added and the difference is reported.
+  const none = check([
+    ["", "2025"], ["Revenue", "1000"], ["Materials", "300"], ["Staff costs", "200"], ["Marketing expenses", "999"],
+    ["Net profit", "450"], ["Total assets", "1200"], ["Total equity", "500"],
+  ]);
+  assert.ok(none.read.rows.every((r) => !r.byCheck));
+  assert.ok(none.issues.some((x) => x.key === "resultDiffers"));
 });

@@ -29,6 +29,7 @@ export default {
     fictional: "fictional",
     downloadCsv: "Download CSV",
     dash: "–",
+    byline: "Built by Jan Grgur Glivar · <a href=\"https://linkedin.com/in/jangrgurglivar\" rel=\"noopener\">LinkedIn</a> · <a href=\"https://github.com/jangrgur-cmd/profitability-lens\" rel=\"noopener\">GitHub repo</a>",
   },
 
   parse: {
@@ -562,7 +563,7 @@ export default {
       open: "Paste from Excel",
       title: "Paste from Excel or a CSV file",
       close: "Close",
-      intro: "Copy the lines of an income statement and balance sheet from a spreadsheet: the line names in the first column and one column of amounts per year (up to five). Croatian GFI-POD and English labels are recognised; you can correct every line before filling the form.",
+      intro: "Copy the lines of an income statement and balance sheet from a spreadsheet, or open the file: the line names in the first column and one column of amounts per year (up to five). Croatian GFI-POD and English labels are recognised, other lines get a suggested field, and the grade appears as soon as the lines are read. You can change the field of every line.",
       label: "Pasted lines",
       placeholder: "Revenue\t1,250,000\t1,180,000\nCost of goods sold\t740,000\t700,000\n…",
       read: "Read the table",
@@ -589,10 +590,63 @@ export default {
       statusMatched: "Matched",
       statusAlso: "Looks like {field}, already filled",
       statusUnknown: "Not recognised",
+      statusSuggested: "Suggested, please check",
+      statusResult: "Used to check the sums",
+      checksTitle: "Automatic checks",
+      checkError: "Problem",
+      checkWarning: "Check",
+      checkOk: "OK",
+      gradeTitle: "Grade for {year}: {letter} ({score}/100) · {label}",
+      gradeMeta: {
+        one: "Based on {coverage} · {industry} benchmarks · {count} year rated",
+        other: "Based on {coverage} · {industry} benchmarks · {count} years rated",
+      },
+      resultLine: {
+        grossProfit: "Gross profit",
+        ebitda: "EBITDA",
+        ebit: "EBIT (operating profit)",
+        ebt: "Profit before tax",
+        netIncome: "Net profit",
+      },
+      check: {
+        cannotRate: "{year} cannot be rated yet. {problems} Choose the right field for that line in the table below, or add the line to the file.",
+        yearsLeftOut: {
+          one: "{years} is left out of the rating. {problem}",
+          other: "{years} are left out of the rating. {year}: {problem}",
+        },
+        resultMatches: {
+          one: "{line} in the file matches the amount calculated from the lines ({count} year).",
+          other: "{line} in the file matches the amount calculated from the lines ({count} years).",
+        },
+        resultDiffers: "{line} {year}: {pasted} in the file, {calculated} calculated from the lines (difference {difference}). A line may be missing, in the wrong field or counted twice.",
+        otherYears: {
+          one: "It also differs in {count} other year.",
+          other: "It also differs in {count} other years.",
+        },
+        balanceMatches: {
+          one: "Total equity and liabilities match total assets ({count} year).",
+          other: "Total equity and liabilities match total assets ({count} years).",
+        },
+        balanceDiffers: "{year}: total equity and liabilities in the file ({pasted}) differ from total assets ({assets}). Check which line is total assets.",
+        biggerThanAssets: "{year}: {field} is larger than total assets, which cannot be right. Check the line in that field.",
+        suggested: {
+          one: "{count} line was placed by a suggestion (marked “Suggested”). Check it before relying on the grade.",
+          other: "{count} lines were placed by a suggestion (marked “Suggested”). Check them before relying on the grade.",
+        },
+        placedByCheck: {
+          one: "{count} line that looked like part of an already filled field was added after all: only with it do the result lines in the file (such as net profit) agree. It is marked “Suggested”.",
+          other: "{count} lines that looked like parts of an already filled field were added after all: only with them do the result lines in the file (such as net profit) agree. They are marked “Suggested”.",
+        },
+        notAdded: {
+          one: "{count} line looks like {field} but was not added, because other lines already fill that field and it may be part of them. If it is a separate amount, choose the field for it.",
+          other: "{count} lines look like {field} but were not added, because other lines already fill that field and they may be part of them. If they are separate amounts, choose the field for them.",
+        },
+        noProblems: "No problems found: the required fields are filled and no amount looks wrong.",
+      },
       resultCaption: "What goes into the form",
       costsNote: "Lines that go into the same field are added up (for example materials, staff and other costs into operating expenses). Costs are taken as positive amounts. The form replaces its current figures.",
       cancel: "Cancel",
-      apply: "Fill the form",
+      apply: "Fill in and show the full rating",
       applied: {
         one: "Figures for {count} year filled in from the pasted table.",
         other: "Figures for {count} years filled in from the pasted table.",
@@ -1207,7 +1261,7 @@ export default {
 
   seg: {
     title: "Messaging profitability model",
-    byline: "Illustrative model, sourced market prices · Built by Jan Grgur Glivar · <a href=\"https://linkedin.com/in/jangrgurglivar\" rel=\"noopener\">LinkedIn</a> · <a href=\"https://github.com/jangrgur-cmd/messaging-profitability\" rel=\"noopener\">GitHub repo</a>",
+    byline: "Illustrative model, sourced market prices · Built by Jan Grgur Glivar · <a href=\"https://linkedin.com/in/jangrgurglivar\" rel=\"noopener\">LinkedIn</a> · <a href=\"https://github.com/jangrgur-cmd/profitability-lens\" rel=\"noopener\">GitHub repo</a>",
     lede: "Where a European business-messaging provider makes and loses money across five markets, four channels and 36 customer types, and what happens when prices, costs or exchange rates move. Market prices come from public rate cards.",
     noTraffic: "No traffic matches these filters.",
     loadError: "The data could not be loaded: {message}. Open the page through a local web server (for example \"npx serve .\") rather than as a file.",

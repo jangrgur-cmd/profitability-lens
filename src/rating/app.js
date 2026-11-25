@@ -104,7 +104,7 @@ function buildForm() {
     event.target.value = "";
     if (file) importJsonFile(file);
   });
-  const paste = createPasteDialog({ latestYear: () => app.latestYear, onApply: applyPaste });
+  const paste = createPasteDialog({ latestYear: () => app.latestYear, industryId: () => $("industry").value, onApply: applyPaste });
   $("paste-table").addEventListener("click", () => paste.open());
   // A file dropped on the page: an exported JSON file is imported, a table opens in the paste dialog.
   listenForFileDrop((file) => (/.json$/i.test(file.name) ? importJsonFile(file) : paste.open(file)));
@@ -450,10 +450,11 @@ function isFictionalName(name) {
     || Object.values(HANDOFF_SOURCES).some((source) => name === source.companyName);
 }
 
-function applyPaste(years) {
+/** Fills the form from the paste dialog (years already checked) and rates it with the industry chosen there. */
+function applyPaste(years, industryId) {
   // Pasted figures are not the example company any more: drop its fictional name.
   const name = $("company-name").value;
-  loadYears(years, { latestYear: years[0].year, industryId: $("industry").value, companyName: isFictionalName(name) ? "" : name });
+  loadYears(years, { latestYear: years[0].year, industryId, companyName: isFictionalName(name) ? "" : name });
   announce(t("rating.paste.applied", { count: years.length }));
 }
 

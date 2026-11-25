@@ -33,6 +33,7 @@ export default {
     fictional: "izmišljeno",
     downloadCsv: "Preuzmi CSV",
     dash: "–",
+    byline: "Izradio Jan Grgur Glivar · <a href=\"https://linkedin.com/in/jangrgurglivar\" rel=\"noopener\">LinkedIn</a> · <a href=\"https://github.com/jangrgur-cmd/profitability-lens\" rel=\"noopener\">GitHub repozitorij</a>",
   },
 
   parse: {
@@ -568,7 +569,7 @@ export default {
       open: "Zalijepi iz Excela",
       title: "Lijepljenje iz Excela ili CSV datoteke",
       close: "Zatvori",
-      intro: "Kopirajte retke računa dobiti i gubitka i bilance iz tablice: nazive pozicija u prvom stupcu i po jedan stupac iznosa za svaku godinu (do pet). Prepoznaju se nazivi iz obrazaca GFI-POD i engleski nazivi; svaki redak možete ispraviti prije popunjavanja obrasca.",
+      intro: "Kopirajte retke računa dobiti i gubitka i bilance iz tablice ili otvorite datoteku: nazive pozicija u prvom stupcu i po jedan stupac iznosa za svaku godinu (do pet). Prepoznaju se nazivi iz obrazaca GFI-POD i engleski nazivi, ostali retci dobivaju predloženo polje, a ocjena se pokaže čim se retci pročitaju. Polje svakog retka možete promijeniti.",
       label: "Zalijepljeni retci",
       placeholder: "Prihodi od prodaje\t1.180.000\t1.250.000\nMaterijalni troškovi\t610.000\t640.000\n…",
       read: "Pročitaj tablicu",
@@ -597,10 +598,71 @@ export default {
       statusMatched: "Povezano",
       statusAlso: "Izgleda kao {field}, već popunjeno",
       statusUnknown: "Nije prepoznato",
+      statusSuggested: "Prijedlog, provjerite",
+      statusResult: "Služi za provjeru zbrojeva",
+      checksTitle: "Automatske provjere",
+      checkError: "Problem",
+      checkWarning: "Provjerite",
+      checkOk: "U redu",
+      gradeTitle: "Ocjena za {year}.: {letter} ({score}/100) · {label}",
+      gradeMeta: {
+        one: "Na temelju: {coverage} · referentne vrijednosti: {industry} · ocijenjena {count} godina",
+        few: "Na temelju: {coverage} · referentne vrijednosti: {industry} · ocijenjene {count} godine",
+        other: "Na temelju: {coverage} · referentne vrijednosti: {industry} · ocijenjeno {count} godina",
+      },
+      resultLine: {
+        grossProfit: "Bruto dobit",
+        ebitda: "EBITDA",
+        ebit: "EBIT (dobit iz poslovanja)",
+        ebt: "Dobit prije oporezivanja",
+        netIncome: "Neto dobit",
+      },
+      check: {
+        cannotRate: "Godina {year}. još se ne može ocijeniti. {problems} U tablici ispod odaberite pravo polje za taj redak ili dodajte redak u datoteku.",
+        yearsLeftOut: {
+          one: "Godina {years}. izostavljena je iz ocjene. {problem}",
+          few: "Godine {years} izostavljene su iz ocjene. Za {year}.: {problem}",
+          other: "Godine {years} izostavljene su iz ocjene. Za {year}.: {problem}",
+        },
+        resultMatches: {
+          one: "{line} u datoteci jednaka je iznosu izračunatom iz redaka ({count} godina).",
+          few: "{line} u datoteci jednaka je iznosu izračunatom iz redaka ({count} godine).",
+          other: "{line} u datoteci jednaka je iznosu izračunatom iz redaka ({count} godina).",
+        },
+        resultDiffers: "{line} {year}.: u datoteci {pasted}, izračunato iz redaka {calculated} (razlika {difference}). Možda neki redak nedostaje, ide u pogrešno polje ili je ubrojen dvaput.",
+        otherYears: {
+          one: "Razlikuje se i u još {count} godini.",
+          few: "Razlikuje se i u još {count} godine.",
+          other: "Razlikuje se i u još {count} godina.",
+        },
+        balanceMatches: {
+          one: "Ukupna pasiva jednaka je ukupnoj aktivi ({count} godina).",
+          few: "Ukupna pasiva jednaka je ukupnoj aktivi ({count} godine).",
+          other: "Ukupna pasiva jednaka je ukupnoj aktivi ({count} godina).",
+        },
+        balanceDiffers: "{year}.: ukupna pasiva u datoteci ({pasted}) razlikuje se od ukupne aktive ({assets}). Provjerite koji je redak ukupna aktiva.",
+        biggerThanAssets: "{year}.: „{field}” veće je od ukupne aktive, što ne može biti točno. Provjerite redak u tom polju.",
+        suggested: {
+          one: "{count} redak smješten je prema prijedlogu (oznaka „Prijedlog”). Provjerite ga prije nego što se oslonite na ocjenu.",
+          few: "{count} retka smještena su prema prijedlogu (oznaka „Prijedlog”). Provjerite ih prije nego što se oslonite na ocjenu.",
+          other: "{count} redaka smješteno je prema prijedlogu (oznaka „Prijedlog”). Provjerite ih prije nego što se oslonite na ocjenu.",
+        },
+        placedByCheck: {
+          one: "{count} redak koji je izgledao kao dio već popunjenog polja ipak je dodan: samo se s njim slažu zbrojevi iz datoteke (npr. neto dobit). Označen je kao „Prijedlog”.",
+          few: "{count} retka koja su izgledala kao dio već popunjenog polja ipak su dodana: samo se s njima slažu zbrojevi iz datoteke (npr. neto dobit). Označena su kao „Prijedlog”.",
+          other: "{count} redaka koji su izgledali kao dio već popunjenog polja ipak je dodano: samo se s njima slažu zbrojevi iz datoteke (npr. neto dobit). Označeni su kao „Prijedlog”.",
+        },
+        notAdded: {
+          one: "{count} redak izgleda kao „{field}”, ali nije dodan jer to polje već popunjavaju drugi retci, a možda je njihov dio. Ako je to zaseban iznos, odaberite mu polje.",
+          few: "{count} retka izgledaju kao „{field}”, ali nisu dodana jer to polje već popunjavaju drugi retci, a možda su njihov dio. Ako su to zasebni iznosi, odaberite im polje.",
+          other: "{count} redaka izgleda kao „{field}”, ali nisu dodani jer to polje već popunjavaju drugi retci, a možda su njihov dio. Ako su to zasebni iznosi, odaberite im polje.",
+        },
+        noProblems: "Nema problema: obavezna polja su popunjena i nijedan iznos ne izgleda pogrešno.",
+      },
       resultCaption: "Što ulazi u obrazac",
       costsNote: "Retci koji idu u isto polje zbrajaju se (npr. materijalni troškovi, troškovi osoblja i ostali troškovi u poslovne rashode). Troškovi se uzimaju kao pozitivni iznosi. Obrazac zamjenjuje trenutačne podatke.",
       cancel: "Odustani",
-      apply: "Popuni obrazac",
+      apply: "Popuni i prikaži cijelu ocjenu",
       applied: {
         one: "Podaci za {count} godinu preneseni su iz zalijepljene tablice.",
         few: "Podaci za {count} godine preneseni su iz zalijepljene tablice.",
@@ -1218,7 +1280,7 @@ export default {
   // ---------------------------------------------------------------------------
   seg: {
     title: "Model profitabilnosti poslovnih poruka",
-    byline: "Ilustrativni model, tržišne cijene iz izvora · Izradio Jan Grgur Glivar · <a href=\"https://linkedin.com/in/jangrgurglivar\" rel=\"noopener\">LinkedIn</a> · <a href=\"https://github.com/jangrgur-cmd/messaging-profitability\" rel=\"noopener\">GitHub repozitorij</a>",
+    byline: "Ilustrativni model, tržišne cijene iz izvora · Izradio Jan Grgur Glivar · <a href=\"https://linkedin.com/in/jangrgurglivar\" rel=\"noopener\">LinkedIn</a> · <a href=\"https://github.com/jangrgur-cmd/profitability-lens\" rel=\"noopener\">GitHub repozitorij</a>",
     lede: "Gdje europski pružatelj usluga poslovnih poruka zarađuje, a gdje gubi novac na pet tržišta, četiri kanala i 36 vrsta korisnika, i što se događa kad se promijene cijene, troškovi ili tečaj. Tržišne cijene preuzete su iz javnih cjenika.",
     noTraffic: "Nijedan promet ne odgovara ovim filtrima.",
     loadError: "Podaci se nisu mogli učitati: {message}. Otvorite stranicu preko lokalnog web-poslužitelja (npr. \"npx serve .\"), a ne kao datoteku.",

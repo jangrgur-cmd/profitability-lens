@@ -6,6 +6,8 @@ All notable changes to Profitability Lens. The format follows [Keep a Changelog]
 
 ### Added
 
+- Paste and file import show the grade at once: lines are read as soon as they are pasted or a file is opened, unrecognised lines get a suggested field, and automatic checks compare net profit, EBIT, total equity and liabilities and similar lines in the file with what the lines add up to. Where the totals show that a look-alike line is a cost of its own, it is added. Older years with a missing required field are left out instead of blocking the rating. One button fills the form and shows the full rating.
+- The author line (LinkedIn, GitHub) on every page, as on the messaging case study.
 - Other operating income (*ostali poslovni prihodi*) as an input: it counts in EBITDA and EBIT but not in revenue.
 - Open an Excel (.xlsx) or CSV file in both paste dialogs, or drop it anywhere on the page, and download an Excel template for the Company rating and for segments. No library: the workbook is read and written in the browser.
 - "Fix the company" on the Glossary & practice page: five challenges that ask for a goal grade with a limited set of What if… levers (one fixes prices at −3 % for a price war), with a lesson once solved.
