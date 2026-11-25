@@ -16,6 +16,7 @@ import { downloadWorkbook, fileControls, listenForFileDrop, readTableFile } from
 import { segmentTemplate } from "./template.js";
 import { encodeHandoff } from "../shared/handoff.js";
 import { mountSiteHeader } from "../shared/site-header.js";
+import { confirmAction } from "../shared/confirm.js";
 import { captureMotion, playMotion, motionKey } from "../shared/motion.js";
 
 const $ = (id) => document.getElementById(id);
@@ -209,9 +210,9 @@ function loadSample(sample) {
   submit();
 }
 
-function clearTable() {
+async function clearTable() {
   const hasFigures = app.rows.some((row) => COLUMNS.some((c) => String(row[c]).trim() !== ""));
-  if (hasFigures && !window.confirm(t("segments.page.clearConfirm"))) return;
+  if (hasFigures && !await confirmAction(t("segments.page.clearConfirm"), { confirmLabel: t("segments.page.clear") })) return;
   app.rows = Array.from({ length: START_ROWS }, blankRow);
   app.analysis = null;
   app.errors = {};

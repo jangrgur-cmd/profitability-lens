@@ -33,6 +33,8 @@ export default {
     fictional: "izmišljeno",
     downloadCsv: "Preuzmi CSV",
     dash: "–",
+    confirm: "Nastavi",
+    cancel: "Odustani",
     byline: "Izradio Jan Grgur Glivar · <a href=\"https://linkedin.com/in/jangrgurglivar\" rel=\"noopener\">LinkedIn</a> · <a href=\"https://github.com/jangrgur-cmd/profitability-lens\" rel=\"noopener\">GitHub repozitorij</a>",
   },
 

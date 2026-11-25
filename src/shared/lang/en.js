@@ -29,6 +29,8 @@ export default {
     fictional: "fictional",
     downloadCsv: "Download CSV",
     dash: "–",
+    confirm: "Continue",
+    cancel: "Cancel",
     byline: "Built by Jan Grgur Glivar · <a href=\"https://linkedin.com/in/jangrgurglivar\" rel=\"noopener\">LinkedIn</a> · <a href=\"https://github.com/jangrgur-cmd/profitability-lens\" rel=\"noopener\">GitHub repo</a>",
   },
 

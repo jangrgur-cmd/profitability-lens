@@ -28,6 +28,7 @@ import { h, replaceChildren } from "../shared/dom.js";
 import { readJson, writeJson } from "../shared/prefs.js";
 import { downloadFile } from "../shared/export.js";
 import { mountSiteHeader } from "../shared/site-header.js";
+import { confirmAction } from "../shared/confirm.js";
 import { captureMotion, playMotion, motionKey, flash, replay, rise } from "../shared/motion.js";
 
 const $ = (id) => document.getElementById(id);
@@ -270,12 +271,13 @@ function addYear() {
   $(inputId("revenue")).focus();
 }
 
-function removeYear() {
+async function removeYear() {
   syncActive();
   const index = app.years.length - 1;
   const removed = app.years[index];
   const hasFigures = Object.entries(removed).some(([id, v]) => !["assets", "equity"].includes(id) && String(v).trim() !== "");
-  if (hasFigures && !window.confirm(t("rating.years.removeConfirm", { year: yearLabel(index) }))) return;
+  if (hasFigures && !await confirmAction(t("rating.years.removeConfirm", { year: yearLabel(index) }),
+    { confirmLabel: t("rating.years.remove", { year: yearLabel(index) }) })) return;
   app.years.pop();
   // Its balance sheet goes back into the prior-year fields of the new oldest year.
   const oldest = app.years.at(-1);
@@ -412,10 +414,10 @@ function loadSample(sample) {
   submit();
 }
 
-function clearForm() {
+async function clearForm() {
   syncActive();
   const hasFigures = app.years.some((raw) => Object.values(raw).some((v) => String(v).trim() !== ""));
-  if (hasFigures && !window.confirm(t("rating.page.clearConfirm"))) return;
+  if (hasFigures && !await confirmAction(t("rating.page.clearConfirm"), { confirmLabel: t("rating.page.clear") })) return;
   app.source = null;
   app.view = null;
   fillForm({ years: [], latestYear: app.latestYear, industryId: $("industry").value, companyName: "" });
@@ -569,10 +571,12 @@ function restore() {
     // Never overwrite the user's own saved figures without asking.
     const saved = storedForm();
     const hasFigures = saved?.years.some((raw) => Object.values(raw ?? {}).some((v) => String(v ?? "").trim() !== ""));
-    if (!hasFigures || window.confirm(t("rating.page.caseReplace", { name: practiceCase.name }))) {
+    if (!hasFigures) {
       loadSample(practiceCase);
       return;
     }
+    // Ask on the page, over the saved figures shown below; they stay unless the user agrees.
+    confirmAction(t("rating.page.caseReplace", { name: practiceCase.name })).then((yes) => { if (yes) loadSample(practiceCase); });
   }
   const handoff = decodeHandoff(location.hash);
   if (handoff) {

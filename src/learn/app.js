@@ -20,6 +20,7 @@ import { formatEurFull } from "../shared/format.js";
 import { t } from "../shared/i18n.js";
 import { h, replaceChildren } from "../shared/dom.js";
 import { captureMotion, playMotion, motionKey } from "../shared/motion.js";
+import { confirmAction } from "../shared/confirm.js";
 import { readJson, writeJson } from "../shared/prefs.js";
 import { bandPill, severityPill, GRADE_TONES } from "../shared/status.js";
 import { mountSiteHeader } from "../shared/site-header.js";
@@ -256,8 +257,8 @@ function makeGuess(c, letter) {
   document.querySelector(".case-verdict")?.scrollIntoView({ block: "nearest" });
 }
 
-function resetQuiz() {
-  if (!window.confirm(t("learn.quiz.resetConfirm"))) return;
+async function resetQuiz() {
+  if (!await confirmAction(t("learn.quiz.resetConfirm"), { confirmLabel: t("learn.quiz.reset") })) return;
   state.answers = {};
   saveAnswers();
   renderScore();

@@ -15,6 +15,10 @@ All notable changes to Profitability Lens. The format follows [Keep a Changelog]
 - Published sector averages next to every ratio: the average of listed European companies in the industry (Damodaran, January 2026), marked on the benchmark track and listed in "How the rating works". For comparison only; grades are unchanged.
 - "How to reach grade X" on the Company rating: the smallest change of each What if… lever that reaches the next grade, with "Try it" to set it, and a table of the points each ratio earns and misses.
 
+### Fixed
+
+- "Clear", "Remove this year", "Start again" and opening a practice case over saved figures did nothing in browsers that silence `window.confirm` (an embedded browser, or a page whose dialogs were blocked). They now ask in a dialog drawn by the page (`src/shared/confirm.js`), with the action's own name on the button.
+
 ## [1.0.0] – 2026-11-25
 
 Phase 5: documentation and project setup.

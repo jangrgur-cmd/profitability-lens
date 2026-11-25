@@ -12,6 +12,7 @@ import { MINUS, formatNumber } from "../shared/format.js";
 import { t } from "../shared/i18n.js";
 import { h, replaceChildren } from "../shared/dom.js";
 import { captureMotion, playMotion, motionKey } from "../shared/motion.js";
+import { confirmAction } from "../shared/confirm.js";
 import { readJson, writeJson } from "../shared/prefs.js";
 
 const STORAGE_KEY = "learn/fix";
@@ -183,8 +184,8 @@ export function setupFix({ announce, onOpenCase }) {
   openCase = onOpenCase;
   const saved = readJson(STORAGE_KEY);
   state.solved = saved?.version === STORAGE_VERSION ? cleanSolved(saved.solved) : [];
-  $("fix-reset").addEventListener("click", () => {
-    if (!window.confirm(t("learn.fix.resetConfirm"))) return;
+  $("fix-reset").addEventListener("click", async () => {
+    if (!await confirmAction(t("learn.fix.resetConfirm"), { confirmLabel: t("learn.fix.reset") })) return;
     state.solved = [];
     save();
     renderProgress();
