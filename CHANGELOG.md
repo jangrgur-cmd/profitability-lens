@@ -2,6 +2,12 @@
 
 All notable changes to Profitability Lens. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and versions follow [Semantic Versioning](https://semver.org/). Each version is one phase of the work plan in [`CLAUDE.md`](CLAUDE.md) §7. The messaging case study's history before it joined this repository is in its own git history and [`modules/messaging/DECISIONS.md`](modules/messaging/DECISIONS.md).
 
+## [Unreleased]
+
+### Added
+
+- "How to reach grade X" on the Company rating: the smallest change of each What if… lever that reaches the next grade, with "Try it" to set it, and a table of the points each ratio earns and misses.
+
 ## [1.0.0] – 2026-11-25
 
 Phase 5: documentation and project setup.

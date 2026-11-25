@@ -21,7 +21,8 @@ function leverText(value) {
  * start at zero; a new rating builds a new panel.
  * @param {object} ctx view context (see view-results.js)
  * @param {{industryId: string}} options
- * @returns {HTMLElement}
+ * @returns {{element: HTMLElement, show: (levers: Record<string, number>, focusId: string) => void}}
+ *   show sets the levers (the others go back to zero), scrolls to the panel and focuses one slider
  */
 export function renderWhatIf(ctx, { industryId }) {
   const levers = { ...NO_CHANGE };
@@ -73,27 +74,31 @@ export function renderWhatIf(ctx, { industryId }) {
       h("p", { class: "whatif__help", id: `${id}-help` }, disabled ? t("rating.whatif.needsCogs") : lever.help));
   });
 
-  const reset = h("button", {
-    type: "button", class: "button-quiet",
-    on: {
-      click: () => {
-        for (const lever of LEVERS) {
-          levers[lever.id] = 0;
-          inputs[lever.id].input.value = "0";
-          inputs[lever.id].input.setAttribute("aria-valuetext", leverText(0));
-          inputs[lever.id].value.textContent = leverText(0);
-        }
-        update();
-      },
-    },
-  }, t("rating.whatif.reset"));
+  const setLevers = (next) => {
+    for (const lever of LEVERS) {
+      levers[lever.id] = next[lever.id] ?? 0;
+      inputs[lever.id].input.value = String(levers[lever.id]);
+      inputs[lever.id].input.setAttribute("aria-valuetext", leverText(levers[lever.id]));
+      inputs[lever.id].value.textContent = leverText(levers[lever.id]);
+    }
+    update();
+  };
+
+  const reset = h("button", { type: "button", class: "button-quiet", on: { click: () => setLevers(NO_CHANGE) } }, t("rating.whatif.reset"));
 
   update();
-  return h("section", { class: "block whatif-block", "aria-labelledby": "whatif-title" },
+  const element = h("section", { class: "block whatif-block", "aria-labelledby": "whatif-title" },
     h("h3", { id: "whatif-title", class: "block-title" }, t("rating.whatif.title")),
     h("p", { class: "block-note" }, t("rating.whatif.lede", { year: ctx.trend.years[0].year })),
     h("div", { class: "card whatif" },
       h("div", { class: "whatif__levers" }, sliders, reset),
       output),
     h("p", { class: "learn-note learn-only" }, t("rating.whatif.learn")));
+
+  const show = (next, focusId) => {
+    setLevers(next);
+    element.scrollIntoView({ behavior: "smooth", block: "start" });
+    inputs[focusId].input.focus({ preventScroll: true });
+  };
+  return { element, show };
 }

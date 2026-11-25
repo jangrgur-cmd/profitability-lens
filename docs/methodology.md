@@ -211,3 +211,14 @@ The Glossary & practice page (`learn.html`, code in `src/learn/`) and the formul
 
 - **Glossary**: 54 terms in five sections. A term the engines already name (ratios, form fields, derived figures, DuPont factors) uses the engine's own language key, so the glossary cannot name it differently; a ratio's formula is its definition's formula. The other-language name is the same key read in the other language. Search ignores case and accents and matches both languages.
 - **Cheat sheet**: built by `cheatSheet()` from `RATIOS` (names, formulas, weights), `SCORE_ANCHORS` (the score at each threshold), `GRADES`, `FLAG_LIMITS` and the General industry's thresholds; only the wording of the statement lines is text in the language files (`learn.formulas`, shared with the glossary). It prints on one A4 page (print stylesheet in `src/learn/learn.css`), so "Save as PDF" in the print dialog gives the PDF, and "Download as text" saves the same content as a .txt file made in the browser.
+
+## 15. Path to the next grade
+
+The block "How to reach grade X" (`src/rating/path.js`) shows, for the latest year, what would move the grade. It uses the same figures and engine as the rating; nothing in it is estimated separately.
+
+- **One change at a time.** For each What if… lever (§10), the smallest move in whole percent, within the lever's range, whose full re-rating reaches the next grade. Both directions are tried and the smaller move wins (a rise before a fall at the same size). A lever moves several ratios together, as a real change would, so this is the practical guide. When no lever reaches the next grade on its own, the page says so instead of showing a move outside the range. "Try it" sets that lever in What if….
+- **Where the points are lost.** Each available ratio earns *score × weight share* points, where the share is its weight divided by the weight of the available ratios, so the points add up to the overall score before rounding. *Missed* is (100 − score) × share. *Per +1 pp* is the points one more percentage point of that ratio alone would add, with every other ratio unchanged: it shows where the score is most sensitive, and is 0 below the score's floor or above "excellent".
+
+No single ratio can usually close a gap on its own (the largest weight is 15 % of the total, so one ratio can add at most 15 points), which is why the block shows the levers rather than a target value per ratio.
+
+The grade comes from the rounded score, so a lever counts as reaching the next grade when the rounded score reaches the grade's minimum.

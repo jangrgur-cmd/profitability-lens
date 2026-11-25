@@ -1,8 +1,8 @@
 // app.js: the Company rating page. UI only: every number and sentence comes
-// from the pure modules (fields, years, rating, report, whatif, compare,
+// from the pure modules (fields, years, rating, report, path, whatif, compare,
 // paste, shared/*) and every other text from the language files. This file
 // keeps the form's state (one to five years), calls rateYears() and places
-// the result blocks (view-results.js, view-whatif.js, view-peers.js).
+// the result blocks (view-results.js, view-path.js, view-whatif.js, view-peers.js).
 //
 // The form shows one year at a time; the year tabs switch which year's
 // figures are in the inputs. Newest year first: years[0] is the year rated.
@@ -17,6 +17,7 @@ import {
   renderVerdict, renderKeyFigures, renderFlags, renderRatioGroup, renderTrend, renderDupont, renderMethod, renderPrintInputs, richText,
 } from "./view-results.js";
 import { renderWhatIf } from "./view-whatif.js";
+import { renderPath } from "./view-path.js";
 import { renderPeers } from "./view-peers.js";
 import { createPasteDialog } from "./view-paste.js";
 import { formatAmountInput } from "../shared/format.js";
@@ -503,6 +504,8 @@ function renderResults() {
     return;
   }
   const ctx = app.view;
+  const industryId = ctx.rating.industry.id;
+  const whatIf = renderWhatIf(ctx, { industryId });
   replaceChildren(body,
     renderVerdict(ctx, { onCopy: copySummary }),
     renderKeyFigures(ctx),
@@ -511,7 +514,8 @@ function renderResults() {
     renderRatioGroup(ctx, "margins"),
     renderRatioGroup(ctx, "returns"),
     renderDupont(ctx),
-    renderWhatIf(ctx, { industryId: ctx.rating.industry.id }),
+    renderPath(ctx, { industryId, onTry: whatIf.show }),
+    whatIf.element,
     peersBlock(),
     renderMethod(ctx),
     renderPrintInputs(ctx));

@@ -434,6 +434,34 @@ export default {
       learn: "Svaka se godina ocjenjuje zasebno, a za prosječnu imovinu i kapital koristi se godina prije. Promjene pokazatelja iskazane su u postotnim bodovima (p. b.): neto marža koja s 8 % naraste na 10 % raste za 2 p. b., a ne za 25 %. Iznosi se mijenjaju u postocima; postotna promjena u odnosu na gubitak ili nulu nema smisla (n/s).",
     },
 
+    path: {
+      title: "Kako do ocjene {letter}",
+      titleTop: "Gdje se gube bodovi",
+      lede: {
+        one: "Ocjena {letter} počinje od {min} bodova. Brojke za {year}. imaju rezultat {score}/100, pa je potreban još {count} bod.",
+        few: "Ocjena {letter} počinje od {min} bodova. Brojke za {year}. imaju rezultat {score}/100, pa su potrebna još {count} boda.",
+        other: "Ocjena {letter} počinje od {min} bodova. Brojke za {year}. imaju rezultat {score}/100, pa je potrebno još {count} bodova.",
+      },
+      ledeTop: "Brojke za {year}. imaju rezultat {score}/100, što je već ocjena A. Tablica pokazuje gdje se gube preostali bodovi.",
+      leversTitle: "Jedna promjena odjednom",
+      leverOk: "{change} → ocjena {letter} ({score}/100)",
+      leverOut: "Ocjena {letter} nije dostižna između {min} i {max}",
+      leverNeedsCogs: "Potreban je trošak prodanih proizvoda i robe",
+      try: "Isprobaj",
+      tryLabel: "Isprobaj {lever} {change} u odjeljku „Što ako…”",
+      leversNote: "Najmanji pomak svakog klizača zasebno, u cijelim postocima i unutar raspona u odjeljku „Što ako…”. Amortizacija, kamate i bilanca ostaju kako su uneseni.",
+      noneReach: "Nijedna promjena sama ne donosi ocjenu {letter}: za to je potrebno više poboljšanja zajedno. Kombinirajte klizače u odjeljku „Što ako…”.",
+      pointsTitle: "Gdje se gube bodovi",
+      pointsCaption: "Bodovi koje svaki pokazatelj donosi i gubi te bodovi koje bi donio jedan postotni bod više",
+      colRatio: "Pokazatelj",
+      colScore: "Bodovi 0–100",
+      colPoints: "Doprinos",
+      colMissed: "Izgubljeno",
+      colPerPp: "Za +1 p. b.",
+      total: "Ukupno",
+      learn: "Svaki pokazatelj donosi svoju ocjenu (0–100) pomnoženu sa svojim udjelom u težini, pa se bodovi zbrajaju u ukupni broj bodova. Stupac „Za +1 p. b.” pokazuje gdje je broj bodova najosjetljiviji: najviše dobiva pokazatelj velike težine na strmom dijelu svoje ljestvice, a pokazatelj iznad praga „izvrsno” ne dobiva ništa. U stvarnom poslovanju pokazatelji se mijenjaju zajedno (povećanje cijena podiže sve marže i sve stope povrata odjednom), pa su klizači bolji vodič za to što promijeniti.",
+    },
+
     whatif: {
       levers: {
         volume: { label: "Količina prodaje", help: "Više ili manje prodanih jedinica po sadašnjim cijenama: prihodi i trošak prodanog mijenjaju se zajedno." },

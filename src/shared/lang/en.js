@@ -429,6 +429,33 @@ export default {
       learn: "Each year is rated on its own benchmarks, using the year before for average assets and equity. Ratio changes are in percentage points (pp): a net margin going from 8% to 10% is +2 pp, not +25%. Amounts change in %; a % change from a loss or from zero has no meaning (n/m).",
     },
 
+    path: {
+      title: "How to reach grade {letter}",
+      titleTop: "Where the points go",
+      lede: {
+        one: "Grade {letter} starts at {min} points. The {year} figures score {score}, so {count} more point is needed.",
+        other: "Grade {letter} starts at {min} points. The {year} figures score {score}, so {count} more points are needed.",
+      },
+      ledeTop: "The {year} figures score {score} out of 100, already grade A. The table shows where the remaining points are lost.",
+      leversTitle: "One change at a time",
+      leverOk: "{change} → grade {letter} ({score}/100)",
+      leverOut: "Grade {letter} is out of reach between {min} and {max}",
+      leverNeedsCogs: "Needs cost of goods sold",
+      try: "Try it",
+      tryLabel: "Try {lever} {change} in What if…",
+      leversNote: "The smallest move of each lever on its own, in whole percent and within the What if… range. Depreciation, interest and the balance sheet stay as entered.",
+      noneReach: "No single change reaches grade {letter}: the gap needs several improvements together. Combine the levers in What if… to explore.",
+      pointsTitle: "Where the points are lost",
+      pointsCaption: "Points each ratio earns and misses, and the points one more percentage point of it would add",
+      colRatio: "Ratio",
+      colScore: "Score",
+      colPoints: "Points",
+      colMissed: "Missed",
+      colPerPp: "Per +1 pp",
+      total: "Total",
+      learn: "Each ratio earns its score (0–100) times its share of the weight, so the points add up to the overall score. \"Per +1 pp\" shows where the score is most sensitive: a heavily weighted ratio on a steep part of its scale gains most, and a ratio already above \"excellent\" gains nothing. In a real business ratios move together (a price rise lifts every margin and every return at once), which is why the levers are the better guide to what to change.",
+    },
+
     whatif: {
       levers: {
         volume: { label: "Sales volume", help: "More or fewer units sold at today's prices: revenue and cost of goods sold move together." },

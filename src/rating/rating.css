@@ -356,6 +356,27 @@ h1 {
 .sparkline__dot { fill: var(--accent); }
 .sparkline__zero { stroke: var(--rule-strong); stroke-width: 1; stroke-dasharray: 2 2; }
 
+/* ---------- Path to the next grade ---------- */
+
+.path { display: grid; gap: var(--space-5); padding: var(--space-4) var(--space-5); }
+.path__heading { margin: 0 0 var(--space-2); font-size: var(--step--1); font-weight: 700; color: var(--ink-muted); }
+.path__list { margin: 0; padding: 0; list-style: none; }
+.path__lever { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.1rem var(--space-3); padding: var(--space-2) 0; border-bottom: 1px solid var(--rule); }
+.path__lever:last-child { border-bottom: 0; }
+.path__label { font-size: 0.9375rem; font-weight: 600; }
+.path__detail { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-1) var(--space-3); font-size: var(--step--1); font-variant-numeric: tabular-nums; }
+.path__result { color: var(--accent-strong); font-weight: 600; }
+.path__off { color: var(--ink-muted); }
+.path__lever--off .path__label { color: var(--ink-muted); }
+.path__try { font-size: var(--step--1); margin-right: calc(-1 * var(--space-3)); }
+.path__note { margin: var(--space-2) 0 0; font-size: 0.8125rem; color: var(--ink-muted); }
+.path__points { min-width: 0; }
+.path__table { width: 100%; border-collapse: collapse; font-size: var(--step--1); font-variant-numeric: tabular-nums; }
+.path__table th, .path__table td { padding: 0.4rem 0.5rem; border-bottom: 1px solid var(--rule); text-align: right; white-space: nowrap; }
+.path__table th:first-child { text-align: left; padding-left: 0; font-weight: 600; white-space: normal; }
+.path__table thead th { font-size: 0.8125rem; color: var(--ink-muted); vertical-align: bottom; }
+.path__table tfoot > tr > * { border-top: 2px solid var(--rule-strong); border-bottom: 0; font-weight: 700; }
+
 /* ---------- What if ---------- */
 
 .whatif {
@@ -473,6 +494,7 @@ h1 {
   .dupont__op { display: none; }
   .dupont { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .whatif { grid-template-columns: minmax(0, 1fr); padding: var(--space-4); }
+  .path { padding: var(--space-4); }
   .peers { padding: var(--space-4); }
   .paste { padding: var(--space-4); }
 }
@@ -488,7 +510,7 @@ h1 {
   .ratio, .flag, .dupont-card { break-inside: avoid; }
   .method:not([open]) > :not(summary) { display: block; }
   .print-only { display: block; }
-  .whatif-block, .peers__actions, .peers__remove, .paste-dialog { display: none !important; }
+  .whatif-block, .path__try, .peers__actions, .peers__remove, .paste-dialog { display: none !important; }
   .print-inputs table { border-collapse: collapse; font-size: 0.8125rem; }
   .print-inputs th, .print-inputs td { padding: 0.1rem 1rem 0.1rem 0; text-align: right; }
   .print-inputs th[scope="row"] { text-align: left; font-weight: 500; }

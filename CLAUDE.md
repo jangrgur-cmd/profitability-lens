@@ -63,6 +63,8 @@ Settled in Phase 4: the learning page is `learn.html` (tabs: Guess the grade, Gl
 
 Settled in Phase 5: `CHANGELOG.md` (one version per phase), `.github/workflows/ci.yml` (tests on Node 24 and 26, Pages deploy from `main` after the tests pass), `.github/ISSUE_TEMPLATE/` (bug, feature, benchmark or definition, translation) and `scripts/screenshots.mjs`, which retakes `docs/screenshots/` with a local Edge or Chrome.
 
+Added after Phase 5: `src/rating/path.js` (path to the next grade: lever moves and points by ratio) with `view-path.js`; the method is in `docs/methodology.md` §15.
+
 Languages (added during Phase 2): `src/shared/i18n.js` with `src/shared/lang/en.js` and `hr.js`. Engine texts (field labels, ratio names, flags, summaries) are getters that read the current language, so the pure modules stay testable in either language (`useLanguage("hr")` in tests). Croatian names for the messaging data (countries, months, customers…) are in the `data` section of `hr.js`; English names come from the data files. Assumption labels, notes and sources stay in English. The financial term list is `docs/terminology.md`.
 
 ### 3.1 Number parsing (`src/shared/parse.js`)

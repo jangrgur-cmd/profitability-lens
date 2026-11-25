@@ -30,6 +30,7 @@ This project does the whole loop in the browser. It works out the ratios, compar
 - **Grade:** A–E with a 0–100 score, **eight ratios** (gross, EBITDA, operating and net margin, ROA, ROE, ROCE, ROIC), each with its value, a benchmark band and a track showing where it sits between the thresholds for seven industries.
 - **DuPont breakdown** of ROE into net margin × asset turnover × equity multiplier.
 - **Red flags:** net loss, negative equity, operating loss, low interest cover, ROE inflated by leverage, heavy depreciation, thin data.
+- **How to reach the next grade:** the smallest change in prices, volume, unit costs or overheads that lifts the grade, and where the score's points are lost.
 - **Up to five years** with year-on-year changes and sparklines; **what-if levers** (volume, prices, unit costs, overheads) that re-rate the company live; **comparison with up to three peers**.
 - Three fictional examples, JSON export and import, a text summary to copy, and a print stylesheet for PDF.
 
