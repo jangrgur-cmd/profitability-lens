@@ -273,7 +273,13 @@ export default {
     benchmarkSource: {
       label: "Rule-of-thumb thresholds",
       inline: "rule-of-thumb thresholds",
-      note: "Judgement-based starting points for learning, not official statistics. They will be calibrated against published sector data.",
+      note: "Judgement-based starting points for learning, not official statistics. Each ratio also shows the average of listed European companies in its sector (Damodaran, January 2026) for comparison; that average is not used for the grade.",
+    },
+    sector: {
+      source: "Damodaran (NYU Stern), European industry averages, data as of January 2026",
+      line: "Listed European companies in this sector: {value} on average",
+      lineNote: "Damodaran, January 2026; for comparison, not used in the grade",
+      trackLabel: "The mark ▾ is the average of listed European companies in this sector: {value}.",
     },
     industries: {
       general: {
@@ -670,6 +676,7 @@ export default {
       colFair: "Fair from",
       colGood: "Good from",
       colExcellent: "Excellent from",
+      colSector: "Listed EU average",
       methodLink: "Full method and definitions: ",
       printInputs: "Figures rated (EUR)",
       announceInvalid: "Some figures need attention before the company can be rated.",

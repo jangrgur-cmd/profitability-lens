@@ -28,6 +28,7 @@ the vocabulary of Croatian textbooks on financial statement analysis (e.g. *rent
 | Interest-bearing debt | Kamatonosne obveze | |
 | Cash | Novac i novčani ekvivalenti | |
 | Prior year | Prethodna godina | |
+| Listed companies (sector averages) | Poduzeća uvrštena na burzu | Used for the Damodaran sector reference |
 | Liabilities | Obveze | |
 | Retained earnings | Zadržana dobit | |
 | Share capital | Temeljni kapital | |

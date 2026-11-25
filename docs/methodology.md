@@ -105,6 +105,28 @@ Weighted average 96.0 → **96/100, grade A**. DuPont: 9.6 % × 1.00 × 2.50 = 2
 
 General, Retail & wholesale, Manufacturing, Software & SaaS, Telecom & CPaaS / messaging, Professional services, Tourism & hospitality. All thresholds are in [`src/rating/benchmarks.js`](../src/rating/benchmarks.js). They are **rule-of-thumb values**; the roadmap is to calibrate them against published sector data (for example Damodaran's industry margin and return datasets), recording the source and year of each value.
 
+### Published sector averages (reference only)
+
+Next to each ratio the page marks (▾) the average of **listed European companies** in the industry, and the "How the rating works" table lists it. It is shown for comparison and **never changes a score or a grade**.
+
+- **Source:** Aswath Damodaran (NYU Stern), industry averages for Europe, data as of January 2026: `marginEurope.xls` (gross margin, EBITDA/sales, pre-tax unadjusted operating margin, net margin), `roeEurope.xls` (ROE, unadjusted) and `EVAEurope.xls` (ROC), from [datacurrent.html](https://pages.stern.nyu.edu/~adamodar/New_Home_Page/datacurrent.html), downloaded 25 November 2026. The rows used are copied into `src/rating/sector.js`, rounded to two decimals of a percent.
+- **Definitions:** each figure is an aggregate (sum of profits ÷ sum of revenues or capital) over listed companies. Damodaran's ROC is after-tax operating income ÷ (book equity + debt − cash), the same as ROIC here. ROA and ROCE are not published, so they have no mark.
+- **Industries:** each industry here combines Damodaran industries, averaged with each row's number of firms as its weight:
+
+  | Industry | Damodaran industries (Europe) |
+  |---|---|
+  | General | Total Market (without financials) |
+  | Retail & wholesale | Retail (General), Retail (Grocery and Food), Retail (Distributors), Retail (Special Lines), Retail (Building Supply), Retail (Automotive), Food Wholesalers |
+  | Manufacturing | Machinery, Electrical Equipment, Electronics (General), Building Materials, Food Processing, Chemical (Specialty), Packaging & Container, Furn/Home Furnishings, Auto Parts, Steel, Paper/Forest Products, Apparel, Household Products |
+  | Software & SaaS | Software (System & Application), Software (Internet) |
+  | Telecom & CPaaS / messaging | Telecom. Services, Telecom (Wireless) |
+  | Professional services | Business & Consumer Services, Computer Services, Information Services, Advertising |
+  | Tourism & hospitality | Hotel/Gaming, Restaurant/Dining |
+
+- **A published EBITDA margin below the operating margin is not shown** (EBITDA is always at least EBIT); this applies to Software & SaaS in the January 2026 data.
+
+**Why the averages do not set the thresholds.** Calibrating the thresholds on these averages was tried: with the average as "fair" the fictional examples fall about two grades (the bakery from B to D), and with the average as "good" about one. The averages describe larger, listed companies, not the small firms the tool is meant for, so they are shown as a reference while the thresholds stay rule-of-thumb (decided by Jan, 25 November 2026).
+
 ## 6. Red flags
 
 | Flag | Severity | Rule |

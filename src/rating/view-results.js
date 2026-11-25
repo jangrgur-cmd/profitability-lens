@@ -17,6 +17,7 @@ import { FIELDS } from "./fields.js";
 import { gradeScaleText } from "./rating.js";
 import { RATIOS } from "./ratios.js";
 import { INDUSTRY_BY_ID, BENCHMARK_SOURCE } from "./benchmarks.js";
+import { SECTOR_SOURCE } from "./sector.js";
 import { KEY_FIGURES, keyFigureText, explainRatio, dupontSentences, ratioStatusText } from "./report.js";
 import { trendSentence } from "./years.js";
 import { formatPct, formatPp, formatMultiple, formatAmountInput, formatPercentValue, formatEurFull, formatSignedPct, formatNumber, toneClass } from "../shared/format.js";
@@ -149,13 +150,16 @@ function scaleText(thresholds) {
 
 function renderTrack(ratio) {
   const valuePct = ratio.status === "ok" ? ratio.value * 100 : null;
-  const g = trackGeometry(valuePct, ratio.thresholds);
-  const label = ratio.status === "ok"
+  const reference = ratio.sector?.value ?? null;
+  const g = trackGeometry(valuePct, ratio.thresholds, reference === null ? null : reference * 100);
+  const base = ratio.status === "ok"
     ? t("rating.page.trackValue", { value: formatPct(ratio.value), ratio: ratio.shortLabel, scale: scaleText(ratio.thresholds) })
     : t("rating.page.trackScale", { scale: scaleText(ratio.thresholds) });
+  const label = reference === null ? base : `${base}. ${t("rating.sector.trackLabel", { value: formatPct(reference) })}`;
   return h("div", { class: "track", role: "img", "aria-label": label },
     h("div", { class: "track__bar" },
       g.segments.map((s) => h("span", { class: `track__seg tone-${s.id}`, style: `left:${s.from}%;width:${s.to - s.from}%` })),
+      g.reference ? h("span", { class: "track__ref", style: `left:${g.reference.at}%` }) : null,
       g.marker ? h("span", {
         class: `track__marker${g.marker.outside ? ` track__marker--${g.marker.outside}` : ""}`,
         style: `left:${g.marker.at}%`,
@@ -191,6 +195,10 @@ function renderRatio(ratio, ctx) {
     head,
     ratio.status === "ok" ? null : h("p", { class: "ratio__status" }, ratioStatusText(ratio)),
     renderTrack(ratio),
+    ratio.sector?.value != null ? h("p", { class: "ratio__sector" },
+      h("span", { class: "ratio__sector-key", "aria-hidden": "true" }, "▾"), " ",
+      t("rating.sector.line", { value: formatPct(ratio.sector.value) }),
+      h("span", { class: "ratio__sector-note" }, ` (${t("rating.sector.lineNote")})`)) : null,
     ratio.id === "grossMargin" && source ? h("p", { class: "ratio__link" }, h("a", { href: source.backLink }, `${source.backLabel} →`)) : null,
     renderMath(ratio, ctx));
 }
@@ -302,11 +310,16 @@ export function renderMethod(ctx) {
         h("table", { class: "method__table" },
           h("caption", {}, t("rating.page.methodCaption", { industry: r.industry.label, source: BENCHMARK_SOURCE.label, note: BENCHMARK_SOURCE.note })),
           h("thead", {}, h("tr", {},
-            ["colRatio", "colWeight", "colWeak", "colFair", "colGood", "colExcellent"].map((key) => h("th", { scope: "col" }, t(`rating.page.${key}`))))),
-          h("tbody", {}, RATIOS.map((ratio) => h("tr", {},
-            h("th", { scope: "row" }, ratio.label),
-            h("td", {}, String(ratio.weight)),
-            thresholds[ratio.id].map((value) => h("td", {}, formatPercentValue(value)))))))),
+            ["colRatio", "colWeight", "colWeak", "colFair", "colGood", "colExcellent", "colSector"].map((key) => h("th", { scope: "col" }, t(`rating.page.${key}`))))),
+          h("tbody", {}, RATIOS.map((ratio) => {
+            const sector = r.ratios.find((x) => x.id === ratio.id).sector;
+            return h("tr", {},
+              h("th", { scope: "row" }, ratio.label),
+              h("td", {}, String(ratio.weight)),
+              thresholds[ratio.id].map((value) => h("td", {}, formatPercentValue(value))),
+              h("td", {}, sector.value === null ? t("common.dash") : formatPct(sector.value)));
+          })))),
+      h("p", { class: "method__source" }, t("rating.sector.source"), " · ", h("a", { href: SECTOR_SOURCE.url, rel: "noopener" }, SECTOR_SOURCE.url)),
       h("p", {}, t("rating.page.methodLink"), h("a", { href: "docs/methodology.md" }, "docs/methodology.md"))));
 }
 

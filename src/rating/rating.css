@@ -256,6 +256,14 @@ h1 {
 }
 /* Off the scale: an arrowhead pointing out of the track. */
 .track__marker--below, .track__marker--above { border-radius: 2px; transform: translate(-50%, -50%) rotate(45deg); width: 0.875rem; height: 0.875rem; }
+.track__ref {
+  position: absolute; top: -0.55rem; width: 0; height: 0; transform: translateX(-50%);
+  border-left: 0.35rem solid transparent; border-right: 0.35rem solid transparent; border-top: 0.45rem solid var(--ink-muted);
+}
+.ratio__sector { margin: 0.1rem 0 0; font-size: 0.8125rem; color: var(--ink-muted); }
+.ratio__sector-key { color: var(--ink-muted); }
+.ratio__sector-note { color: var(--ink-faint); }
+.method__source { margin: var(--space-2) 0 0; font-size: 0.8125rem; color: var(--ink-muted); overflow-wrap: anywhere; }
 .track__ticks { position: relative; height: 1.25rem; margin-top: 0.2rem; font-size: 0.6875rem; color: var(--ink-faint); }
 .track__tick { position: absolute; top: 0; transform: translateX(-50%); white-space: nowrap; }
 
@@ -297,7 +305,7 @@ h1 {
 .method__table caption { margin-bottom: var(--space-2); text-align: left; color: var(--ink-muted); }
 .method__table th, .method__table td { padding: 0.45rem 0.6rem; border-bottom: 1px solid var(--rule); text-align: right; white-space: nowrap; }
 .method__table th:first-child { text-align: left; padding-left: 0; }
-.method__table thead th { font-size: 0.8125rem; color: var(--ink-muted); }
+.method__table thead th { font-size: 0.8125rem; color: var(--ink-muted); white-space: normal; vertical-align: bottom; }
 .method > p { font-size: var(--step--1); }
 
 /* ---------- Years: tabs above the form fields ---------- */
@@ -515,6 +523,6 @@ h1 {
   .print-inputs th, .print-inputs td { padding: 0.1rem 1rem 0.1rem 0; text-align: right; }
   .print-inputs th[scope="row"] { text-align: left; font-weight: 500; }
   .sparkline__line, .sparkline__dot, .peers__grade { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
-  .track__seg { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  .track__seg, .track__ref { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
   .grade-ring__value { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
 }

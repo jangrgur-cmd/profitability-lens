@@ -9,6 +9,7 @@ All notable changes to Profitability Lens. The format follows [Keep a Changelog]
 - Other operating income (*ostali poslovni prihodi*) as an input: it counts in EBITDA and EBIT but not in revenue.
 - Open an Excel (.xlsx) or CSV file in both paste dialogs, or drop it anywhere on the page, and download an Excel template for the Company rating and for segments. No library: the workbook is read and written in the browser.
 - "Fix the company" on the Glossary & practice page: five challenges that ask for a goal grade with a limited set of What if… levers (one fixes prices at −3 % for a price war), with a lesson once solved.
+- Published sector averages next to every ratio: the average of listed European companies in the industry (Damodaran, January 2026), marked on the benchmark track and listed in "How the rating works". For comparison only; grades are unchanged.
 - "How to reach grade X" on the Company rating: the smallest change of each What if… lever that reaches the next grade, with "Try it" to set it, and a table of the points each ratio earns and misses.
 
 ## [1.0.0] – 2026-11-25

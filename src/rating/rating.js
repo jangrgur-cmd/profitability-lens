@@ -15,6 +15,7 @@ import { formatMultiple, formatPct } from "../shared/format.js";
 import { validateValues } from "./fields.js";
 import { RATIOS, computeRatios, deriveStatement, dupont } from "./ratios.js";
 import { BENCHMARK_SOURCE, DEFAULT_INDUSTRY_ID, getIndustry } from "./benchmarks.js";
+import { sectorReference } from "./sector.js";
 import { t } from "../shared/i18n.js";
 
 /** Grades from best to worst; a score at or above `min` earns the grade. */
@@ -80,6 +81,7 @@ export function rate(values, industryId = DEFAULT_INDUSTRY_ID) {
   const industry = getIndustry(industryId);
   const statement = deriveStatement(values);
   const results = computeRatios(statement);
+  const sector = sectorReference(industry.id);
 
   const ratios = RATIOS.map((def) => {
     const result = results[def.id];
@@ -88,7 +90,8 @@ export function rate(values, industryId = DEFAULT_INDUSTRY_ID) {
       ? { score: scoreAgainstThresholds(result.value * 100, thresholds), band: bandFor(result.value * 100, thresholds) }
       : { score: null, band: null };
     const { compute, ...text } = def;
-    return { ...text, ...result, ...scored, thresholds };
+    // sector: the published average for comparison only; it never changes the score.
+    return { ...text, ...result, ...scored, thresholds, sector: sector[def.id] };
   });
 
   const available = ratios.filter((r) => r.status === "ok");

@@ -276,7 +276,13 @@ export default {
     benchmarkSource: {
       label: "Okvirni pragovi",
       inline: "okvirni pragovi",
-      note: "Početne vrijednosti procijenjene iskustveno, za učenje; nisu službena statistika. Bit će usklađene s objavljenim podacima po djelatnostima.",
+      note: "Početne vrijednosti procijenjene iskustveno, za učenje; nisu službena statistika. Uz svaki pokazatelj prikazan je i prosjek europskih poduzeća uvrštenih na burzu u istoj djelatnosti (Damodaran, siječanj 2026.), radi usporedbe; taj prosjek ne ulazi u ocjenu.",
+    },
+    sector: {
+      source: "Damodaran (NYU Stern), prosjeci europskih djelatnosti, podaci za siječanj 2026.",
+      line: "Europska poduzeća uvrštena na burzu u ovoj djelatnosti: u prosjeku {value}",
+      lineNote: "Damodaran, siječanj 2026.; za usporedbu, ne ulazi u ocjenu",
+      trackLabel: "Oznaka ▾ prosjek je europskih poduzeća uvrštenih na burzu u ovoj djelatnosti: {value}.",
     },
     industries: {
       general: {
@@ -680,6 +686,7 @@ export default {
       colFair: "Zadovoljavajuće od",
       colGood: "Dobro od",
       colExcellent: "Izvrsno od",
+      colSector: "Prosjek uvrštenih (EU)",
       methodLink: "Cijela metoda i definicije (na engleskom): ",
       printInputs: "Ocijenjeni podaci (EUR)",
       announceInvalid: "Neke podatke treba provjeriti prije nego što se tvrtka može ocijeniti.",

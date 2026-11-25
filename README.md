@@ -76,7 +76,7 @@ Where textbooks differ (ROE on negative equity, the tax rate in NOPAT, averages 
 
 ## Assumptions and limitations
 
-- **The benchmarks are rule-of-thumb starting points**, set by judgement for seven industries and labelled as such in the interface. They are not calibrated against published sector data yet. That is the first item on the roadmap, with source and year recorded for each value.
+- **The benchmarks are rule-of-thumb starting points**, set by judgement for seven industries and labelled as such in the interface. Next to them, each ratio shows the average of listed European companies in its sector (Damodaran, January 2026) for comparison. Those averages do not set the thresholds: they describe larger, listed firms, and calibrating on them dropped every example by one or two grades ([methodology §5](docs/methodology.md)).
 - **Eight ratios do not make a credit analysis.** The rating looks at profitability only: no liquidity, cash flow, growth or valuation. One year's statement can hide seasonality and one-off items.
 - **Costs by nature:** Croatian statements often have no cost of goods sold. Then gross margin is missing and all costs count as operating expenses, so the grade rests on seven ratios.
 - **The segment page does not allocate company-wide overheads.** Segment profit is contribution margin less the segment's own fixed costs. That is deliberate: an arbitrary allocation key can make a segment that covers its own costs look loss-making.

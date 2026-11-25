@@ -124,7 +124,7 @@ DuPont: ROE = Net margin × Asset turnover (Revenue ÷ AvgAssets) × Equity mult
 - Band: ≥ excellent Excellent, ≥ good Good, ≥ fair Fair, ≥ poor Weak, else Poor.
 - Overall = weighted average of available ratios (weights renormalised); show coverage ("7 of 8 ratios").
 - Grade: A ≥ 80 Excellent, B ≥ 65 Strong, C ≥ 50 Adequate, D ≥ 35 Weak, E < 35 Poor.
-- Industries: General, Retail & wholesale, Manufacturing, Software & SaaS, Telecom & CPaaS/messaging, Professional services, Tourism & hospitality. Thresholds start as **rule-of-thumb values, labelled as such in code and UI**. Roadmap: calibrate against published sector data (e.g. Damodaran's industry margin/return datasets), recording source and year.
+- Industries: General, Retail & wholesale, Manufacturing, Software & SaaS, Telecom & CPaaS/messaging, Professional services, Tourism & hospitality. Thresholds start as **rule-of-thumb values, labelled as such in code and UI**. Roadmap: calibrate against published sector data (e.g. Damodaran's industry margin/return datasets), recording source and year. Done as a reference after Phase 5: `src/rating/sector.js` shows Damodaran's European averages (January 2026) next to each ratio; Jan decided they do not set the thresholds (see `docs/methodology.md` §5).
 - Flags: net loss (critical); equity ≤ 0 (critical); positive gross margin but negative EBIT (serious); interest cover EBIT ÷ interest < 1.5× (serious); equity multiplier > 3 ("ROE inflated by leverage"); D&A > 50% of EBITDA; low coverage (< 60% of weight); no prior-year data (info).
 
 ### 4.5 Hand-checkable test case (must stay in the tests)
