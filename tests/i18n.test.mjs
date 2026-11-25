@@ -243,3 +243,22 @@ test("the messaging model's names, checks and scenario steps run in Croatian", a
   assert.equal(STEPS[3].label, "Trošak operatera");
   assert.equal(PRESETS[2].label, "Jak dolar");
 });
+
+test("messaging sentences: whole phrases per category and English country names with 'the'", async () => {
+  const { inCountry } = await import("../modules/messaging/js/labels.js");
+  const assumptions = JSON.parse(readFileSync(new URL("modules/messaging/data/assumptions.json", ROOT), "utf8"));
+  assert.equal(inCountry("GB", "United Kingdom"), "in the United Kingdom");
+  assert.equal(inCountry("DE", "Germany"), "in Germany");
+  assert.equal(t("seg.overview.trafficOfCategory.authentication"), "authentication (OTP) traffic");
+  for (const lang of ["en", "hr"]) {
+    useLanguage(lang);
+    for (const c of assumptions.dimensions.categories) assert.ok(hasText(`seg.overview.trafficOfCategory.${c.id}`), `${lang} ${c.id}`);
+  }
+  assert.equal(inCountry("GB", "Ujedinjeno Kraljevstvo"), "u Ujedinjenom Kraljevstvu");
+  assert.equal(t("seg.overview.trafficOfCategory.marketing"), "marketinški promet");
+});
+
+test("plural texts choose their form from {count}, so other numbers come after a colon", () => {
+  assert.equal(t("rating.paste.summary", { count: 5, matched: 5, columns: 1 }), "5 lines with amounts, 5 matched to fields; columns of years: 1.");
+  assert.equal(t("segments.paste.summary", { count: 2, skipped: 1 }), "2 segments read; lines skipped: 1.");
+});

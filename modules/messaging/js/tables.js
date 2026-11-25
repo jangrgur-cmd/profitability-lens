@@ -125,7 +125,7 @@ export function createSortableTable(container, options) {
       const td = document.createElement("td");
       td.colSpan = columns.length;
       td.className = "empty";
-      td.textContent = t("seg.noTraffic");
+      td.textContent = options.emptyText ?? t("seg.noTraffic");
       tr.append(td);
       body.push(tr);
     }

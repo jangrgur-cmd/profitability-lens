@@ -90,6 +90,7 @@ export function createAssumptionsView(model) {
     columns,
     caption: t("seg.assumptions.tableCaption"),
     sort: { key: "label", direction: "asc" },
+    emptyText: t("seg.assumptions.noMatch"),
   });
   const csvColumns = ["id", "group", "label", "value", "unit", "status", "source", "note"].map((key) => ({ label: key, key }));
   $("assumptions-csv").addEventListener("click", () => downloadCsv("assumptions.csv", toCsv(csvColumns, table.sortedRows())));
@@ -111,7 +112,7 @@ export function createAssumptionsView(model) {
     sort: { key: "base_monthly_volume", direction: "desc" },
   });
   const archetypeCsv = [
-    { label: "customer_id", key: "id" }, { label: "customer", key: "name" }, { label: "industry", key: "industry" },
+    { label: "customer_id", key: "id" }, { label: "customer", csv: (c) => customerNames[c.id] }, { label: "industry", key: "industry" },
     { label: "home_country", key: "home_country" }, { label: "size_tier", key: "size_tier" },
     { label: "discount_tier", key: "discount_tier" }, { label: "base_monthly_volume", key: "base_monthly_volume" },
     { label: "countries", csv: (c) => Object.keys(c.footprint.countries).join(" ") },

@@ -11,7 +11,6 @@
 
 import { RATIOS } from "../rating/ratios.js";
 import { t, textIn, otherLanguage, getLang } from "../shared/i18n.js";
-import { normalizeLabel } from "../shared/paste.js";
 
 /** Glossary sections, in display order. Labels under learn.glossary.categories. */
 export const CATEGORIES = ["statements", "profit", "ratios", "analysis", "segments"].map((id) => ({
@@ -130,9 +129,18 @@ export const GLOSSARY = [
 /** Entries by id. */
 export const GLOSSARY_BY_ID = Object.fromEntries(GLOSSARY.map((e) => [e.id, e]));
 
+/**
+ * Lower case without accents (đ → d), with "&" and "%" kept inside words, so
+ * "trosak" finds "Trošak", and "D&A" or "20%" are searched as one word.
+ */
+function fold(text) {
+  return String(text ?? "").toLowerCase().replace(/đ/g, "d").normalize("NFD").replace(/[̀-ͯ]/g, "")
+    .replace(/s+%/g, "%").replace(/[^a-z0-9&%]+/g, " ").trim();
+}
+
 /** Text an entry can be found by: its name in both languages and its definition. */
 function searchText(e) {
-  return normalizeLabel([e.term, e.alt, e.definition, e.formula ?? ""].join(" "));
+  return fold([e.term, e.alt, e.definition, e.formula ?? ""].join(" "));
 }
 
 /**
@@ -144,9 +152,9 @@ function searchText(e) {
  * @returns {GlossaryEntry[]}
  */
 export function searchGlossary(query, { category = null, entries = GLOSSARY } = {}) {
-  const words = normalizeLabel(query).split(" ").filter(Boolean);
+  const words = fold(query).split(" ").filter(Boolean);
   const collator = new Intl.Collator(getLang());
-  const inName = (e) => words.every((w) => normalizeLabel(`${e.term} ${e.alt}`).includes(w));
+  const inName = (e) => words.every((w) => fold(`${e.term} ${e.alt}`).includes(w));
   return entries
     .filter((e) => !category || e.category === category)
     .filter((e) => words.length === 0 || words.every((w) => searchText(e).includes(w)))

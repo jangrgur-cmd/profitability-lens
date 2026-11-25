@@ -13,7 +13,7 @@ import { createChecksView } from "./checks-view.js";
 import { renderMarginContributions, initHandoffLink } from "./learn-view.js";
 import { mountSiteHeader } from "../../../src/shared/site-header.js";
 import { isLearnMode } from "../../../src/shared/prefs.js";
-import { t, hasText } from "../../../src/shared/i18n.js";
+import { t, hasText, getLang } from "../../../src/shared/i18n.js";
 import { inCountry } from "./labels.js";
 
 const $ = (id) => document.getElementById(id);
@@ -116,7 +116,9 @@ function initFilters() {
   fillSelect($("f-to"), months);
   fillSelect($("f-country"), [
     { value: "all", label: t("seg.filters.allCountries") },
-    ...[...dimensions.countries].sort((a, b) => a.name.localeCompare(b.name)).map((c) => ({ value: c.code, label: c.name })),
+    ...dimensions.countries
+      .map((c) => ({ value: c.code, label: app.model.countryNames[c.code] }))
+      .sort((a, b) => a.label.localeCompare(b.label, getLang())),
   ]);
   fillSelect($("f-channel"), [
     { value: "all", label: t("seg.filters.allChannels") },
@@ -181,7 +183,10 @@ function scopeText({ country, channel, category, industry }) {
   const channelName = channel === "Voice" ? t("seg.overview.voiceInSentence") : app.model.channelName(channel);
   if (channel !== "all") parts.push(where ? t("seg.overview.channelIn", { channel: channelName, where }) : channelName);
   else if (where) parts.push(t("seg.overview.allChannelsIn", { where }));
-  if (category !== "all") parts.push(t("seg.overview.categoryTraffic", { category: categoryLabels[category].toLowerCase() }));
+  if (category !== "all") {
+    const key = `seg.overview.trafficOfCategory.${category}`;
+    parts.push(hasText(key) ? t(key) : t("seg.overview.categoryTraffic", { category: categoryLabels[category] }));
+  }
   if (industry !== "all") parts.push(t("seg.overview.industryCustomers", { industry: app.model.industryName(industry) }));
   return parts.length ? parts.join(t("common.listSeparator")) : t("seg.overview.allTraffic");
 }

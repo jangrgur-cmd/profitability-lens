@@ -238,3 +238,12 @@ test("the cheat sheet text download has every section, in both languages", () =>
   assert.ok(hr.includes(`Bruto marža | 15${nb}% | 25${nb}% | 35${nb}% | 50${nb}%`));
   assert.ok(!/\{\w+\}/.test(hr), "no unfilled placeholders");
 });
+
+test("glossary search keeps '&' and '%' inside a word: 'D&A' and '20%' are precise", () => {
+  const da = searchGlossary("D&A").map((e) => e.id);
+  assert.ok(da.includes("da"), "finds Depreciation & amortisation via its definition's 'D&A'");
+  assert.ok(da.length <= 8, `'D&A' should not match every entry with a 'd' and an 'a' (got ${da.length})`);
+  assert.ok(searchGlossary("20%").some((e) => e.id === "topShare"));
+  useLanguage("hr");
+  assert.ok(searchGlossary("20%").some((e) => e.id === "topShare"), "Croatian '20 %' is found by '20%'");
+});

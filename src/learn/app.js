@@ -307,6 +307,16 @@ function setupGlossary() {
   }, cat.label));
   replaceChildren($("glossary-categories"), chips);
   $("glossary-search").addEventListener("input", (event) => { state.query = event.target.value; renderGlossary(); });
+  // "See also" links: follow them here, so a link to the entry already in the URL
+  // (no hashchange) still clears a filter that hides it.
+  $("glossary-list").addEventListener("click", (event) => {
+    const link = event.target.closest('a[href^="#term-"]');
+    if (!link) return;
+    event.preventDefault();
+    const href = link.getAttribute("href");
+    if (location.hash !== href) history.pushState(null, "", href);
+    followHash();
+  });
   renderGlossary();
 }
 

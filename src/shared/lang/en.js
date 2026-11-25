@@ -503,8 +503,8 @@ export default {
       privacy: "Read in your browser; nothing is uploaded.",
       nothing: "No amounts found. Paste lines with a name in the first column and amounts in the next columns.",
       summary: {
-        one: "{count} line with amounts, {matched} matched to a field; {columns} year column.",
-        other: "{count} lines with amounts, {matched} matched to fields; {columns} year columns.",
+        one: "{count} line with amounts, {matched} matched to a field; columns of years: {columns}.",
+        other: "{count} lines with amounts, {matched} matched to fields; columns of years: {columns}.",
       },
       extraColumns: {
         one: "{count} more column of amounts was left out: at most five years.",
@@ -738,7 +738,7 @@ export default {
         cogs: "The direct cost of what was sold: goods bought for resale, materials and production costs. Statements that list costs by nature do not show it as one line.",
         opex: "The costs of running the business that are not cost of goods sold: staff, rent, marketing, services, administration. Here without depreciation and amortisation, which have their own line.",
         costsByNature: "A way of presenting the income statement by what was bought (materials, staff, services, depreciation) instead of by function (cost of sales, selling, administration). Croatian statements (GFI-POD) use it, so they often have no cost of goods sold.",
-        da: "The cost of wearing out long-lived assets, spread over their useful life: machines and buildings (depreciation), software and licences (amortisation). It is a cost without a cash payment in the year.",
+        da: "The cost of wearing out long-lived assets, spread over their useful life: machines and buildings (depreciation), software and licences (amortisation). It is a cost without a cash payment in the year. Often shortened to D&A.",
         interest: "What the company pays for its loans and other borrowing in the year. High interest compared with operating profit is a warning sign.",
         tax: "Tax on the year's profit. A loss year usually has none.",
         assets: "Everything the company owns or controls at year end: buildings, machines, stock, money owed by customers and cash.",
@@ -976,8 +976,8 @@ export default {
       placeholder: "Customer\tRevenue\tVariable costs\tDirect fixed costs\nCustomer A\t120,000\t84,000\t9,000\n…",
       nothing: "No segments found. Each row needs a name and a revenue amount.",
       summary: {
-        one: "{count} segment read; {skipped} lines skipped.",
-        other: "{count} segments read; {skipped} lines skipped.",
+        one: "{count} segment read; lines skipped: {skipped}.",
+        other: "{count} segments read; lines skipped: {skipped}.",
       },
       truncated: "Only the first {max} segments are used.",
       withHeader: "Columns found from the header row.",
@@ -1057,6 +1057,15 @@ export default {
   // ---------------------------------------------------------------------------
   // Segment profitability: the messaging case study
   // ---------------------------------------------------------------------------
+  // English names inside a sentence that differ from the plain name (see inCountry in
+  // modules/messaging/js/labels.js). Other English data names come from the data files.
+  data: {
+    countryIn: {
+      GB: "in the United Kingdom",
+      US: "in the United States",
+    },
+  },
+
   seg: {
     title: "Messaging profitability model",
     byline: "Illustrative model, sourced market prices · Built by Jan Grgur Glivar · <a href=\"https://linkedin.com/in/jangrgurglivar\" rel=\"noopener\">LinkedIn</a> · <a href=\"https://github.com/jangrgur-cmd/messaging-profitability\" rel=\"noopener\">GitHub repo</a>",
@@ -1105,12 +1114,17 @@ export default {
       inCountry: "in {country}",
       voiceInSentence: "voice passcode calls",
       categoryTraffic: "{category} traffic",
+      trafficOfCategory: {
+        authentication: "authentication (OTP) traffic",
+        utility: "utility (transactional) traffic",
+        marketing: "marketing traffic",
+      },
       industryCustomers: "{industry} customers",
       noTraffic: "no traffic matches these filters. Widen the month range or set a filter back to All.",
-      grossLoss: "a {amount} gross loss",
+      grossLoss: "{amount} gross loss",
       grossProfit: "{amount} gross profit",
-      onRevenue: " on {amount} revenue, a ",
-      margin: " margin.",
+      onRevenue: " on {amount} revenue, a margin of ",
+      margin: ".",
       kpiRevenue: "Revenue",
       kpiRevenueDetail: "after customer discounts",
       kpiGrossProfit: "Gross profit",
@@ -1201,9 +1215,9 @@ export default {
       noRoutes: "No routes have traffic with these filters.",
       best: " {route} earns the most gross profit (",
       bestEnd: ").",
-      onlyLoses: "The only route in this selection, {route}, loses money: a ",
-      onlyProfitable: "The only route in this selection, {route}, is profitable: a ",
-      onlyMarginOn: " margin on ",
+      onlyLoses: "The only route in this selection, {route}, loses money: a margin of ",
+      onlyProfitable: "The only route in this selection, {route}, is profitable: a margin of ",
+      onlyMarginOn: " on ",
       onlyRevenue: " revenue.",
       allProfitable: "All {count} routes are profitable in this selection; the thinnest is {route} at ",
       losers: {
@@ -1287,7 +1301,7 @@ export default {
       reset: "Reset scenario",
       resetNote: "Back to the baseline.",
       noTraffic: "No traffic matches these filters. Widen the filters above to run a scenario.",
-      unchanged: "Pick a preset or move a slider to see how gross profit responds. With no changes, the scenario equals the baseline: {profit} gross profit, a {margin} margin.",
+      unchanged: "Pick a preset or move a slider to see how gross profit responds. With no changes, the scenario equals the baseline: {profit} gross profit and a margin of {margin}.",
       rises: "In this scenario gross profit rises by ",
       falls: "In this scenario gross profit falls by ",
       toProfit: " to {profit}, and the margin moves from ",
@@ -1346,6 +1360,7 @@ export default {
       colSource: "Source",
       colNote: "Note",
       tableCaption: "Every input assumption with its value, unit, status and source",
+      noMatch: "No assumption has this group and status.",
       archetypesTitle: "Customer archetypes and their estimated volumes",
       archetypesCaption: "Customer archetypes with their estimated monthly volume",
       colCustomer: "Customer",

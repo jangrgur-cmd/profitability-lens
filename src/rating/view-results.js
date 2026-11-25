@@ -151,7 +151,7 @@ function renderTrack(ratio) {
   const valuePct = ratio.status === "ok" ? ratio.value * 100 : null;
   const g = trackGeometry(valuePct, ratio.thresholds);
   const label = ratio.status === "ok"
-    ? t("rating.page.trackValue", { value: formatPct(ratio.value), ratio: ratio.label.toLowerCase(), scale: scaleText(ratio.thresholds) })
+    ? t("rating.page.trackValue", { value: formatPct(ratio.value), ratio: ratio.shortLabel, scale: scaleText(ratio.thresholds) })
     : t("rating.page.trackScale", { scale: scaleText(ratio.thresholds) });
   return h("div", { class: "track", role: "img", "aria-label": label },
     h("div", { class: "track__bar" },

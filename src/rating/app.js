@@ -11,7 +11,7 @@ import { FIELDS, GROUPS, parseForm, exportJson, importJson } from "./fields.js";
 import { MAX_YEARS, PRIOR_FIELD_IDS, rateYears, trendSentence } from "./years.js";
 import { INDUSTRIES, DEFAULT_INDUSTRY_ID, INDUSTRY_BY_ID, BENCHMARK_SOURCE } from "./benchmarks.js";
 import { SAMPLES } from "./samples.js";
-import { caseFromHash } from "../learn/cases.js";
+import { CASES, caseFromHash } from "../learn/cases.js";
 import { textSummary } from "./report.js";
 import {
   renderVerdict, renderKeyFigures, renderFlags, renderRatioGroup, renderTrend, renderDupont, renderMethod, renderPrintInputs, richText,
@@ -439,11 +439,16 @@ async function importFile(event) {
   }
 }
 
+/** True for the names the page itself gives fictional figures: examples, practice cases and hand-offs. */
+function isFictionalName(name) {
+  return [...SAMPLES, ...CASES].some((s) => name === t("rating.samples.nameFictional", { name: s.name }))
+    || Object.values(HANDOFF_SOURCES).some((source) => name === source.companyName);
+}
+
 function applyPaste(years) {
   // Pasted figures are not the example company any more: drop its fictional name.
   const name = $("company-name").value;
-  const fromSample = SAMPLES.some((s) => name === t("rating.samples.nameFictional", { name: s.name }));
-  loadYears(years, { latestYear: years[0].year, industryId: $("industry").value, companyName: fromSample ? "" : name });
+  loadYears(years, { latestYear: years[0].year, industryId: $("industry").value, companyName: isFictionalName(name) ? "" : name });
   announce(t("rating.paste.applied", { count: years.length }));
 }
 
