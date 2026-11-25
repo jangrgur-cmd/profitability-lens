@@ -11,6 +11,8 @@ The modules are connected: "Send to Company rating" on either segment page carri
 
 **Learn mode** (switch in the header) turns both modules into a teaching tool: the math behind every ratio with your own numbers, what each ratio tells you and how to improve it, field help with the matching term in the other language, a plain-language DuPont breakdown, how segment margins add up to the company margin, and what each scenario step changes. Light and dark mode follow your system, or pick one in the header.
 
+**Glossary & practice** ([learn.html](learn.html)): guess the A–E grade of five fictional companies and see how the rating gets there, look up 54 terms in English and Croatian with their formulas, and print the one-page [formula cheat sheet](cheatsheet.html) (or save it as PDF or text).
+
 **English and Croatian** (EN/HR switch in the header): the interface, the explanations and the number formats (1,234.56 or 1.234,56) follow the language, which starts from your browser's setting. Croatian uses standard accounting terminology; the term list is in [docs/terminology.md](docs/terminology.md).
 
 No accounts, no backend, no API keys: your data never leaves the browser (the form is kept only in this browser's local storage). Example companies and simulated data are fictional, and the benchmarks are rule-of-thumb thresholds, not official statistics.

@@ -1,0 +1,228 @@
+/* learn.css: the Glossary & practice page and the formula cheat sheet.
+   Builds on theme.css (tokens, buttons, pills) and rating.css (cards, chips,
+   grade ring, flags). */
+
+.page-intro__link { margin: var(--space-3) 0 0; color: var(--ink-muted); }
+
+/* ---------- Tabs ---------- */
+
+.learn-tabs {
+  display: flex;
+  gap: var(--space-1);
+  margin-bottom: var(--space-5);
+  border-bottom: 1px solid var(--rule);
+}
+.learn-tab {
+  font: inherit;
+  font-weight: 600;
+  padding: 0.6rem 1rem;
+  border: 0;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -1px;
+  background: none;
+  color: var(--ink-muted);
+  cursor: pointer;
+}
+.learn-tab:hover { color: var(--ink); }
+.learn-tab[aria-selected="true"] { color: var(--accent-strong); border-bottom-color: var(--accent); }
+.learn-panel:focus { outline: none; }
+.quiz-intro { margin: 0 0 var(--space-4); max-width: 68ch; color: var(--ink-muted); }
+
+/* ---------- Guess the grade ---------- */
+
+.quiz-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: var(--space-3) var(--space-6); }
+.quiz-score { display: flex; align-items: center; gap: var(--space-3); padding-top: var(--space-1); }
+.quiz-score__text { margin: 0; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+.quiz-cases__list { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0 0 var(--space-4); padding: 0; list-style: none; }
+.quiz-case-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font: inherit;
+  font-size: var(--step--1);
+  font-weight: 600;
+  padding: 0.35rem 0.8rem;
+  border: 1px solid var(--rule-strong);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--ink-muted);
+  cursor: pointer;
+}
+.quiz-case-tab:hover { border-color: var(--accent); color: var(--ink); }
+.quiz-case-tab[aria-current="step"] { border-color: var(--accent); background: var(--accent); color: var(--on-accent); }
+.quiz-case-tab__icon { font-size: 0.8125rem; }
+.quiz-case-tab--right:not([aria-current]) .quiz-case-tab__icon { color: var(--profit); }
+.quiz-case-tab--wrong:not([aria-current]) .quiz-case-tab__icon { color: var(--loss); }
+
+.case { padding: var(--space-5) var(--space-6) var(--space-6); }
+.case__eyebrow { margin: 0; font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-faint); }
+.case__title { margin: var(--space-1) 0 0; font-family: var(--font-display); font-size: var(--step-2); line-height: 1.2; letter-spacing: -0.02em; }
+.case__title:focus { outline: none; }
+.case__title .chip__tag { vertical-align: middle; font-family: var(--font-sans); }
+.case__industry { margin: var(--space-1) 0 0; font-weight: 600; color: var(--ink-muted); }
+.case__story { margin: var(--space-3) 0 0; max-width: 70ch; }
+.case-section-title { margin: var(--space-5) 0 var(--space-2); font-size: 1rem; font-weight: 700; }
+.case-help { margin: 0 0 var(--space-3); font-size: var(--step--1); color: var(--ink-muted); }
+
+.case-figures { display: grid; grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr)); gap: var(--space-3) var(--space-6); }
+.case-figures__table { width: 100%; border-collapse: collapse; font-size: var(--step--1); font-variant-numeric: tabular-nums; align-self: start; }
+.case-figures__table caption { padding-bottom: var(--space-1); text-align: left; font-weight: 650; color: var(--ink-muted); }
+.case-figures__table th, .case-figures__table td { padding: 0.35rem 0; border-bottom: 1px solid var(--rule); }
+.case-figures__table th { font-weight: 500; text-align: left; padding-right: var(--space-3); }
+.case-figures__table td { text-align: right; white-space: nowrap; }
+.case-figures__none { color: var(--ink-faint); font-style: italic; }
+
+.case-hint { margin-top: var(--space-4); padding: var(--space-3) var(--space-4); border: 1px dashed var(--rule-strong); border-radius: var(--radius-sm); }
+.case-hint summary { font-weight: 600; cursor: pointer; color: var(--accent-strong); }
+.case-hint__note { margin: var(--space-2) 0; font-size: var(--step--1); color: var(--ink-muted); }
+.case-hint__list { display: grid; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); gap: 0 var(--space-6); margin: 0; padding: 0; list-style: none; font-size: var(--step--1); }
+.case-hint__list li { display: flex; justify-content: space-between; gap: var(--space-3); padding: 0.3rem 0; border-bottom: 1px solid var(--rule); }
+.case-hint__value { font-weight: 600; font-variant-numeric: tabular-nums; text-align: right; }
+
+.guess { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: var(--space-2); max-width: 36rem; }
+.guess__button {
+  display: grid;
+  justify-items: center;
+  gap: 0.1rem;
+  font: inherit;
+  padding: 0.6rem 0.25rem;
+  border: 2px solid var(--rule-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+}
+.guess__button:hover:not(:disabled) { border-color: var(--accent); }
+.guess__button:disabled { cursor: default; opacity: 0.55; }
+.guess__letter { font-family: var(--font-display); font-size: var(--step-2); font-weight: 750; line-height: 1; color: var(--tone); }
+.guess__label { font-size: 0.75rem; color: var(--ink-muted); text-align: center; }
+.guess__button[aria-pressed="true"] { opacity: 1; border-color: var(--ink); }
+.guess__button--answer { opacity: 1; border-color: var(--tone); background: color-mix(in srgb, var(--tone) 12%, var(--surface)); }
+.guess__button--wrong { border-style: dashed; }
+.guess__button.tone-excellent { --tone: var(--band-excellent); }
+.guess__button.tone-good { --tone: var(--band-good); }
+.guess__button.tone-fair { --tone: var(--band-fair); }
+.guess__button.tone-weak { --tone: var(--band-weak); }
+.guess__button.tone-poor { --tone: var(--band-poor); }
+
+.case-reveal { margin-top: var(--space-5); padding-top: var(--space-2); border-top: 1px solid var(--rule); }
+.case-verdict { display: flex; align-items: center; gap: var(--space-2); margin: var(--space-3) 0 0; font-size: var(--step-1); font-weight: 700; }
+.case-verdict__icon {
+  display: inline-grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  font-size: 1rem;
+  color: var(--on-accent);
+  flex: none;
+}
+.case-verdict--right .case-verdict__icon { background: var(--profit); }
+.case-verdict--wrong .case-verdict__icon { background: var(--loss); }
+.case-answer { display: flex; align-items: center; gap: var(--space-5); }
+.case-answer .grade-ring { flex: none; }
+.case-answer__summary { margin: 0; max-width: 62ch; }
+
+.case-ratios { display: grid; grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr)); gap: 0 var(--space-6); margin: 0; padding: 0; list-style: none; font-size: var(--step--1); }
+.case-ratios li { display: grid; grid-template-columns: minmax(0, 1fr) auto 7.5rem; align-items: center; gap: var(--space-3); padding: 0.4rem 0; border-bottom: 1px solid var(--rule); }
+.case-ratios__value { font-weight: 600; font-variant-numeric: tabular-nums; text-align: right; }
+.case-ratios li .pill { justify-self: start; }
+
+.case-lesson { margin-top: var(--space-5); padding: var(--space-1) var(--space-4) var(--space-3); border-left: 4px solid var(--accent); background: var(--accent-soft); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+.case-lesson .case-section-title { margin-top: var(--space-3); }
+.case-lesson p { margin: 0; max-width: 72ch; }
+.case-done { margin: var(--space-4) 0 0; font-weight: 600; }
+.case-actions { display: flex; flex-wrap: wrap; gap: var(--space-2); margin-top: var(--space-5); }
+.case-actions a.button { text-decoration: none; }
+
+/* ---------- Glossary ---------- */
+
+.glossary-tools { display: grid; gap: var(--space-3); padding: var(--space-4) var(--space-5); margin-bottom: var(--space-5); }
+.glossary-tools .field { margin: 0; max-width: 32rem; }
+.glossary-chip { padding-right: 0.75rem; }
+.glossary-chip[aria-pressed="true"] { border-color: var(--accent); background: var(--accent); color: var(--on-accent); }
+.glossary-count { margin: 0; font-size: var(--step--1); color: var(--ink-muted); }
+
+.term-group { margin-bottom: var(--space-5); }
+.term-group__title { margin: 0 0 var(--space-2); font-size: var(--step-1); font-weight: 700; }
+.terms { padding: 0 var(--space-5); }
+.term { padding: var(--space-4) 0; border-top: 1px solid var(--rule); scroll-margin-top: var(--space-6); }
+.term:first-child { border-top: 0; }
+.term:focus { outline: none; }
+.term:target, .term:focus-visible { box-shadow: inset 4px 0 0 var(--accent); padding-left: var(--space-3); }
+.term__name { margin: 0; font-size: 1.0625rem; font-weight: 700; }
+.term__alt { margin: 0.15rem 0 0; font-size: var(--step--1); color: var(--ink-muted); }
+.term__alt span { font-style: italic; }
+.term__formula {
+  display: inline-block;
+  margin: var(--space-2) 0 0;
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+  background: var(--surface-2);
+  border: 1px solid var(--rule);
+  font-size: var(--step--1);
+  font-weight: 600;
+}
+.term__def { margin: var(--space-2) 0 0; max-width: 72ch; }
+.term__related { margin: var(--space-2) 0 0; font-size: var(--step--1); color: var(--ink-muted); }
+
+/* ---------- Cheat sheet ---------- */
+
+.sheet-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-3); margin-top: var(--space-4); }
+.sheet-actions p { margin: 0; font-size: var(--step--1); color: var(--ink-muted); }
+.sheet { padding: var(--space-6); margin-bottom: var(--space-6); }
+.sheet__title { margin: 0; font-family: var(--font-display); font-size: var(--step-1); font-weight: 750; }
+.sheet__subtitle { margin: var(--space-1) 0 0; font-size: var(--step--1); color: var(--ink-muted); }
+.sheet__grid { columns: 2 24rem; column-gap: var(--space-6); margin-top: var(--space-4); }
+.sheet__section { break-inside: avoid; margin: 0 0 var(--space-4); }
+.sheet__section h3 {
+  margin: 0 0 var(--space-1);
+  padding-bottom: 0.15rem;
+  border-bottom: 2px solid var(--accent);
+  font-size: 0.8125rem;
+  font-weight: 750;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--accent-strong);
+}
+.sheet__lines { margin: 0; padding: 0; list-style: none; font-size: var(--step--1); }
+.sheet__lines li { padding: 0.2rem 0; border-bottom: 1px solid var(--rule); }
+.sheet__table { width: 100%; border-collapse: collapse; font-size: var(--step--1); font-variant-numeric: tabular-nums; }
+.sheet__table th, .sheet__table td { padding: 0.2rem 0.4rem; border-bottom: 1px solid var(--rule); text-align: right; white-space: nowrap; }
+.sheet__table th:first-child, .sheet__table td:first-child { text-align: left; padding-left: 0; }
+.sheet__table thead th { font-size: 0.75rem; color: var(--ink-muted); white-space: normal; vertical-align: bottom; }
+.sheet__ratio-formula { text-align: left !important; white-space: normal !important; }
+.sheet__table tbody th { white-space: normal; }
+.sheet__note { margin: var(--space-1) 0 0; font-size: 0.75rem; color: var(--ink-muted); }
+.sheet__footer { margin: var(--space-2) 0 0; font-size: 0.75rem; color: var(--ink-faint); }
+
+@media (max-width: 40rem) {
+  .case { padding: var(--space-4); }
+  .case-answer { flex-direction: column; align-items: flex-start; }
+  .case-ratios li { grid-template-columns: minmax(0, 1fr) auto; }
+  .case-ratios li .pill { grid-column: 1 / -1; }
+  .guess__label { display: none; }
+  .terms { padding: 0 var(--space-4); }
+  .sheet { padding: var(--space-4); }
+  .quiz-score { width: 100%; justify-content: space-between; }
+}
+
+@media print {
+  .sheet-page .site-header,
+  .sheet-page .site-footer,
+  .sheet-page .page-intro,
+  .sheet-page .skip-link { display: none !important; }
+  .sheet-page main { padding: 0; }
+  html:has(.sheet-page), .sheet-page { background: #fff; }
+  @page { size: A4; margin: 10mm; }
+  .sheet { padding: 0; border: 0; border-radius: 0; box-shadow: none; margin: 0; background: none; font-size: 8.5pt; }
+  .sheet__title { font-size: 13pt; }
+  .sheet__grid { columns: 2; column-gap: 7mm; margin-top: 3mm; }
+  .sheet__section { margin-bottom: 3mm; }
+  .sheet__section h3 { font-size: 8pt; }
+  .sheet__lines, .sheet__table { font-size: 8pt; }
+  .sheet__lines li { padding: 0.6mm 0; }
+  .sheet__table th, .sheet__table td { padding: 0.5mm 1mm; }
+  .sheet__note, .sheet__footer { font-size: 7pt; }
+}

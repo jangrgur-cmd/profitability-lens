@@ -11,6 +11,7 @@ import { FIELDS, GROUPS, parseForm, exportJson, importJson } from "./fields.js";
 import { MAX_YEARS, PRIOR_FIELD_IDS, rateYears, trendSentence } from "./years.js";
 import { INDUSTRIES, DEFAULT_INDUSTRY_ID, INDUSTRY_BY_ID, BENCHMARK_SOURCE } from "./benchmarks.js";
 import { SAMPLES } from "./samples.js";
+import { caseFromHash } from "../learn/cases.js";
 import { textSummary } from "./report.js";
 import {
   renderVerdict, renderKeyFigures, renderFlags, renderRatioGroup, renderTrend, renderDupont, renderMethod, renderPrintInputs, richText,
@@ -523,8 +524,22 @@ function storedForm() {
   return null;
 }
 
-/** Restores the saved form, or applies figures sent from the segment module. */
+/**
+ * Restores the saved form, or applies figures sent from the segment module,
+ * or opens a practice case from the Glossary & practice page (#case=<id>).
+ */
 function restore() {
+  const practiceCase = caseFromHash(location.hash);
+  if (practiceCase) {
+    history.replaceState(null, "", location.pathname + location.search);
+    // Never overwrite the user's own saved figures without asking.
+    const saved = storedForm();
+    const hasFigures = saved?.years.some((raw) => Object.values(raw ?? {}).some((v) => String(v ?? "").trim() !== ""));
+    if (!hasFigures || window.confirm(t("rating.page.caseReplace", { name: practiceCase.name }))) {
+      loadSample(practiceCase);
+      return;
+    }
+  }
   const handoff = decodeHandoff(location.hash);
   if (handoff) {
     app.source = handoff.source.id;
@@ -556,4 +571,4 @@ mountSiteHeader($("site-header"), { active: "rating", root: "./" });
 buildForm();
 restore();
 // A hand-off link opened while this page is already showing changes only the hash.
-window.addEventListener("hashchange", () => { if (decodeHandoff(location.hash)) restore(); });
+window.addEventListener("hashchange", () => { if (decodeHandoff(location.hash) || caseFromHash(location.hash)) restore(); });

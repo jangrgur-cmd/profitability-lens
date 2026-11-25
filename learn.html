@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The title and description stay in English here for link previews and search engines;
+       the page sets the title in the interface language (learn.page.title). -->
+  <title data-i18n="learn.page.title">Glossary &amp; practice · Profitability Lens</title>
+  <meta name="description" content="Learn to read profitability: guess the A–E grade of five fictional companies and see how the rating gets there, look up every financial term in English and Croatian, and print a one-page formula cheat sheet. Free and open source; runs in your browser.">
+  <meta name="theme-color" content="#2f54eb">
+  <link rel="icon" href="modules/messaging/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="src/shared/theme.css">
+  <link rel="stylesheet" href="src/rating/rating.css">
+  <link rel="stylesheet" href="src/learn/learn.css">
+</head>
+<body>
+  <!-- Every visible text comes from src/shared/lang/en.js and hr.js (data-i18n keys). -->
+  <a class="skip-link" href="#main" data-i18n="common.skipLink"></a>
+  <header id="site-header"></header>
+
+  <main id="main" class="wrap">
+    <div class="page-intro">
+      <h1 data-i18n="learn.page.heading"></h1>
+      <p class="lede" data-i18n="learn.page.lede"></p>
+      <p class="page-intro__link" data-i18n-html="learn.page.sheetLink"></p>
+    </div>
+
+    <div class="learn-tabs" role="tablist" data-i18n-attr="aria-label: learn.page.tabsLabel">
+      <button type="button" role="tab" class="learn-tab" id="tab-practice" aria-controls="panel-practice" data-panel="practice" data-i18n="learn.page.tabPractice"></button>
+      <button type="button" role="tab" class="learn-tab" id="tab-glossary" aria-controls="panel-glossary" data-panel="glossary" data-i18n="learn.page.tabGlossary"></button>
+    </div>
+
+    <section class="learn-panel" id="panel-practice" role="tabpanel" aria-labelledby="tab-practice" tabindex="-1">
+      <div class="quiz-head">
+        <div>
+          <h2 class="block-title" data-i18n="learn.quiz.title"></h2>
+          <p class="quiz-intro" data-i18n="learn.quiz.intro"></p>
+        </div>
+        <div class="quiz-score">
+          <p id="quiz-score" class="quiz-score__text"></p>
+          <button type="button" class="button-quiet" id="quiz-reset" data-i18n="learn.quiz.reset"></button>
+        </div>
+      </div>
+      <nav class="quiz-cases" id="quiz-cases" data-i18n-attr="aria-label: learn.quiz.casesLabel"></nav>
+      <div id="quiz-case"></div>
+    </section>
+
+    <section class="learn-panel" id="panel-glossary" role="tabpanel" aria-labelledby="tab-glossary" tabindex="-1" hidden>
+      <h2 class="block-title" data-i18n="learn.glossary.title"></h2>
+      <p class="quiz-intro" data-i18n="learn.glossary.intro"></p>
+      <div class="glossary-tools card">
+        <div class="field field--text">
+          <label for="glossary-search" data-i18n="learn.glossary.searchLabel"></label>
+          <input id="glossary-search" type="search" autocomplete="off" spellcheck="false" data-i18n-attr="placeholder: learn.glossary.searchPlaceholder" aria-describedby="glossary-count">
+        </div>
+        <div class="chips" id="glossary-categories" role="group" data-i18n-attr="aria-label: learn.glossary.categoriesLabel"></div>
+        <p class="glossary-count" id="glossary-count" aria-live="polite"></p>
+      </div>
+      <div id="glossary-list"></div>
+    </section>
+
+    <p class="sr-only" id="announcer" aria-live="polite"></p>
+  </main>
+
+  <footer class="wrap site-footer">
+    <p data-i18n="learn.page.footer"></p>
+    <p data-i18n-html="learn.page.footerMethod"></p>
+  </footer>
+
+  <script type="module" src="src/learn/app.js"></script>
+</body>
+</html>

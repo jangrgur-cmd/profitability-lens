@@ -69,6 +69,12 @@ export function bandFor(value, thresholds) {
 }
 
 /**
+ * The score at each point of a benchmark scale: [floor, poor, fair, good, excellent].
+ * The floor lies as far below "poor" as "fair" lies above it.
+ */
+export const SCORE_ANCHORS = [0, 20, 50, 75, 100];
+
+/**
  * Scores a value from 0 to 100 against a benchmark scale, piecewise linearly
  * between these points:
  *
@@ -84,13 +90,7 @@ export function bandFor(value, thresholds) {
 export function scoreAgainstThresholds(value, thresholds) {
   assertThresholds(thresholds);
   const [poor, fair, good, excellent] = thresholds;
-  const points = [
-    [poor - (fair - poor), 0],
-    [poor, 20],
-    [fair, 50],
-    [good, 75],
-    [excellent, 100],
-  ];
+  const points = [poor - (fair - poor), poor, fair, good, excellent].map((x, i) => [x, SCORE_ANCHORS[i]]);
   if (value <= points[0][0]) return 0;
   for (let i = 1; i < points.length; i += 1) {
     const [x1, y1] = points[i];
@@ -99,7 +99,7 @@ export function scoreAgainstThresholds(value, thresholds) {
       return y0 + ((value - x0) / (x1 - x0)) * (y1 - y0);
     }
   }
-  return 100; // above excellent
+  return SCORE_ANCHORS[SCORE_ANCHORS.length - 1]; // above excellent
 }
 
 /**

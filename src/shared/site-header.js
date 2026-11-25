@@ -14,6 +14,7 @@ export const MODULES = [
   { id: "rating", labelKey: "header.navRating", path: "index.html" },
   { id: "segments", labelKey: "header.navSegments", path: "segments.html" },
   { id: "messaging", labelKey: "header.navMessaging", path: "modules/messaging/" },
+  { id: "learn", labelKey: "header.navLearn", path: "learn.html" },
 ];
 
 const SVG = "http://www.w3.org/2000/svg";
@@ -58,7 +59,7 @@ function languageSwitch() {
  * Renders the shared header into `container` and fills the page's static
  * texts (data-i18n attributes) in the current language.
  * @param {HTMLElement} container
- * @param {{active: "rating"|"segments"|"messaging", root: string}} options
+ * @param {{active: "rating"|"segments"|"messaging"|"learn", root: string}} options
  *   root: path from the page to the site root, e.g. "./" or "../../"
  */
 export function mountSiteHeader(container, { active, root }) {
@@ -87,5 +88,9 @@ export function mountSiteHeader(container, { active, root }) {
         h("a", { href: root + m.path, "aria-current": m.id === active ? "page" : null }, t(m.labelKey)))))),
     h("div", { class: "site-tools" }, languageSwitch(), learn, theme),
   ));
+  // On a narrow screen the navigation scrolls sideways: bring the current page's link into view.
+  const nav = container.querySelector(".module-nav");
+  const current = nav.querySelector('[aria-current="page"]');
+  if (current && nav.scrollWidth > nav.clientWidth) nav.scrollLeft = current.offsetLeft - nav.offsetLeft - 8;
   applyTranslations(document);
 }

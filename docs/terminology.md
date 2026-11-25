@@ -159,3 +159,21 @@ the vocabulary of Croatian textbooks on financial statement analysis (e.g. *rent
 | Multiple | 2.50× | 2,50× |
 | Per message | 0.0336 €/msg | 0,0336 €/poruka |
 | Missing value | n/a | n/d |
+
+## Learning materials
+
+| English | Croatian | Note |
+|---|---|---|
+| Glossary & practice | Pojmovnik i vježbe | Navigation label (not *Učenje*, which is the Learn mode switch) |
+| Glossary | Pojmovnik | |
+| Guess the grade | Pogodi ocjenu | |
+| Practice case | Slučaj za vježbu | |
+| Formula cheat sheet | Podsjetnik s formulama | |
+| Profit before tax (EBT) | Dobit prije oporezivanja (EBT) | |
+| Costs by nature | Troškovi po prirodnim vrstama | |
+| Average balance | Prosječno stanje | |
+| Benchmark | Referentna vrijednost | Singular of *referentne vrijednosti* |
+| Leverage | Zaduženost (financijska poluga) | Glossary entry; elsewhere *zaduženost* alone |
+| Percentage point (pp) | Postotni bod (p. b.) | |
+| Overheads | Opći režijski troškovi | |
+| Pass-through fee | Prolazna naknada | |

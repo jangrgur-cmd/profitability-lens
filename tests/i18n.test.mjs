@@ -109,6 +109,8 @@ test("every literal key used in the code and the pages exists in both languages"
     ...filesIn(fileURLToPath(new URL("modules/messaging/js", ROOT)), [".js"]),
     fileURLToPath(new URL("index.html", ROOT)),
     fileURLToPath(new URL("segments.html", ROOT)),
+    fileURLToPath(new URL("learn.html", ROOT)),
+    fileURLToPath(new URL("cheatsheet.html", ROOT)),
     fileURLToPath(new URL("modules/messaging/index.html", ROOT)),
   ];
   const used = new Set();

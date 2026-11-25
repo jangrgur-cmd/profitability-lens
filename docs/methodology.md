@@ -194,3 +194,20 @@ Segment profit           = CM − Direct fixed costs        (0 when blank)
 - In Learn mode, each segment's share of revenue × its margin gives its contribution in percentage points; the contributions add up to the company margin (`marginContributions` in `src/shared/margin.js`, shared with the messaging case study).
 - **Send to Company rating** passes total revenue as revenue and total variable costs as cost of goods sold, with the General industry. Variable costs are an approximation of cost of sales: fixed production costs, if any, are left in operating expenses.
 - A pasted table is read by column name (English or Croatian) when it has a header row, otherwise in the order name, revenue, variable costs, direct fixed costs.
+
+## 14. Learning materials
+
+The Glossary & practice page (`learn.html`, code in `src/learn/`) and the formula cheat sheet (`cheatsheet.html`) teach the method above. None of them holds a number or a formula of its own:
+
+- **Guess the grade**: five fictional companies, chosen so that they earn the grades A to E once each, shown in a different order. The grade is never stored: each case is rated by `rate()` when the page loads, so the answer always matches the Company rating, and "Open this case in Company rating" (`index.html#case=<id>`) loads the same figures there. A test fails if a change to the benchmarks moves a case to another grade, or if a case stops showing what its lesson says (for example, that the supermarket's ROA is Excellent). Guesses are kept in this browser's local storage only.
+
+  | Case | Industry | Grade | What it teaches |
+  |---|---|---|---|
+  | Software company | Software & SaaS | B | A 12 % net margin is only "strong" against software benchmarks; the same figures earn an A on General benchmarks |
+  | Supermarket chain | Retail & wholesale | A | A net margin under 4 % can still be excellent when assets turn over twice a year |
+  | Seaside bistro | Tourism & hospitality | E | A good gross margin does not survive fixed costs, depreciation and interest |
+  | Metalworks | Manufacturing | C | Costs by nature (no COGS, 7 of 8 ratios) and an ROE lifted by an equity multiplier of about 4 |
+  | Messaging reseller | Telecom & CPaaS / messaging | D | Thin wholesale margins and interest cover below 1.5× |
+
+- **Glossary**: 54 terms in five sections. A term the engines already name (ratios, form fields, derived figures, DuPont factors) uses the engine's own language key, so the glossary cannot name it differently; a ratio's formula is its definition's formula. The other-language name is the same key read in the other language. Search ignores case and accents and matches both languages.
+- **Cheat sheet**: built by `cheatSheet()` from `RATIOS` (names, formulas, weights), `SCORE_ANCHORS` (the score at each threshold), `GRADES`, `FLAG_LIMITS` and the General industry's thresholds; only the wording of the statement lines is text in the language files (`learn.formulas`, shared with the glossary). It prints on one A4 page (print stylesheet in `src/learn/learn.css`), so "Save as PDF" in the print dialog gives the PDF, and "Download as text" saves the same content as a .txt file made in the browser.

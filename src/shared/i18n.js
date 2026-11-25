@@ -113,6 +113,28 @@ export function t(key, params = {}) {
   return interpolate(entry, params);
 }
 
+/** The language that is not the current one (the glossary shows each term in both). */
+export function otherLanguage() {
+  return LANGUAGES.find((l) => l.id !== current).id;
+}
+
+/**
+ * The text for a key in a given language, whatever the interface language is.
+ * @param {"en"|"hr"} lang
+ * @param {string} key
+ * @param {Record<string, string|number>} [params]
+ * @returns {string}
+ */
+export function textIn(lang, key, params = {}) {
+  const saved = current;
+  useLanguage(lang);
+  try {
+    return t(key, params);
+  } finally {
+    useLanguage(saved);
+  }
+}
+
 /**
  * Fills static page text from the language files:
  *   data-i18n → textContent

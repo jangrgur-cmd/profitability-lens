@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- The title and description stay in English here for link previews and search engines;
+       the page sets the title in the interface language (learn.sheet.pageTitle). -->
+  <title data-i18n="learn.sheet.pageTitle">Formula cheat sheet · Profitability Lens</title>
+  <meta name="description" content="A free one-page cheat sheet of profitability formulas: from revenue to net income, the eight ratios and their weights, DuPont, scoring and grades, red flags, example thresholds and segment profitability. Print it, save it as PDF or download it as text. English and Croatian.">
+  <meta name="theme-color" content="#2f54eb">
+  <link rel="icon" href="modules/messaging/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="src/shared/theme.css">
+  <link rel="stylesheet" href="src/rating/rating.css">
+  <link rel="stylesheet" href="src/learn/learn.css">
+</head>
+<body class="sheet-page">
+  <!-- Every visible text comes from src/shared/lang/en.js and hr.js (data-i18n keys). -->
+  <a class="skip-link" href="#main" data-i18n="common.skipLink"></a>
+  <header id="site-header"></header>
+
+  <main id="main" class="wrap">
+    <div class="page-intro">
+      <h1 data-i18n="learn.sheet.heading"></h1>
+      <p class="lede" data-i18n="learn.sheet.lede"></p>
+      <div class="sheet-actions">
+        <button type="button" class="button button--primary" id="sheet-print" data-i18n="learn.sheet.print"></button>
+        <button type="button" class="button" id="sheet-download" data-i18n="learn.sheet.download"></button>
+        <p data-i18n="learn.sheet.printHint"></p>
+      </div>
+    </div>
+
+    <article class="card sheet" id="sheet" aria-labelledby="sheet-title"></article>
+
+    <p class="sr-only" id="announcer" aria-live="polite"></p>
+  </main>
+
+  <footer class="wrap site-footer">
+    <p data-i18n="learn.page.footer"></p>
+    <p data-i18n-html="learn.page.footerMethod"></p>
+  </footer>
+
+  <script type="module" src="src/learn/sheet-app.js"></script>
+</body>
+</html>

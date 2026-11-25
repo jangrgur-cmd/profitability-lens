@@ -14,7 +14,7 @@
 //   trend   result of rateYears(); trend.years.length is 1 for a single year
 
 import { FIELDS } from "./fields.js";
-import { GRADES } from "./rating.js";
+import { gradeScaleText } from "./rating.js";
 import { RATIOS } from "./ratios.js";
 import { INDUSTRY_BY_ID, BENCHMARK_SOURCE } from "./benchmarks.js";
 import { KEY_FIGURES, keyFigureText, explainRatio, dupontSentences, ratioStatusText } from "./report.js";
@@ -75,13 +75,6 @@ export function sparkline(values, label) {
   if (g.path) el.append(svg("path", { d: g.path, class: "sparkline__line" }));
   for (const p of g.points) el.append(svg("circle", { cx: p.x, cy: p.y, r: p === g.points.at(-1) ? 2.6 : 1.6, class: "sparkline__dot" }));
   return el;
-}
-
-/** "A 80+ (Excellent), B 65+ (Strong), …, E below 35 (Poor)". */
-function gradeScaleText() {
-  return GRADES.map((g, i) => (g.min > 0
-    ? t("rating.page.gradeFrom", { letter: g.letter, min: g.min, label: g.label })
-    : t("rating.page.gradeBelow", { letter: g.letter, min: GRADES[i - 1].min, label: g.label }))).join(t("common.listSeparator"));
 }
 
 /**

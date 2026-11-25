@@ -27,14 +27,23 @@ export const GRADES = [["A", 80], ["B", 65], ["C", 50], ["D", 35], ["E", 0]].map
 /** Flag severities, most serious first. */
 export const SEVERITIES = ["critical", "serious", "warning", "info"];
 
-/** Below this share of the total weight the rating rests on too few ratios. */
-const LOW_COVERAGE_SHARE = 0.6;
-/** Interest cover (EBIT ÷ interest) below this is a serious flag. */
-const MIN_INTEREST_COVER = 1.5;
-/** An equity multiplier above this means leverage drives much of ROE. */
-const MAX_EQUITY_MULTIPLIER = 3;
-/** D&A above this share of EBITDA means asset wear eats most operating cash profit. */
-const MAX_DA_SHARE_OF_EBITDA = 0.5;
+/**
+ * The limits behind the red flags (also printed on the cheat sheet).
+ *   lowCoverageShare     below this share of the total weight the rating rests on too few ratios
+ *   minInterestCover     interest cover (EBIT ÷ interest) below this is a serious flag
+ *   maxEquityMultiplier  above this, leverage drives much of ROE
+ *   maxDaShareOfEbitda   D&A above this share of EBITDA: asset wear eats most operating cash profit
+ */
+export const FLAG_LIMITS = Object.freeze({
+  lowCoverageShare: 0.6,
+  minInterestCover: 1.5,
+  maxEquityMultiplier: 3,
+  maxDaShareOfEbitda: 0.5,
+});
+const {
+  lowCoverageShare: LOW_COVERAGE_SHARE, minInterestCover: MIN_INTEREST_COVER,
+  maxEquityMultiplier: MAX_EQUITY_MULTIPLIER, maxDaShareOfEbitda: MAX_DA_SHARE_OF_EBITDA,
+} = FLAG_LIMITS;
 /** Prior-year fields; a sentence names them with rating.flags.noPriorYear.<id>. */
 const PRIOR_YEAR_FIELDS = ["priorAssets", "priorEquity"];
 
@@ -45,6 +54,16 @@ const PRIOR_YEAR_FIELDS = ["priorAssets", "priorEquity"];
  */
 export function gradeFor(score) {
   return GRADES.find((g) => score >= g.min) ?? GRADES[GRADES.length - 1];
+}
+
+/**
+ * The grade scale in words: "A 80+ (Excellent), B 65+ (Strong), …, E below 35 (Poor)".
+ * @returns {string}
+ */
+export function gradeScaleText() {
+  return GRADES.map((g, i) => (g.min > 0
+    ? t("rating.page.gradeFrom", { letter: g.letter, min: g.min, label: g.label })
+    : t("rating.page.gradeBelow", { letter: g.letter, min: GRADES[i - 1].min, label: g.label }))).join(t("common.listSeparator"));
 }
 
 /**
